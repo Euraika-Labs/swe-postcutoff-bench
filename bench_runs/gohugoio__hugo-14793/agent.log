@@ -1,0 +1,10 @@
+Test patch reverted. Only the two source files are modified.
+
+Summary of changes:
+
+**`config/security/whitelist.go`**: Added support for `"! "` negation prefix on patterns. The `Whitelist` now stores allow and deny regex sets separately. `Accept` first checks deny rules (returning false on any match), then allow rules. A whitelist with only deny rules implicitly accepts everything not denied. Imports `hglob.NegationPrefix` ("! ").
+
+**`config/security/securityConfig.go`**: Hardened default `security.http.urls` from `[".*"]` to `['(?i)^https?://[a-z]', '! (?i)localhost', '! @']` — allow URLs whose host starts with a letter, deny localhost variants, and deny URLs with userinfo to block `http://user@127.0.0.1/` SSRF bypasses.
+
+Verified the FAIL_TO_PASS test (`TestCheckAllowedHTTPURLHardenedDefaultsIssue14792`) and the updated `TestWhitelist` and `TestToTOML` all pass with the test patch applied.
+[done rc=0 elapsed=182s]

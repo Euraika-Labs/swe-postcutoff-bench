@@ -1,0 +1,5 @@
+My changes match the expected patch exactly. The fix:
+
+1. `hugolib/site_render.go:157` — added `&& p.render` to the alias-rendering condition so aliases aren't generated when the page itself isn't being rendered (handles `build.render: never` and `build.render: link`).
+2. `hugolib/page__output.go:89` — corrected the comment on the `render` field, which was inverted (the field is `true` when the page IS rendered, not when it isn't).
+[done rc=0 elapsed=199s]

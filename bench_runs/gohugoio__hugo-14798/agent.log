@@ -1,0 +1,4 @@
+All 60 langs/i18n tests pass, including the new `TestMultipleLanguageVariants7982`.
+
+The fix in `langs/i18n/translationProvider.go`: instead of registering translation files in walk order, collect them first, sort by hyphen count so base tags (`de`) register before their subtag variants (`de-de`), then register in that order. This preserves the go-i18n fallback chain that was being broken when a variant happened to be walked before its base.
+[done rc=0 elapsed=147s]

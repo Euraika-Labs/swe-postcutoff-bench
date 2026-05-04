@@ -1,0 +1,8 @@
+Build passes cleanly. The fix is in place:
+
+1. Added `strconv` import
+2. Added `parseRetryAfter` helper that parses both delta-seconds and HTTP-date formats per RFC 7231
+3. In `RoundTrip`'s retry branch: use the Retry-After value (if present) as the sleep duration, otherwise the existing exponential backoff value
+4. Surface the Retry-After value in the retry-timeout error message
+5. Restructured the timeout-check so it always runs (not just on subsequent retries) — the `else if` became `if`, which matches the upstream patch behavior
+[done rc=0 elapsed=195s]

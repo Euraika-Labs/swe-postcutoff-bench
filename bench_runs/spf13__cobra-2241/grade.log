@@ -1,0 +1,31 @@
+{
+  "instance_id": "spf13__cobra-2241",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "./TestHelpFuncExecuted": true
+  },
+  "agent_seconds": 1.2511751651763916,
+  "candidate_label": "agent.diff"
+}
+mand_test.go cleanly.
+Applied patch command_test.go cleanly.
+Applied patch command_test.go cleanly.
+
+
+Checking patch command.go...
+Applied patch command.go cleanly.
+
+
+[install rc=0]
+
+[./TestHelpFuncExecuted] rc=0
+=== RUN   TestHelpFuncExecuted
+--- PASS: TestHelpFuncExecuted (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.002s
+
+---

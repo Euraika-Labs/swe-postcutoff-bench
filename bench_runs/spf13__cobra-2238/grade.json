@@ -1,0 +1,13 @@
+{
+  "instance_id": "spf13__cobra-2238",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "./TestCustomDefaultShellCompDirective": true
+  },
+  "agent_seconds": 1.5035440921783447,
+  "candidate_label": "agent.diff"
+}

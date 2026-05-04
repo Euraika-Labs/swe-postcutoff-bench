@@ -1,0 +1,28 @@
+{
+  "instance_id": "gohugoio__hugo-14808",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "hugolib/TestDoNotRenderAliasesIfPageNotRendered14807": true
+  },
+  "agent_seconds": 14.547255039215088,
+  "candidate_label": "agent.diff"
+}
+_output.go cleanly.
+Applied patch hugolib/site_render.go cleanly.
+
+
+[install rc=0]
+
+[hugolib/TestDoNotRenderAliasesIfPageNotRendered14807] rc=0
+=== RUN   TestDoNotRenderAliasesIfPageNotRendered14807
+=== PAUSE TestDoNotRenderAliasesIfPageNotRendered14807
+=== CONT  TestDoNotRenderAliasesIfPageNotRendered14807
+--- PASS: TestDoNotRenderAliasesIfPageNotRendered14807 (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/hugolib	0.094s
+
+---

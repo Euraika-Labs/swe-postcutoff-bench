@@ -1,0 +1,230 @@
+diff --git a/config/security/securityConfig_test.go b/config/security/securityConfig_test.go
+index c8599ee41ce..4b5a12417e2 100644
+--- a/config/security/securityConfig_test.go
++++ b/config/security/securityConfig_test.go
+@@ -135,7 +135,7 @@ func TestToTOML(t *testing.T) {
+ 	got := DefaultConfig.ToTOML()
+ 
+ 	c.Assert(got, qt.Equals,
+-		"[security]\n  enableInlineShortcodes = false\n\n  [security.exec]\n    allow = ['^(dart-)?sass(-embedded)?$', '^go$', '^git$', '^node$', '^postcss$', '^tailwindcss$']\n    osEnv = ['(?i)^((HTTPS?|NO)_PROXY|PATH(EXT)?|APPDATA|TE?MP|TERM|GO\\w+|(XDG_CONFIG_)?HOME|USERPROFILE|SSH_AUTH_SOCK|DISPLAY|LANG|SYSTEMDRIVE|PROGRAMDATA)$']\n\n  [security.funcs]\n    getenv = ['^HUGO_', '^CI$']\n\n  [security.http]\n    methods = ['(?i)GET|POST']\n    urls = ['.*']\n\n  [security.node]\n    [security.node.permissions]\n      allowAddons = ['tailwindcss']\n      allowRead = ['.']\n      allowWorker = ['tailwindcss']\n      allowWrite = []\n      disable = false",
++		"[security]\n  enableInlineShortcodes = false\n\n  [security.exec]\n    allow = ['^(dart-)?sass(-embedded)?$', '^go$', '^git$', '^node$', '^postcss$', '^tailwindcss$']\n    osEnv = ['(?i)^((HTTPS?|NO)_PROXY|PATH(EXT)?|APPDATA|TE?MP|TERM|GO\\w+|(XDG_CONFIG_)?HOME|USERPROFILE|SSH_AUTH_SOCK|DISPLAY|LANG|SYSTEMDRIVE|PROGRAMDATA)$']\n\n  [security.funcs]\n    getenv = ['^HUGO_', '^CI$']\n\n  [security.http]\n    methods = ['(?i)GET|POST']\n    urls = ['(?i)^https?://[a-z]', '! (?i)localhost', '! @']\n\n  [security.node]\n    [security.node.permissions]\n      allowAddons = ['tailwindcss']\n      allowRead = ['.']\n      allowWorker = ['tailwindcss']\n      allowWrite = []\n      disable = false",
+ 	)
+ }
+ 
+@@ -170,6 +170,83 @@ func TestDecodeConfigDefault(t *testing.T) {
+ 	c.Assert(pc.Node.Permissions.AllowWrite, qt.DeepEquals, []string{})
+ }
+ 
++func TestCheckAllowedHTTPURLHardenedDefaultsIssue14792(t *testing.T) {
++	t.Parallel()
++	c := qt.New(t)
++
++	c.Run("Public URLs allowed by default", func(c *qt.C) {
++		c.Parallel()
++		pc, err := DecodeConfig(config.New())
++		c.Assert(err, qt.IsNil)
++		for _, u := range []string{
++			"https://example.org/",
++			"https://example.org:8443/foo",
++			"https://sub.example.org/path",
++		} {
++			c.Assert(pc.CheckAllowedHTTPURL(u), qt.IsNil, qt.Commentf(u))
++		}
++	})
++
++	c.Run("Private/loopback URLs denied by default", func(c *qt.C) {
++		c.Parallel()
++		pc, err := DecodeConfig(config.New())
++		c.Assert(err, qt.IsNil)
++		for _, u := range []string{
++			"http://localhost/",
++			"http://LOCALHOST:8080/",
++			"http://foo.localhost/",
++			"http://127.0.0.1/",
++			"http://127.1.2.3:8080/x",
++			"http://user:pass@127.0.0.1/", // userinfo must not sneak past the deny.
++			"http://10.0.0.1/",
++			"http://172.16.0.1/",
++			"http://192.168.1.1/",
++			"http://169.254.169.254/latest/meta-data/", // AWS/GCP metadata.
++			"http://0.0.0.0/",
++			"http://[::1]/",
++			"http://[fe80::1]/",
++			"http://[fc00::1]/",
++			// Public IP literals are blocked as collateral; users can override.
++			"http://93.184.216.34/",
++			"https://[2001:db8::1]/",
++		} {
++			err := pc.CheckAllowedHTTPURL(u)
++			c.Assert(err, qt.IsNotNil, qt.Commentf(u))
++			c.Assert(err, qt.ErrorMatches, `(?s).*is not whitelisted in policy "security\.http\.urls".*`, qt.Commentf(u))
++		}
++	})
++
++	c.Run("Explicit user config bypasses hardening", func(c *qt.C) {
++		c.Parallel()
++		tomlConfig := `
++[security.http]
++urls = ['http://127\.0\.0\.1.*', 'http://localhost.*']
++`
++		cfg, err := config.FromConfigString(tomlConfig, "toml")
++		c.Assert(err, qt.IsNil)
++		pc, err := DecodeConfig(cfg)
++		c.Assert(err, qt.IsNil)
++		c.Assert(pc.CheckAllowedHTTPURL("http://127.0.0.1:8080/foo"), qt.IsNil)
++		c.Assert(pc.CheckAllowedHTTPURL("http://localhost:1313/"), qt.IsNil)
++	})
++
++	c.Run("User can deny with the ! prefix", func(c *qt.C) {
++		c.Parallel()
++		tomlConfig := `
++[security.http]
++urls = ['.*', '! ^https?://evil\.example\.com']
++`
++		cfg, err := config.FromConfigString(tomlConfig, "toml")
++		c.Assert(err, qt.IsNil)
++		pc, err := DecodeConfig(cfg)
++		c.Assert(err, qt.IsNil)
++		c.Assert(pc.CheckAllowedHTTPURL("https://good.example.com/"), qt.IsNil)
++		err = pc.CheckAllowedHTTPURL("https://evil.example.com/x")
++		c.Assert(err, qt.IsNotNil)
++		c.Assert(err, qt.ErrorMatches, `(?s).*is not whitelisted in policy "security\.http\.urls".*`)
++	})
++}
++
+ func TestDecodeConfigNodePermissions(t *testing.T) {
+ 	c := qt.New(t)
+ 
+diff --git a/config/security/whitelist_test.go b/config/security/whitelist_test.go
+index add3345a8da..c78b6fe176a 100644
+--- a/config/security/whitelist_test.go
++++ b/config/security/whitelist_test.go
+@@ -43,4 +43,25 @@ func TestWhitelist(t *testing.T) {
+ 		c.Assert(w.Accept("bar"), qt.IsTrue)
+ 		c.Assert(w.Accept("mbar"), qt.IsFalse)
+ 	})
++
++	c.Run("Negation takes precedence", func(c *qt.C) {
++		w := MustNewWhitelist(".*", "! ^foo")
++		c.Assert(w.Accept("bar"), qt.IsTrue)
++		c.Assert(w.Accept("foo"), qt.IsFalse)
++		c.Assert(w.Accept("foobar"), qt.IsFalse)
++	})
++
++	c.Run("Negation only", func(c *qt.C) {
++		// A whitelist with only deny rules accepts everything else.
++		w := MustNewWhitelist("! ^foo")
++		c.Assert(w.Accept("bar"), qt.IsTrue)
++		c.Assert(w.Accept("foo"), qt.IsFalse)
++	})
++
++	c.Run("Bad pattern", func(c *qt.C) {
++		_, err := NewWhitelist("[invalid")
++		c.Assert(err, qt.IsNotNil)
++		_, err = NewWhitelist("! [invalid")
++		c.Assert(err, qt.IsNotNil)
++	})
+ }
+diff --git a/hugolib/resource_chain_test.go b/hugolib/resource_chain_test.go
+index efc18147a48..b886d0258a5 100644
+--- a/hugolib/resource_chain_test.go
++++ b/hugolib/resource_chain_test.go
+@@ -45,6 +45,8 @@ func TestResourceChainBasic(t *testing.T) {
+ 	files := `
+ -- hugo.toml --
+ baseURL = "http://example.com/"
++[security.http]
++urls = ['.*']
+ -- assets/images/sunset.jpg --
+ ` + getTestSunset(t) + `
+ -- layouts/home.html --
+@@ -1329,6 +1331,8 @@ Template test.
+ 
+ 			files := test.files
+ 			files = strings.ReplaceAll(files, "HTTPTEST_SERVER_URL", ts.URL)
++			files = strings.Replace(files, `baseURL = "http://example.com/"`,
++				"baseURL = \"http://example.com/\"\n[security.http]\nurls = ['.*']", 1)
+ 
+ 			b := Test(t, files)
+ 
+diff --git a/hugolib/securitypolicies_test.go b/hugolib/securitypolicies_test.go
+index 0656edda50c..43b610e9250 100644
+--- a/hugolib/securitypolicies_test.go
++++ b/hugolib/securitypolicies_test.go
+@@ -151,6 +151,9 @@ allow="none"
+ 		files := fmt.Sprintf(`
+ -- hugo.toml --
+ baseURL = "https://example.org"
++[security]
++[security.http]
++urls = ['.*']
+ -- layouts/home.html --
+ {{ $json := resources.GetRemote "%s/fruits.json" }}{{ $json.Content }}
+ `, ts.URL)
+@@ -166,6 +169,9 @@ baseURL = "https://example.org"
+ 		files := fmt.Sprintf(`
+ -- hugo.toml --
+ baseURL = "https://example.org"
++[security]
++[security.http]
++urls = ['.*']
+ -- layouts/home.html --
+ {{ $json := resources.GetRemote "%s/fruits.json" (dict "method" "DELETE" ) }}{{ $json.Content }}
+ `, ts.URL)
+@@ -194,6 +200,23 @@ urls="none"
+ 		c.Assert(err, qt.ErrorMatches, `(?s).*is not whitelisted in policy "security\.http\.urls".*`)
+ 	})
+ 
++	c.Run("resources.GetRemote, denied loopback URL by default", func(c *qt.C) {
++		c.Parallel()
++		ts := httptest.NewServer(http.FileServer(http.Dir("testdata/")))
++		c.Cleanup(func() {
++			ts.Close()
++		})
++		files := fmt.Sprintf(`
++-- hugo.toml --
++baseURL = "https://example.org"
++-- layouts/home.html --
++{{ $json := resources.GetRemote "%s/fruits.json" }}{{ $json.Content }}
++`, ts.URL)
++		_, err := TestE(c, files)
++		c.Assert(err, qt.IsNotNil)
++		c.Assert(err, qt.ErrorMatches, `(?s).*is not whitelisted in policy "security\.http\.urls".*`)
++	})
++
+ 	c.Run("resources.GetRemote, fake JSON", func(c *qt.C) {
+ 		c.Parallel()
+ 		ts := httptest.NewServer(http.FileServer(http.Dir("testdata/")))
+@@ -204,6 +227,8 @@ urls="none"
+ -- hugo.toml --
+ baseURL = "https://example.org"
+ [security]
++[security.http]
++urls = ['.*']
+ -- layouts/home.html --
+ {{ $json := resources.GetRemote "%s/fakejson.json" }}{{ $json.Content }}
+ `, ts.URL)
+@@ -223,6 +248,7 @@ baseURL = "https://example.org"
+ baseURL = "https://example.org"
+ [security]
+ [security.http]
++urls = ['.*']
+ mediaTypes=["application/json"]
+ -- layouts/home.html --
+ {{ $json := resources.GetRemote "%s/fakejson.json" }}{{ $json.Content }}
+diff --git a/tpl/openapi/openapi3/openapi3_integration_test.go b/tpl/openapi/openapi3/openapi3_integration_test.go
+index 9040f965b94..f8e77af99eb 100644
+--- a/tpl/openapi/openapi3/openapi3_integration_test.go
++++ b/tpl/openapi/openapi3/openapi3_integration_test.go
+@@ -273,7 +273,9 @@ func TestUnmarshalRefRemote(t *testing.T) {
+ 		})
+ 
+ 		dataPartRef := ts.URL + "/api/messages/dataPart.json"
+-		return strings.ReplaceAll(refLocalTemplate, "DATAPART_REF", dataPartRef)
++		files := strings.ReplaceAll(refLocalTemplate, "DATAPART_REF", dataPartRef)
++		return strings.Replace(files, "baseURL = 'http://example.com/'",
++			"baseURL = 'http://example.com/'\n[security.http]\nurls = ['.*']", 1)
+ 	}
+ 
+ 	t.Run("Build", func(t *testing.T) {
+

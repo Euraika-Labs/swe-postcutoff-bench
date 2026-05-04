@@ -1,0 +1,149 @@
+diff --git a/command_test.go b/command_test.go
+index 7e7c34182..0c7aae749 100644
+--- a/command_test.go
++++ b/command_test.go
+@@ -2921,3 +2921,30 @@ func TestUnknownFlagShouldReturnSameErrorRegardlessOfArgPosition(t *testing.T) {
+ 		})
+ 	}
+ }
++
++func TestHelpFuncExecuted(t *testing.T) {
++	helpText := "Long description"
++
++	child := &Command{Use: "child", Run: emptyRun}
++	child.SetHelpFunc(func(cmd *Command, args []string) {
++		_, err := cmd.OutOrStdout().Write([]byte(helpText))
++		if err != nil {
++			t.Error(err)
++		}
++
++		// Test for https://github.com/spf13/cobra/issues/2240
++		if cmd.Context() == nil {
++			t.Error("Context is nil")
++		}
++	})
++
++	rootCmd := &Command{Use: "root", Run: emptyRun}
++	rootCmd.AddCommand(child)
++
++	output, err := executeCommand(rootCmd, "help", "child")
++	if err != nil {
++		t.Errorf("Unexpected error: %v", err)
++	}
++
++	checkStringContains(t, output, helpText)
++}
+
+From d848cfcdf81e747c057c1f8ab7631f29d12a13e7 Mon Sep 17 00:00:00 2001
+From: Fraser Waters <fraser@pulumi.com>
+Date: Fri, 21 Feb 2025 08:33:59 +0000
+Subject: [PATCH 2/5] Check specific context
+
+---
+ command_test.go | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/command_test.go b/command_test.go
+index 0c7aae749..175f2ffdb 100644
+--- a/command_test.go
++++ b/command_test.go
+@@ -2925,6 +2925,9 @@ func TestUnknownFlagShouldReturnSameErrorRegardlessOfArgPosition(t *testing.T) {
+ func TestHelpFuncExecuted(t *testing.T) {
+ 	helpText := "Long description"
+ 
++	// Create a context that will be unique, not just the background context
++	executionCtx, _ := context.WithCancel(context.Background())
++
+ 	child := &Command{Use: "child", Run: emptyRun}
+ 	child.SetHelpFunc(func(cmd *Command, args []string) {
+ 		_, err := cmd.OutOrStdout().Write([]byte(helpText))
+@@ -2933,15 +2936,15 @@ func TestHelpFuncExecuted(t *testing.T) {
+ 		}
+ 
+ 		// Test for https://github.com/spf13/cobra/issues/2240
+-		if cmd.Context() == nil {
+-			t.Error("Context is nil")
++		if cmd.Context() != executionCtx {
++			t.Error("Context doesn't equal the execution context")
+ 		}
+ 	})
+ 
+ 	rootCmd := &Command{Use: "root", Run: emptyRun}
+ 	rootCmd.AddCommand(child)
+ 
+-	output, err := executeCommand(rootCmd, "help", "child")
++	output, err := executeCommandWithContext(executionCtx, rootCmd, "help", "child")
+ 	if err != nil {
+ 		t.Errorf("Unexpected error: %v", err)
+ 	}
+
+From 47f12e63deb0b24712c0e4c2beef333947cd7887 Mon Sep 17 00:00:00 2001
+From: Fraser Waters <fraser@pulumi.com>
+Date: Fri, 21 Feb 2025 12:05:26 +0000
+Subject: [PATCH 3/5] lint
+
+---
+ command_test.go | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/command_test.go b/command_test.go
+index 175f2ffdb..165826d10 100644
+--- a/command_test.go
++++ b/command_test.go
+@@ -2926,7 +2926,8 @@ func TestHelpFuncExecuted(t *testing.T) {
+ 	helpText := "Long description"
+ 
+ 	// Create a context that will be unique, not just the background context
+-	executionCtx, _ := context.WithCancel(context.Background())
++	executionCtx, cancel := context.WithCancel(context.Background())
++	defer cancel()
+ 
+ 	child := &Command{Use: "child", Run: emptyRun}
+ 	child.SetHelpFunc(func(cmd *Command, args []string) {
+
+From 3473156b22be6cc662a14b321b238ae32830b291 Mon Sep 17 00:00:00 2001
+From: Fraser Waters <fraser@pulumi.com>
+Date: Fri, 21 Feb 2025 12:11:47 +0000
+Subject: [PATCH 4/5] feedback
+
+---
+ command_test.go | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/command_test.go b/command_test.go
+index 165826d10..54d3370dc 100644
+--- a/command_test.go
++++ b/command_test.go
+@@ -2926,8 +2926,7 @@ func TestHelpFuncExecuted(t *testing.T) {
+ 	helpText := "Long description"
+ 
+ 	// Create a context that will be unique, not just the background context
+-	executionCtx, cancel := context.WithCancel(context.Background())
+-	defer cancel()
++	executionCtx := context.WithValue(context.Background(), "testKey", "123")
+ 
+ 	child := &Command{Use: "child", Run: emptyRun}
+ 	child.SetHelpFunc(func(cmd *Command, args []string) {
+
+From d6a2746d5b67353cd744923beb9ff29ca6af6de9 Mon Sep 17 00:00:00 2001
+From: Fraser Waters <fraser@pulumi.com>
+Date: Fri, 21 Feb 2025 12:18:37 +0000
+Subject: [PATCH 5/5] lint
+
+---
+ command_test.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/command_test.go b/command_test.go
+index 54d3370dc..156df9eb6 100644
+--- a/command_test.go
++++ b/command_test.go
+@@ -2926,6 +2926,7 @@ func TestHelpFuncExecuted(t *testing.T) {
+ 	helpText := "Long description"
+ 
+ 	// Create a context that will be unique, not just the background context
++	//nolint:golint,staticcheck // We can safely use a basic type as key in tests.
+ 	executionCtx := context.WithValue(context.Background(), "testKey", "123")
+ 
+ 	child := &Command{Use: "child", Run: emptyRun}
+

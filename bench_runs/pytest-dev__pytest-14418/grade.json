@@ -1,0 +1,13 @@
+{
+  "instance_id": "pytest-dev__pytest-14418",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "testing/test_assertrewrite.py::test_assertion_failure_when_terminalreporter_is_disabled": true
+  },
+  "agent_seconds": 11.292908191680908,
+  "candidate_label": "agent.diff"
+}

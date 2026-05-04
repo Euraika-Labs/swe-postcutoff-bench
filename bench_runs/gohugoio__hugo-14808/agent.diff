@@ -1,0 +1,26 @@
+diff --git a/hugolib/page__output.go b/hugolib/page__output.go
+index d21c6860d..3ba2c1102 100644
+--- a/hugolib/page__output.go
++++ b/hugolib/page__output.go
+@@ -86,7 +86,7 @@ func newPageOutput(
+ type pageOutput struct {
+ 	p *pageState
+ 
+-	// Set if this page isn't configured to be rendered to this format.
++	// Set if this page is configured to be rendered to this format.
+ 	render bool
+ 
+ 	f output.Format
+diff --git a/hugolib/site_render.go b/hugolib/site_render.go
+index b69e3dcbc..b453c4193 100644
+--- a/hugolib/site_render.go
++++ b/hugolib/site_render.go
+@@ -154,7 +154,7 @@ func pageRenderer(
+ 			}
+ 		}
+ 
+-		if !s.conf.DisableAliases && !s.h.BuildState.IsRebuild() {
++		if !s.conf.DisableAliases && !s.h.BuildState.IsRebuild() && p.render {
+ 			of := p.outputFormat()
+ 			if of.IsHTML && of.Permalinkable {
+ 				// Render any aliases for this page.

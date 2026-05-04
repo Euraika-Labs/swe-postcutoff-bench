@@ -1,0 +1,38 @@
+{
+  "instance_id": "gohugoio__hugo-14798",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "langs/TestMultipleLanguageVariants7982": true
+  },
+  "agent_seconds": 15.206191301345825,
+  "candidate_label": "agent.diff"
+}
+)
+}
+
+error: patch failed: langs/languages_integration_test.go:296
+Applied patch langs/i18n/translationProvider.go cleanly.
+Applying patch langs/languages_integration_test.go with 1 reject...
+Rejected hunk #1.
+
+[3way] error: langs/i18n/translationProvider.go: does not match index
+error: langs/languages_integration_test.go: does not match index
+
+
+[agent.diff apply failed; running tests anyway]
+
+[install rc=0]
+
+[langs/TestMultipleLanguageVariants7982] rc=0
+=== RUN   TestMultipleLanguageVariants7982
+=== PAUSE TestMultipleLanguageVariants7982
+=== CONT  TestMultipleLanguageVariants7982
+--- PASS: TestMultipleLanguageVariants7982 (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/langs	0.106s
+
+---

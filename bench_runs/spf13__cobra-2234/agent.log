@@ -1,0 +1,4 @@
+Fix complete. Changed `CompletionFunc` from a defined named type to a **type alias** in `completions.go:132` — a single-character change (added `=`).
+
+**Why it works:** Previously `CompletionFunc` was a distinct named type, so user-defined named types like Docker's `type CompletionFn func(cmd *Command, args []string, toComplete string) ([]string, ShellCompDirective)` couldn't be assigned to `CompletionFunc` without an explicit conversion (Go disallows implicit conversion between two distinct named types). Making it an alias means `CompletionFunc` *is* the underlying function type itself, so any function value with that signature — named or unnamed, returning `[]string` or `[]Completion` (which is itself a `string` alias) — assigns directly. All 8 sub-tests in `TestCompletionFuncCompatibility` pass and the full suite (420 tests) is still green.
+[done rc=0 elapsed=142s]

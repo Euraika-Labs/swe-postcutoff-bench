@@ -1,0 +1,22 @@
+The fix is already applied to `src/_pytest/config/__init__.py` and both parametrized test cases (`--version` and `-V`) pass.
+
+Looking at the state:
+- `git diff HEAD` shows the test changes (already added by the harness) and the source fix (already staged)
+- `src/_pytest/config/__init__.py:185-192` now early-exits on a single `--version` *or* `-V` by counting both flags
+- `pytest testing/test_helpconfig.py::test_version_less_verbose -v` → both parameterizations pass
+
+The fix in `src/_pytest/config/__init__.py`:
+
+```python
+# Handle a single `--version`/`-V` argument early to avoid starting up the entire pytest infrastructure.
+new_args = sys.argv[1:] if args is None else args
+if (
+    isinstance(new_args, Sequence)
+    and (new_args.count("--version") + new_args.count("-V")) == 1
+):
+    sys.stdout.write(f"pytest {__version__}\n")
+    return ExitCode.OK
+```
+
+This extends the early short-circuit (introduced for `--version` in #13575) to also recognize `-V`, restoring the version-printing behavior that regressed for the short flag. The condition uses summed counts so `-V -V`, `--version --version`, or mixing both still falls through to the normal config path rather than printing twice.
+[done rc=0 elapsed=70s]

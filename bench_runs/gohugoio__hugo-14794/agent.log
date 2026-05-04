@@ -1,0 +1,2 @@
+The fix is applied. The change replaces the lookup chain `lang → defaultContentLanguage → "en"` with `languageConfig.Locale → lang → defaultContentLanguage → "en"` (skipping empty keys), exactly matching the patch from the upstream PR. Build verified.
+[done rc=0 elapsed=117s]

@@ -1,0 +1,4 @@
+Only the source-file change remains.
+
+**Fix summary:** In `command.go`, the auto-generated `help` subcommand's `Run` function looks up the target command via `c.Root().Find(args)` but never propagated the context to it. Added context inheritance from the help command (`c.ctx`) to the resolved target command (`cmd.ctx`) before calling `cmd.Help()`, matching the same pattern already used during normal command execution at line 1144.
+[done rc=0 elapsed=123s]

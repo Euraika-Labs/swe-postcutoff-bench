@@ -1,0 +1,43 @@
+{
+  "instance_id": "gohugoio__hugo-14785",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "tpl/collections/TestWhereWithPageEqualityIssue14777": true
+  },
+  "agent_seconds": 15.750843286514282,
+  "candidate_label": "agent.diff"
+}
+\n\n1: /b2.html\n\n2: /a1.html\n\n3: /a2.html\n$")
+}
+
+// Issue 13621.
+func TestWhereNotInEmptySlice(t *testing.T) {
+	t.Parallel()
+
+error: patch failed: tpl/collections/collections_integration_test.go:289
+Checking patch tpl/collections/where.go...
+Applying patch tpl/collections/collections_integration_test.go with 1 reject...
+Rejected hunk #1.
+Applied patch tpl/collections/where.go cleanly.
+
+[3way] error: tpl/collections/collections_integration_test.go: does not match index
+error: tpl/collections/where.go: does not match index
+
+
+[agent.diff apply failed; running tests anyway]
+
+[install rc=0]
+
+[tpl/collections/TestWhereWithPageEqualityIssue14777] rc=0
+=== RUN   TestWhereWithPageEqualityIssue14777
+=== PAUSE TestWhereWithPageEqualityIssue14777
+=== CONT  TestWhereWithPageEqualityIssue14777
+--- PASS: TestWhereWithPageEqualityIssue14777 (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/tpl/collections	0.351s
+
+---

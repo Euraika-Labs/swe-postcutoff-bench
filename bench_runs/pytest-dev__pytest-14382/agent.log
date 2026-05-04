@@ -1,0 +1,2 @@
+Fix complete. The change in `src/_pytest/config/__init__.py` extends the early `--version` short-circuit to also recognize the `-V` short form by counting both flags. With the fix in place, `test_version_less_verbose` passes for both `--version` and `-V`, and all 13 tests in `test_helpconfig.py` pass.
+[done rc=0 elapsed=165s]

@@ -1,0 +1,72 @@
+{
+  "instance_id": "pytest-dev__pytest-14407",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "testing/test_helpconfig.py::test_version_less_verbose": false
+  },
+  "agent_seconds": 10.84297776222229,
+  "candidate_label": "agent.diff"
+}
+ild_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting iniconfig>=1.0.1 (from pytest==9.0.4.dev1+g4afcd4906.d20260504)
+  Using cached iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Requirement already satisfied: packaging>=22 in ./.pcb_venv/lib/python3.14/site-packages (from pytest==9.0.4.dev1+g4afcd4906.d20260504) (26.2)
+Collecting pluggy<2,>=1.5 (from pytest==9.0.4.dev1+g4afcd4906.d20260504)
+  Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest==9.0.4.dev1+g4afcd4906.d20260504)
+  Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+Building wheels for collected packages: pytest
+  Building editable for pytest (pyproject.toml): started
+  Building editable for pytest (pyproject.toml): finished with status 'done'
+  Created wheel for pytest: filename=pytest-9.0.4.dev1+g4afcd4906.d20260504-0.editable-py3-none-any.whl size=5323 sha256=96124e740aabf93019331c10334677da0337093cebd3938eba586a0a866d0d97
+  Stored in directory: /tmp/pip-ephem-wheel-cache-n78fw15f/wheels/9c/74/40/4d82542166b13379f777c4d54afc7e62f144fbe8718e6c39ad
+Successfully built pytest
+Installing collected packages: pygments, pluggy, iniconfig, pytest
+
+Successfully installed iniconfig-2.3.0 pluggy-1.6.0 pygments-2.20.0 pytest-9.0.4.dev1+g4afcd4906.d20260504
+WARNING: pytest 9.0.4.dev1+g4afcd4906.d20260504 does not provide the extra 'test'
+
+[test rc=1]
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.0.4.dev1+g4afcd4906.d20260504, pluggy-1.6.0 -- /tmp/pcb_grade_workdirs/pytest-dev__pytest-14407/.pcb_venv/bin/python3.14
+rootdir: /tmp/pcb_grade_workdirs/pytest-dev__pytest-14407
+configfile: pyproject.toml
+collecting ... collected 2 items
+
+testing/test_helpconfig.py::test_version_less_verbose[--version] PASSED  [ 50%]
+testing/test_helpconfig.py::test_version_less_verbose[-V] FAILED         [100%]
+
+=================================== FAILURES ===================================
+________________________ test_version_less_verbose[-V] _________________________
+/tmp/pcb_grade_workdirs/pytest-dev__pytest-14407/testing/test_helpconfig.py:24: in test_version_less_verbose
+    assert result.ret == ExitCode.OK
+E   assert <ExitCode.NO_TESTS_COLLECTED: 5> == <ExitCode.OK: 0>
+E    +  where <ExitCode.NO_TESTS_COLLECTED: 5> = <RunResult ret=5 len(stdout.lines)=8 len(stderr.lines)=0 duration=0.20s>.ret
+E    +  and   <ExitCode.OK: 0> = ExitCode.OK
+----------------------------- Captured stdout call -----------------------------
+running: /tmp/pcb_grade_workdirs/pytest-dev__pytest-14407/.pcb_venv/bin/python3.14 -mpytest --basetemp=/tmp/pytest-of-bert/pytest-24/test_version_less_verbose1/runpytest-0 -V
+     in: /tmp/pytest-of-bert/pytest-24/test_version_less_verbose1
+This should not be printed
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.0.4.dev1+g4afcd4906.d20260504, pluggy-1.6.0
+rootdir: /tmp
+configfile: pyproject.toml
+collected 0 items
+
+============================ no tests ran in 0.02s =============================
+=========================== short test summary info ============================
+FAILED testing/test_helpconfig.py::test_version_less_verbose[-V] - assert <Ex...
+========================= 1 failed, 1 passed in 0.35s ==========================
+

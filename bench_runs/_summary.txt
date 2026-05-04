@@ -1,0 +1,34 @@
+scripts/run_opus.sh: line 38: bench_runs/gohugoio__hugo-14785/test_patch.err: No such file or directory
+scripts/run_opus.sh: line 38: bench_runs/gohugoio__hugo-14793/test_patch.err: No such file or directory
+scripts/run_opus.sh: line 38: bench_runs/gohugoio__hugo-14784/test_patch.err: No such file or directory
+gohugoio__hugo-14784  agent=119s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/gohugoio__hugo-14794/test_patch.err: No such file or directory
+gohugoio__hugo-14793  agent=182s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/gohugoio__hugo-14798/test_patch.err: No such file or directory
+gohugoio__hugo-14785  agent=214s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/gohugoio__hugo-14802/test_patch.err: No such file or directory
+gohugoio__hugo-14794  agent=117s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/gohugoio__hugo-14808/test_patch.err: No such file or directory
+gohugoio__hugo-14798  agent=147s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/gohugoio__hugo-14826/test_patch.err: No such file or directory
+gohugoio__hugo-14808  agent=199s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/gohugoio__hugo-14829/test_patch.err: No such file or directory
+gohugoio__hugo-14802  agent=259s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/gohugoio__hugo-14840/test_patch.err: No such file or directory
+gohugoio__hugo-14826  agent=172s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/pytest-dev__pytest-14382/test_patch.err: No such file or directory
+gohugoio__hugo-14840  agent=103s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/pytest-dev__pytest-14407/test_patch.err: No such file or directory
+gohugoio__hugo-14829  agent=195s  passed=True  F2P=1/1
+pytest-dev__pytest-14382  agent=165s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/pytest-dev__pytest-14418/test_patch.err: No such file or directory
+scripts/run_opus.sh: line 38: bench_runs/pytest-dev__pytest-14422/test_patch.err: No such file or directory
+pytest-dev__pytest-14407  agent=224s  passed=False  F2P=0/1
+scripts/run_opus.sh: line 38: bench_runs/spf13__cobra-2234/test_patch.err: No such file or directory
+pytest-dev__pytest-14422  agent=183s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/spf13__cobra-2238/test_patch.err: No such file or directory
+spf13__cobra-2234  agent=142s  passed=True  F2P=1/1
+scripts/run_opus.sh: line 38: bench_runs/spf13__cobra-2397/test_patch.err: No such file or directory
+pytest-dev__pytest-14418  agent=367s  passed=True  F2P=1/1
+spf13__cobra-2397  agent=85s  passed=False  F2P=0/4
+spf13__cobra-2238  agent=873s  passed=False  F2P=0/1

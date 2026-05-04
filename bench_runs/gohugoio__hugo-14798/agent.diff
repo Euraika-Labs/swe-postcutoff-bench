@@ -1,0 +1,90 @@
+diff --git a/langs/i18n/translationProvider.go b/langs/i18n/translationProvider.go
+index 85d7719c3..11aeaa781 100644
+--- a/langs/i18n/translationProvider.go
++++ b/langs/i18n/translationProvider.go
+@@ -17,6 +17,7 @@ import (
+ 	"context"
+ 	"encoding/json"
+ 	"fmt"
++	"sort"
+ 	"strings"
+ 
+ 	"github.com/gohugoio/hugo/common/paths"
+@@ -59,6 +60,7 @@ func (tp *TranslationProvider) NewResource(dst *deps.Deps) error {
+ 	bundle.RegisterUnmarshalFunc("yml", metadecoders.UnmarshalYaml)
+ 	bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
+ 
++	var files []hugofs.FileMetaInfo
+ 	w := hugofs.NewWalkway(
+ 		hugofs.WalkwayConfig{
+ 			Fs:         dst.BaseFs.I18n.Fs,
+@@ -68,7 +70,8 @@ func (tp *TranslationProvider) NewResource(dst *deps.Deps) error {
+ 				if info.IsDir() {
+ 					return nil
+ 				}
+-				return addTranslationFile(bundle, source.NewFileInfo(info))
++				files = append(files, info)
++				return nil
+ 			},
+ 		})
+ 
+@@ -76,6 +79,21 @@ func (tp *TranslationProvider) NewResource(dst *deps.Deps) error {
+ 		return err
+ 	}
+ 
++	// Sort translation files so that base tags (e.g. "de") are always registered
++	// before their subtag variants (e.g. "de-DE"); without this ordering the
++	// fallback chain breaks. See https://github.com/gohugoio/hugo/issues/7982.
++	sort.Slice(files, func(i, j int) bool {
++		si := files[i].Meta().PathInfo.NameNoExt()
++		sj := files[j].Meta().PathInfo.NameNoExt()
++		return strings.Count(si, "-") < strings.Count(sj, "-")
++	})
++
++	for _, info := range files {
++		if err := addTranslationFile(bundle, source.NewFileInfo(info)); err != nil {
++			return err
++		}
++	}
++
+ 	tp.t = NewTranslator(bundle, dst.Conf, dst.Log)
+ 
+ 	dst.Translate = tp.getTranslateFunc(dst)
+diff --git a/langs/languages_integration_test.go b/langs/languages_integration_test.go
+index 5e58cdc8c..fbf04d874 100644
+--- a/langs/languages_integration_test.go
++++ b/langs/languages_integration_test.go
+@@ -296,3 +296,33 @@ FormatCurrency: {{ 512.5032 | lang.FormatCurrency 2 "USD" }}|
+ 		`FormatCurrency: US$512.50|`,
+ 	)
+ }
++
++func TestMultipleLanguageVariants7982(t *testing.T) {
++	t.Parallel()
++
++	files := `
++-- hugo.toml --
++disableKinds = ['page','section','rss','sitemap','taxonomy','term']
++defaultContentLanguageInSubdir = true
++[languages.en]
++weight = 1
++[languages.de]
++weight = 2
++[languages.de-de]
++weight = 3
++-- i18n/en.toml --
++file = 'en'
++-- i18n/de.toml --
++file = 'de'
++-- i18n/de-de.toml --
++file = 'de-de'
++-- layouts/index.html --
++language: {{ site.Language.Name }} file: {{ T "file" }}|
++`
++
++	b := hugolib.Test(t, files)
++
++	b.AssertFileContent("public/en/index.html", "language: en file: en|")
++	b.AssertFileContent("public/de/index.html", "language: de file: de|")
++	b.AssertFileContent("public/de-de/index.html", "language: de-de file: de-de|")
++}

@@ -1,0 +1,7 @@
+All 61 tests in the `langs` packages pass, including the new `TestDefaultContentLanguageFallback14243`.
+
+Summary of the fix in `langs/i18n/translationProvider.go`:
+- Added `config` import.
+- Added a helper `defaultLanguage(conf)` that finds the default `*langs.Language` (with its locale) instead of just having the key string.
+- Replaced `getTranslateFunc` with a 4-step lookup: current locale → current key → default locale → default key, falling back to `tp.t.Func("en")` last.
+[done rc=0 elapsed=259s]

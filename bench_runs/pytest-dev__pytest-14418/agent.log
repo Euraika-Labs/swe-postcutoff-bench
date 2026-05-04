@@ -1,0 +1,7 @@
+Source-only changes remain. Summary:
+
+- `src/_pytest/assertion/__init__.py:205-217`: `pytest_assertrepr_compare` now checks if the `terminalreporter` plugin is registered before calling `config.get_terminal_writer()`; falls back to `util.dummy_highlighter` when the plugin is disabled. Verbose level and highlighter are computed here and passed down.
+- `src/_pytest/assertion/util.py:176-182`: `assertrepr_compare` signature changed to take `verbose` and `highlighter` keyword args directly instead of `config`, and the inner `config.get_terminal_writer()._highlight` call is removed.
+
+Both source patches applied; the FAIL_TO_PASS test passes locally and surrounding tests still pass.
+[done rc=0 elapsed=367s]

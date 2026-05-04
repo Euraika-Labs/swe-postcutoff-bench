@@ -1,0 +1,7 @@
+All 423 tests pass. The fix is complete.
+
+Summary of changes to `completions.go`:
+1. Added `DefaultShellCompDirective *ShellCompDirective` field to `CompletionOptions` struct
+2. Added `SetDefaultShellCompDirective` method to set the custom directive
+3. In `getCompletions`, when falling back to `ShellCompDirectiveDefault`, walk up the command tree (current → parent → ...) to find the nearest custom `DefaultShellCompDirective` and use that instead, providing the recursive inheritance behavior described in the issue.
+[done rc=0 elapsed=170s]

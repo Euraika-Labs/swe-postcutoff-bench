@@ -1,15 +1,8 @@
-# tooling caches
 __pycache__/
 *.pyc
 .venv/
+.pcb_venv/
 node_modules/
-target/
-
-# editor
-.idea/
-.vscode/
-*.swp
-
-# scratch
-scratch/
-*.tmp
+bench_runs/*/workdir/
+/tmp/pcb_workdirs/
+/tmp/pcb_grade_workdirs/

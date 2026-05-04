@@ -1,0 +1,13 @@
+diff --git a/completions.go b/completions.go
+index cedb4d7..a1752f7 100644
+--- a/completions.go
++++ b/completions.go
+@@ -129,7 +129,7 @@ type CompletionOptions struct {
+ type Completion = string
+ 
+ // CompletionFunc is a function that provides completion results.
+-type CompletionFunc func(cmd *Command, args []string, toComplete string) ([]Completion, ShellCompDirective)
++type CompletionFunc = func(cmd *Command, args []string, toComplete string) ([]Completion, ShellCompDirective)
+ 
+ // CompletionWithDesc returns a [Completion] with a description by using the TAB delimited format.
+ func CompletionWithDesc(choice string, description string) Completion {

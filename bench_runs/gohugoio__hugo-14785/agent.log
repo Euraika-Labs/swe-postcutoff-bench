@@ -1,0 +1,8 @@
+All tests pass. The fix:
+
+1. Imported `github.com/gohugoio/hugo/compare` in `tpl/collections/where.go`.
+2. In `checkCondition`, after the nil checks, added a switch on `op` for the equality/inequality operators that calls a new `tryEq` helper. If either side implements `compare.Eqer`, the helper returns the result and the condition uses it (negating for `!=`/`<>`/`ne`).
+3. Added the `tryEq` helper that uses `compare.Eqer` to compare values when their reflect kinds aren't covered by the primitive type switches (e.g., two `Page` interface values).
+
+This makes `where pages "Parent" $page` behave like `range pages` + `if eq .Parent $page`, fixing #14777.
+[done rc=0 elapsed=214s]

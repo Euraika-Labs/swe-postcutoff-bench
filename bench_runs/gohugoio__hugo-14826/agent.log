@@ -1,0 +1,2 @@
+Done. The fix is a one-line change in `config/security/securityConfig.go:62`: tightening the deny rule from `! @` (which rejected any `@` anywhere) to `! (?i)^https?://[^/?#]*@` (which only matches `@` inside the authority section, before any `/`, `?`, or `#`). The `TestCheckAllowedHTTPURLAtInPathIssue14825` test passes — it confirms version-pinned URLs like `mermaid@latest` and `react@18` are allowed while userinfo URLs like `http://user@127.0.0.1/` remain blocked.
+[done rc=0 elapsed=172s]

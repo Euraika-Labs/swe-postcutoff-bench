@@ -1,0 +1,118 @@
+diff --git a/config/security/securityConfig_test.go b/config/security/securityConfig_test.go
+index 4b5a12417e2..8b4223e5d09 100644
+--- a/config/security/securityConfig_test.go
++++ b/config/security/securityConfig_test.go
+@@ -135,7 +135,7 @@ func TestToTOML(t *testing.T) {
+ 	got := DefaultConfig.ToTOML()
+ 
+ 	c.Assert(got, qt.Equals,
+-		"[security]\n  enableInlineShortcodes = false\n\n  [security.exec]\n    allow = ['^(dart-)?sass(-embedded)?$', '^go$', '^git$', '^node$', '^postcss$', '^tailwindcss$']\n    osEnv = ['(?i)^((HTTPS?|NO)_PROXY|PATH(EXT)?|APPDATA|TE?MP|TERM|GO\\w+|(XDG_CONFIG_)?HOME|USERPROFILE|SSH_AUTH_SOCK|DISPLAY|LANG|SYSTEMDRIVE|PROGRAMDATA)$']\n\n  [security.funcs]\n    getenv = ['^HUGO_', '^CI$']\n\n  [security.http]\n    methods = ['(?i)GET|POST']\n    urls = ['(?i)^https?://[a-z]', '! (?i)localhost', '! @']\n\n  [security.node]\n    [security.node.permissions]\n      allowAddons = ['tailwindcss']\n      allowRead = ['.']\n      allowWorker = ['tailwindcss']\n      allowWrite = []\n      disable = false",
++		"[security]\n  enableInlineShortcodes = false\n\n  [security.exec]\n    allow = ['^(dart-)?sass(-embedded)?$', '^go$', '^git$', '^node$', '^postcss$', '^tailwindcss$']\n    osEnv = ['(?i)^((HTTPS?|NO)_PROXY|PATH(EXT)?|APPDATA|TE?MP|TERM|GO\\w+|(XDG_CONFIG_)?HOME|USERPROFILE|SSH_AUTH_SOCK|DISPLAY|LANG|SYSTEMDRIVE|PROGRAMDATA)$']\n\n  [security.funcs]\n    getenv = ['^HUGO_', '^CI$']\n\n  [security.http]\n    methods = ['(?i)GET|POST']\n    urls = ['(?i)^https?://[a-z]', '! (?i)localhost', '! (?i)^https?://[^/?#]*@']\n\n  [security.node]\n    [security.node.permissions]\n      allowAddons = ['tailwindcss']\n      allowRead = ['.']\n      allowWorker = ['tailwindcss']\n      allowWrite = []\n      disable = false",
+ 	)
+ }
+ 
+@@ -247,6 +247,32 @@ urls = ['.*', '! ^https?://evil\.example\.com']
+ 	})
+ }
+ 
++func TestCheckAllowedHTTPURLAtInPathIssue14825(t *testing.T) {
++	t.Parallel()
++	c := qt.New(t)
++
++	pc, err := DecodeConfig(config.New())
++	c.Assert(err, qt.IsNil)
++
++	for _, u := range []string{
++		"https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.esm.min.mjs",
++		"https://unpkg.com/react@18/umd/react.production.min.js",
++		"https://example.org/foo@bar/baz",
++	} {
++		c.Assert(pc.CheckAllowedHTTPURL(u), qt.IsNil, qt.Commentf(u))
++	}
++
++	for _, u := range []string{
++		"http://user@127.0.0.1/",
++		"http://user:pass@example.org/",
++		"https://token@example.org/foo@bar",
++	} {
++		err := pc.CheckAllowedHTTPURL(u)
++		c.Assert(err, qt.IsNotNil, qt.Commentf(u))
++		c.Assert(err, qt.ErrorMatches, `(?s).*is not whitelisted in policy "security\.http\.urls".*`, qt.Commentf(u))
++	}
++}
++
+ func TestDecodeConfigNodePermissions(t *testing.T) {
+ 	c := qt.New(t)
+ 
+
+From 388952a2a2e5aa3257676856a6d5f91626d603ad Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Erik=20Pedersen?=
+ <bjorn.erik.pedersen@gmail.com>
+Date: Wed, 29 Apr 2026 11:35:24 +0200
+Subject: [PATCH 2/2] config/security: Add AllowChildProcess to
+ security.node.permissions
+
+Some Linux setups trigger detect-libc's spawnSync('getconf') fallback
+when process.report does not expose glibcVersionRuntime, breaking
+tailwindcss under the Node permission model. Add AllowChildProcess
+mirroring AllowAddons/AllowWorker, default to ["tailwindcss"], and
+emit --allow-child-process accordingly.
+
+Fixes #14824
+---
+ common/hexec/exec.go                   |  5 +++++
+ common/hexec/exec_test.go              |  4 ++++
+ config/security/securityConfig.go      | 23 +++++++++++++----------
+ config/security/securityConfig_test.go |  2 +-
+ 4 files changed, 23 insertions(+), 11 deletions(-)
+
+diff --git a/common/hexec/exec_test.go b/common/hexec/exec_test.go
+index 89af3f30cb6..0e50cb3ecb2 100644
+--- a/common/hexec/exec_test.go
++++ b/common/hexec/exec_test.go
+@@ -43,6 +43,7 @@ func TestNodePermissionArgs(t *testing.T) {
+ 			"--allow-fs-read=" + site,
+ 			"--allow-addons",
+ 			"--allow-worker",
++			"--allow-child-process",
+ 			"--disable-warning=SecurityWarning",
+ 		})
+ 	})
+@@ -75,6 +76,7 @@ func TestNodePermissionArgs(t *testing.T) {
+ 			"--allow-fs-write=" + site,
+ 			"--allow-addons",
+ 			"--allow-worker",
++			"--allow-child-process",
+ 			"--disable-warning=SecurityWarning",
+ 		})
+ 	})
+@@ -94,6 +96,7 @@ func TestNodePermissionArgs(t *testing.T) {
+ 			"--allow-fs-write=*",
+ 			"--allow-addons",
+ 			"--allow-worker",
++			"--allow-child-process",
+ 			"--disable-warning=SecurityWarning",
+ 		})
+ 	})
+@@ -114,6 +117,7 @@ func TestNodePermissionArgs(t *testing.T) {
+ 		cfg.Node.Permissions.AllowRead = nil
+ 		cfg.Node.Permissions.AllowAddons = nil
+ 		cfg.Node.Permissions.AllowWorker = nil
++		cfg.Node.Permissions.AllowChildProcess = nil
+ 		e := &Exec{
+ 			sc:         cfg,
+ 			workingDir: site,
+diff --git a/config/security/securityConfig_test.go b/config/security/securityConfig_test.go
+index 8b4223e5d09..4e120a28545 100644
+--- a/config/security/securityConfig_test.go
++++ b/config/security/securityConfig_test.go
+@@ -135,7 +135,7 @@ func TestToTOML(t *testing.T) {
+ 	got := DefaultConfig.ToTOML()
+ 
+ 	c.Assert(got, qt.Equals,
+-		"[security]\n  enableInlineShortcodes = false\n\n  [security.exec]\n    allow = ['^(dart-)?sass(-embedded)?$', '^go$', '^git$', '^node$', '^postcss$', '^tailwindcss$']\n    osEnv = ['(?i)^((HTTPS?|NO)_PROXY|PATH(EXT)?|APPDATA|TE?MP|TERM|GO\\w+|(XDG_CONFIG_)?HOME|USERPROFILE|SSH_AUTH_SOCK|DISPLAY|LANG|SYSTEMDRIVE|PROGRAMDATA)$']\n\n  [security.funcs]\n    getenv = ['^HUGO_', '^CI$']\n\n  [security.http]\n    methods = ['(?i)GET|POST']\n    urls = ['(?i)^https?://[a-z]', '! (?i)localhost', '! (?i)^https?://[^/?#]*@']\n\n  [security.node]\n    [security.node.permissions]\n      allowAddons = ['tailwindcss']\n      allowRead = ['.']\n      allowWorker = ['tailwindcss']\n      allowWrite = []\n      disable = false",
++		"[security]\n  enableInlineShortcodes = false\n\n  [security.exec]\n    allow = ['^(dart-)?sass(-embedded)?$', '^go$', '^git$', '^node$', '^postcss$', '^tailwindcss$']\n    osEnv = ['(?i)^((HTTPS?|NO)_PROXY|PATH(EXT)?|APPDATA|TE?MP|TERM|GO\\w+|(XDG_CONFIG_)?HOME|USERPROFILE|SSH_AUTH_SOCK|DISPLAY|LANG|SYSTEMDRIVE|PROGRAMDATA)$']\n\n  [security.funcs]\n    getenv = ['^HUGO_', '^CI$']\n\n  [security.http]\n    methods = ['(?i)GET|POST']\n    urls = ['(?i)^https?://[a-z]', '! (?i)localhost', '! (?i)^https?://[^/?#]*@']\n\n  [security.node]\n    [security.node.permissions]\n      allowAddons = ['tailwindcss']\n      allowChildProcess = ['tailwindcss']\n      allowRead = ['.']\n      allowWorker = ['tailwindcss']\n      allowWrite = []\n      disable = false",
+ 	)
+ }
+ 
+

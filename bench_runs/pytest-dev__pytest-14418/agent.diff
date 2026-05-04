@@ -1,0 +1,51 @@
+diff --git a/src/_pytest/assertion/__init__.py b/src/_pytest/assertion/__init__.py
+index 22f3ca8e2..4b946bc70 100644
+--- a/src/_pytest/assertion/__init__.py
++++ b/src/_pytest/assertion/__init__.py
+@@ -205,4 +205,15 @@ def pytest_sessionfinish(session: Session) -> None:
+ def pytest_assertrepr_compare(
+     config: Config, op: str, left: Any, right: Any
+ ) -> list[str] | None:
+-    return util.assertrepr_compare(config=config, op=op, left=left, right=right)
++    if config.pluginmanager.has_plugin("terminalreporter"):
++        highlighter = config.get_terminal_writer()._highlight
++    else:
++        # Keep it plaintext when not using terminalrepoterer (#14377).
++        highlighter = util.dummy_highlighter
++    return util.assertrepr_compare(
++        op=op,
++        left=left,
++        right=right,
++        verbose=config.get_verbosity(Config.VERBOSITY_ASSERTIONS),
++        highlighter=highlighter,
++    )
+diff --git a/src/_pytest/assertion/util.py b/src/_pytest/assertion/util.py
+index 5d5e6d477..07918a662 100644
+--- a/src/_pytest/assertion/util.py
++++ b/src/_pytest/assertion/util.py
+@@ -174,11 +174,14 @@ def has_default_eq(obj: object) -> bool:
+ 
+ 
+ def assertrepr_compare(
+-    config: Config, op: str, left: object, right: object
++    op: str,
++    left: object,
++    right: object,
++    *,
++    verbose: int,
++    highlighter: _HighlightFunc,
+ ) -> list[str] | None:
+     """Return specialised explanations for some operators/operands."""
+-    verbose = config.get_verbosity(Config.VERBOSITY_ASSERTIONS)
+-
+     # Strings which normalize equal are often hard to distinguish when printed; use ascii() to make this easier.
+     # See issue #3246.
+     use_ascii = (
+@@ -201,7 +204,6 @@ def assertrepr_compare(
+         right_repr = saferepr(right, maxsize=maxsize, use_ascii=use_ascii)
+ 
+     summary = f"{left_repr} {op} {right_repr}"
+-    highlighter = config.get_terminal_writer()._highlight
+ 
+     explanation = None
+     try:

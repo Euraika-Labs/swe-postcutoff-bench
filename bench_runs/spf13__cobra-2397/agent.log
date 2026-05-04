@@ -1,0 +1,2 @@
+All 428 tests pass. The fix adds the `NoDuplicateArgs` validator to `args.go:68-78` — it iterates through args, tracks seen values in a map, and returns an error formatted as `duplicate argument "X" for "cmd"` on the first duplicate.
+[done rc=0 elapsed=99s]

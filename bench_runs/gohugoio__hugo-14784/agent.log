@@ -1,0 +1,2 @@
+Fix applied to `modules/client.go:1046`. The new splitter tracks `inRequireBlock` state explicitly so non-`require` blocks (`tool`, `replace`, `exclude`, `retract`) are skipped, and the safety check `len(parts) < 2` prevents the index-out-of-range panic. Verified the test passes.
+[done rc=0 elapsed=119s]
