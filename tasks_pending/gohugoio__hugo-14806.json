@@ -1,0 +1,27 @@
+{
+  "instance_id": "gohugoio__hugo-14806",
+  "repo": "gohugoio/hugo",
+  "language": "go",
+  "base_commit": "4c40c6d5ca94537a63f7449f269b9ebef84e9346",
+  "merge_commit": "90d8bf34aea897a8a329480bde54ff1c61c0c9b3",
+  "patch": "From e00cc98ec48e1e49c9a123fff3a043b0ab282ec4 Mon Sep 17 00:00:00 2001\nFrom: =?UTF-8?q?Bj=C3=B8rn=20Erik=20Pedersen?=\n <bjorn.erik.pedersen@gmail.com>\nDate: Fri, 24 Apr 2026 18:09:31 +0200\nSubject: [PATCH] Replace deprecated .Site.Sites/.Page.Sites with hugo.Sites\n intests\n\n---\n hugolib/page__fragments_test.go         | 2 +-\n hugolib/pagebundler_test.go             | 4 ++--\n hugolib/template_test.go                | 4 ++--\n resources/page/site_integration_test.go | 2 +-\n 4 files changed, 6 insertions(+), 6 deletions(-)\n\n",
+  "test_patch": "diff --git a/hugolib/page__fragments_test.go b/hugolib/page__fragments_test.go\nindex 4a6fe356d3c..076b720c5f4 100644\n--- a/hugolib/page__fragments_test.go\n+++ b/hugolib/page__fragments_test.go\n@@ -46,7 +46,7 @@ outputs: [\"HTML\", \"JSON\"]\n -- layouts/single.html --\n HTML\n -- layouts/single.json --\n-{{ $secondSite := index .Sites 1 }}\n+{{ $secondSite := index hugo.Sites 1 }}\n {{ $p1 := $secondSite.GetPage \"p1\" }}\n ToC: {{ $p1.TableOfContents }}\n Fragments : {{ $p1.Fragments.Identifiers }}\ndiff --git a/hugolib/pagebundler_test.go b/hugolib/pagebundler_test.go\nindex ee9808f4b0a..10207205e3a 100644\n--- a/hugolib/pagebundler_test.go\n+++ b/hugolib/pagebundler_test.go\n@@ -232,7 +232,7 @@ P1nn\n -- layouts/home.html --\n Len RegularPages: {{ len .Site.RegularPages }}|RegularPages: {{ range site.RegularPages }}{{ .RelPermalink }}: {{ .Title }}|{{ end }}|\n Len Pages: {{ len .Site.Pages }}|\n-Len Sites: {{ len .Site.Sites }}|\n+Len Sites: {{ len hugo.Sites }}|\n -- layouts/single.html --\n {{ .Title }}|{{ .Content }}|{{ .Lang }}|\n \n@@ -292,7 +292,7 @@ P1nn\n -- layouts/home.html --\n Len RegularPages: {{ len .Site.RegularPages }}|RegularPages: {{ range site.RegularPages }}{{ .RelPermalink }}: {{ .Title }}|{{ end }}|\n Len Pages: {{ len .Site.Pages }}|\n-Len Sites: {{ len .Site.Sites }}|\n+Len Sites: {{ len hugo.Sites }}|\n -- layouts/single.html --\n {{ .Title }}|{{ .Content }}|{{ .Lang }}|\n \ndiff --git a/hugolib/template_test.go b/hugolib/template_test.go\nindex 257964d5adf..bb2f9da110c 100644\n--- a/hugolib/template_test.go\n+++ b/hugolib/template_test.go\n@@ -224,11 +224,11 @@ weight = 20\n \n -- layouts/home.html --\n Site: {{ site.Language.Lang }} / {{ .Site.Language.Lang }} / {{ site.BaseURL }}\n-Sites: {{ site.Sites.Default.Home.Language.Lang }}\n+Sites: {{ hugo.Sites.Default.Home.Language.Lang }}\n Hugo: {{ hugo.Generator }}\n -- layouts/home.fr.html --\n Site: {{ site.Language.Lang }} / {{ .Site.Language.Lang }} / {{ site.BaseURL }}\n-Sites: {{ site.Sites.Default.Home.Language.Lang }}\n+Sites: {{ hugo.Sites.Default.Home.Language.Lang }}\n Hugo: {{ hugo.Generator }}\n `\n \tb := Test(t, files)\ndiff --git a/resources/page/site_integration_test.go b/resources/page/site_integration_test.go\nindex 956f87ffb2a..2528f637968 100644\n--- a/resources/page/site_integration_test.go\n+++ b/resources/page/site_integration_test.go\n@@ -35,7 +35,7 @@ weight = 1\n languageName = 'Deutsch'\n weight = 2\n -- layouts/home.html --\n-{{ .Site.Sites.Default.Language.LanguageName }}\n+{{ hugo.Sites.Default.Language.LanguageName }}\n `\n \n \tb := hugolib.Test(t, files)\n",
+  "problem_statement": "Replace deprecated .Site.Sites/.Page.Sites with hugo.Sites intests",
+  "title": "Replace deprecated .Site.Sites/.Page.Sites with hugo.Sites intests",
+  "FAIL_TO_PASS": [],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-24T16:14:42Z",
+  "merged_at": "2026-04-24T17:02:47Z",
+  "pr_url": "https://github.com/gohugoio/hugo/pull/14806",
+  "labels": [],
+  "runner": {
+    "kind": "go",
+    "go_version": "1.23",
+    "install": "go mod download",
+    "test_cmd": "go test ./...",
+    "test_id_separator": "/"
+  },
+  "verified": false,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (0 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

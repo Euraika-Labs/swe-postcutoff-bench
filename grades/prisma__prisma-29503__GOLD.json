@@ -1,0 +1,21 @@
+{
+  "instance_id": "prisma__prisma-29503",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 9,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/client/src/__tests__/validatePrismaClientOptions.test.ts > queryPlanCacheMaxSize option": false,
+    "packages/client/src/__tests__/validatePrismaClientOptions.test.ts > accepts a positive integer": false,
+    "packages/client/src/__tests__/validatePrismaClientOptions.test.ts > accepts 1 as the minimum valid value": false,
+    "packages/client/src/__tests__/validatePrismaClientOptions.test.ts > accepts undefined": false,
+    "packages/client/src/__tests__/validatePrismaClientOptions.test.ts > rejects zero": false,
+    "packages/client/src/__tests__/validatePrismaClientOptions.test.ts > rejects negative numbers": false,
+    "packages/client/src/__tests__/validatePrismaClientOptions.test.ts > rejects non-integer floats": false,
+    "packages/client/src/__tests__/validatePrismaClientOptions.test.ts > rejects string values": false,
+    "packages/client/src/__tests__/validatePrismaClientOptions.test.ts > accepts 0 as the minimum valid value": false
+  },
+  "agent_seconds": 76.85193395614624,
+  "candidate_label": "GOLD"
+}

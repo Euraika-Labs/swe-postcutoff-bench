@@ -1,0 +1,27 @@
+[clone spf13/cobra@5f9c4089 ok]
+
+Checking patch completions_test.go...
+Hunk #1 succeeded at 2885 (offset 47 lines).
+Applied patch completions_test.go cleanly.
+
+
+Checking patch completions.go...
+Applied patch completions.go cleanly.
+
+
+[install rc=0]
+
+[./TestCompletionFuncCompatibility] rc=0
+ned_completion_helper/type_alias_helper
+--- PASS: TestCompletionFuncCompatibility (0.00s)
+    --- PASS: TestCompletionFuncCompatibility/validate_signature (0.00s)
+        --- PASS: TestCompletionFuncCompatibility/validate_signature/format_with_[]string (0.00s)
+        --- PASS: TestCompletionFuncCompatibility/validate_signature/format_with_[]Completion (0.00s)
+        --- PASS: TestCompletionFuncCompatibility/validate_signature/format_with_CompletionFunc (0.00s)
+    --- PASS: TestCompletionFuncCompatibility/user_defined_completion_helper (0.00s)
+        --- PASS: TestCompletionFuncCompatibility/user_defined_completion_helper/type_helper (0.00s)
+        --- PASS: TestCompletionFuncCompatibility/user_defined_completion_helper/type_alias_helper (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.003s
+
+---

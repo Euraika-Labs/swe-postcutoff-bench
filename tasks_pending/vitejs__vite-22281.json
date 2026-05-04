@@ -1,0 +1,33 @@
+{
+  "instance_id": "vitejs__vite-22281",
+  "repo": "vitejs/vite",
+  "language": "typescript",
+  "base_commit": "3770a53064e8da27d4cb8d595a2b038413e6abdb",
+  "merge_commit": "adc995847f3c8f7af01b63b3dd00fb54b11c4d02",
+  "patch": "From 6c1b939da9edcc0e9f998ed6e84a6ea002049261 Mon Sep 17 00:00:00 2001\nFrom: shulaoda <165626830+shulaoda@users.noreply.github.com>\nDate: Tue, 21 Apr 2026 15:01:30 +0800\nSubject: [PATCH] test(glob-import): cover array patterns with sibling dirs\n sharing a prefix\n\n---\n .../glob-import/__tests__/glob-import.spec.ts  | 12 ++++++++++++\n .../array-common-base/pattern1/a.js            |  1 +\n .../array-common-base/pattern2/b.js            |  1 +\n playground/glob-import/index.html              | 18 ++++++++++++++++++\n 4 files changed, 32 insertions(+)\n create mode 100644 playground/glob-import/array-common-base/pattern1/a.js\n create mode 100644 playground/glob-import/array-common-base/pattern2/b.js\n\ndiff --git a/playground/glob-import/array-common-base/pattern1/a.js b/playground/glob-import/array-common-base/pattern1/a.js\nnew file mode 100644\nindex 00000000000000..90bd54cd7f2e6d\n--- /dev/null\n+++ b/playground/glob-import/array-common-base/pattern1/a.js\n@@ -0,0 +1 @@\n+export default 'a'\ndiff --git a/playground/glob-import/array-common-base/pattern2/b.js b/playground/glob-import/array-common-base/pattern2/b.js\nnew file mode 100644\nindex 00000000000000..a3bb49043e4bab\n--- /dev/null\n+++ b/playground/glob-import/array-common-base/pattern2/b.js\n@@ -0,0 +1 @@\n+export default 'b'\ndiff --git a/playground/glob-import/index.html b/playground/glob-import/index.html\nindex 2c211774e58769..efc5c638198913 100644\n--- a/playground/glob-import/index.html\n+++ b/playground/glob-import/index.html\n@@ -274,6 +274,24 @@ <h2>Array Pattern with Exclusions</h2>\n   )\n </script>\n \n+<h2>Array Pattern with Sibling Directories Sharing a Prefix</h2>\n+<pre class=\"array-common-base-result\"></pre>\n+\n+<script type=\"module\">\n+  const arrayCommonBaseModules = import.meta.glob(\n+    [\n+      '/array-common-base/pattern1/**/*.js',\n+      '/array-common-base/pattern2/**/*.js',\n+    ],\n+    {\n+      eager: true,\n+      import: 'default',\n+    },\n+  )\n+  document.querySelector('.array-common-base-result').textContent =\n+    JSON.stringify(arrayCommonBaseModules, null, 2)\n+</script>\n+\n <h2>Transform visibility</h2>\n <pre class=\"transform-visibility\"></pre>\n \n",
+  "test_patch": "diff --git a/playground/glob-import/__tests__/glob-import.spec.ts b/playground/glob-import/__tests__/glob-import.spec.ts\nindex 1944ae249b9b04..f54e9bf1b8c1a5 100644\n--- a/playground/glob-import/__tests__/glob-import.spec.ts\n+++ b/playground/glob-import/__tests__/glob-import.spec.ts\n@@ -272,6 +272,18 @@ test('array pattern with exclusions', async () => {\n     })\n })\n \n+// https://github.com/vitejs/vite/issues/22170\n+test('array pattern with sibling directories sharing a prefix', async () => {\n+  await expect\n+    .poll(async () =>\n+      JSON.parse(await page.textContent('.array-common-base-result')),\n+    )\n+    .toStrictEqual({\n+      '/array-common-base/pattern1/a.js': 'a',\n+      '/array-common-base/pattern2/b.js': 'b',\n+    })\n+})\n+\n test('tree-shake eager css', async () => {\n   expect(await page.textContent('.no-tree-shake-eager-css-result')).toMatch(\n     '.no-tree-shake-eager-css',\n",
+  "problem_statement": "## Summary\r\n\r\n- Adds a playground test case covering `import.meta.glob([...])` where the array entries target sibling directories whose names share a byte-level prefix but are distinct path segments (e.g. `pattern1/` and `pattern2/`).\r\n- The fixture creates `playground/glob-import/array-common-base/pattern{1,2}/*.js`, wires up a new `array-common-base-result` block in `index.html`, and asserts the resolved modules in `glob-import.spec.ts` (runs in both serve and build modes).\r\n- Regression guard for [vitejs/vite#22170](https://github.com/vitejs/vite/issues/22170), fixed upstream in [rolldown/rolldown#9070](https://github.com/rolldown/rolldown/pull/9070).\r\n\r\n## Why\r\n\r\nDuring `vite build`, array `import.meta.glob` patterns are handled by rolldown's native `viteImportGlobPlugin`. Its `get_common_base` used a byte-wise longest common prefix to decide where to start `walkdir`. For array entries like `/array-common-base/pattern1/**/*.js` and `/array-common-base/pattern2/**/*.js`, that produced `/array-common-base/pattern` \u2014 a path that cuts in the middle of a segment and points to no real directory. `walkdir` then found nothing and the bundled output was `Object.assign({})`. Dev (`vite dev`) took a different code path and worked fine, so the regression only surfaced in production builds.\r\n\r\nrolldown/rolldown#9070 fixed `get_common_base` to always land on a path-segment boundary. This test pins that behavior on the Vite side so a future regression is caught by the playground e2e suite rather than by users.",
+  "title": "test(glob-import): cover array patterns with sibling dirs sharing a prefix",
+  "FAIL_TO_PASS": [
+    "playground/glob-import/__tests__/glob-import.spec.ts > array pattern with sibling directories sharing a prefix"
+  ],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-21T07:02:38Z",
+  "merged_at": "2026-04-23T04:01:21Z",
+  "pr_url": "https://github.com/vitejs/vite/pull/22281",
+  "labels": [
+    "p1-chore",
+    "test"
+  ],
+  "runner": {
+    "kind": "node",
+    "node_version": "20",
+    "package_manager": "pnpm",
+    "install": "pnpm install --frozen-lockfile || npm ci",
+    "test_cmd": "pnpm test || npm test",
+    "test_id_separator": " > "
+  },
+  "verified": false,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (1 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

@@ -1,0 +1,29 @@
+{
+  "instance_id": "pytest-dev__pytest-14407",
+  "repo": "pytest-dev/pytest",
+  "language": "python",
+  "base_commit": "4afcd4906b9cf4468dc9ca8cf7c53126e190d008",
+  "merge_commit": "68a341f49596fa43c89e052d437723860b98a443",
+  "patch": "From 480809ae02a97344e68e52eb015e68b840f2e05c Mon Sep 17 00:00:00 2001\nFrom: Bruno Oliveira <bruno@pytest.org>\nDate: Tue, 21 Apr 2026 08:54:17 -0300\nSubject: [PATCH] Fix `-V` to show version information (#14382)\n\nThis regressed in #13575.\n\nFixes #14381.\n\n(cherry picked from commit d72943a57266ef368fb3498a3fd136cbf1c7aee6)\n---\n changelog/14381.bugfix.rst     | 1 +\n src/_pytest/config/__init__.py | 7 +++++--\n testing/test_helpconfig.py     | 7 ++++---\n 3 files changed, 10 insertions(+), 5 deletions(-)\n create mode 100644 changelog/14381.bugfix.rst\n\ndiff --git a/changelog/14381.bugfix.rst b/changelog/14381.bugfix.rst\nnew file mode 100644\nindex 00000000000..d3552a6304d\n--- /dev/null\n+++ b/changelog/14381.bugfix.rst\n@@ -0,0 +1 @@\n+Fixed ``-V`` (short form of ``--version``) to properly display the current version.\ndiff --git a/src/_pytest/config/__init__.py b/src/_pytest/config/__init__.py\nindex a027dbc02a4..4cd8d317f6e 100644\n--- a/src/_pytest/config/__init__.py\n+++ b/src/_pytest/config/__init__.py\n@@ -180,9 +180,12 @@ def main(\n \n     :returns: An exit code.\n     \"\"\"\n-    # Handle a single `--version` argument early to avoid starting up the entire pytest infrastructure.\n+    # Handle a single `--version`/`-V` argument early to avoid starting up the entire pytest infrastructure.\n     new_args = sys.argv[1:] if args is None else args\n-    if isinstance(new_args, Sequence) and new_args.count(\"--version\") == 1:\n+    if (\n+        isinstance(new_args, Sequence)\n+        and (new_args.count(\"--version\") + new_args.count(\"-V\")) == 1\n+    ):\n         sys.stdout.write(f\"pytest {__version__}\\n\")\n         return ExitCode.OK\n \n",
+  "test_patch": "diff --git a/testing/test_helpconfig.py b/testing/test_helpconfig.py\nindex b01a6fa1559..7c2cb49d87e 100644\n--- a/testing/test_helpconfig.py\n+++ b/testing/test_helpconfig.py\n@@ -16,10 +16,11 @@ def test_version_verbose(pytester: Pytester, pytestconfig, monkeypatch) -> None:\n         result.stdout.fnmatch_lines([\"*registered third-party plugins:\", \"*at*\"])\n \n \n-def test_version_less_verbose(pytester: Pytester) -> None:\n-    \"\"\"Single ``--version`` parameter should display only the pytest version, without loading plugins (#13574).\"\"\"\n+@pytest.mark.parametrize(\"flag\", [\"--version\", \"-V\"])\n+def test_version_less_verbose(pytester: Pytester, flag: str) -> None:\n+    \"\"\"Single ``--version`` or ``-V`` should display only the pytest version, without loading plugins (#13574).\"\"\"\n     pytester.makeconftest(\"print('This should not be printed')\")\n-    result = pytester.runpytest_subprocess(\"--version\")\n+    result = pytester.runpytest_subprocess(flag)\n     assert result.ret == ExitCode.OK\n     assert result.stdout.str().strip() == f\"pytest {pytest.__version__}\"\n \n",
+  "problem_statement": "**This is a backport of PR #14382 as merged into main (d72943a57266ef368fb3498a3fd136cbf1c7aee6).**\n\nThis regressed in #13575.\r\n\r\nFixes #14381.",
+  "title": "[PR #14382/d72943a5 backport][9.0.x] Fix `-V` to show version information",
+  "FAIL_TO_PASS": [
+    "testing/test_helpconfig.py::test_version_less_verbose"
+  ],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-21T11:54:31Z",
+  "merged_at": "2026-04-21T12:07:51Z",
+  "pr_url": "https://github.com/pytest-dev/pytest/pull/14407",
+  "labels": [],
+  "runner": {
+    "kind": "python",
+    "python_version": "3.11",
+    "install": "pip install -e .[test] || pip install -e .[testing] || pip install -e .",
+    "test_cmd": "pytest -p no:cacheprovider --tb=short -v",
+    "test_id_separator": "::"
+  },
+  "verified": true,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (1 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

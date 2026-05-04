@@ -1,0 +1,31 @@
+{
+  "instance_id": "pytest-dev__pytest-14422",
+  "repo": "pytest-dev/pytest",
+  "language": "python",
+  "base_commit": "200e8c66fe2daa90eda7f4ff899b4eab6c768070",
+  "merge_commit": "602fc183e54f7652d164f85782c3bba0c96d96d9",
+  "patch": "From e178744105e1493a54377f93172aa5933ac70d3f Mon Sep 17 00:00:00 2001\nFrom: EternalRights <EternalRights@users.noreply.github.com>\nDate: Sun, 26 Apr 2026 17:00:16 +0800\nSubject: [PATCH] config: fix duplicate values in Config.known_args_namespace\n for append actions\n\n---\n changelog/13484.bugfix.rst     | 1 +\n src/_pytest/config/__init__.py | 9 ++++++++-\n testing/test_warnings.py       | 9 +++++++++\n 3 files changed, 18 insertions(+), 1 deletion(-)\n create mode 100644 changelog/13484.bugfix.rst\n\ndiff --git a/changelog/13484.bugfix.rst b/changelog/13484.bugfix.rst\nnew file mode 100644\nindex 00000000000..4407003e8e9\n--- /dev/null\n+++ b/changelog/13484.bugfix.rst\n@@ -0,0 +1 @@\n+Fixed ``-W`` option values being duplicated in ``Config.known_args_namespace``.\ndiff --git a/src/_pytest/config/__init__.py b/src/_pytest/config/__init__.py\nindex 86786c2b04a..2dab4e279b5 100644\n--- a/src/_pytest/config/__init__.py\n+++ b/src/_pytest/config/__init__.py\n@@ -1483,6 +1483,8 @@ def parse(self, args: list[str], addopts: bool = True) -> None:\n                     + args\n                 )\n \n+        # At this point, self.option contains only defaults from the _processopt\n+        # callback.\n         ns = self._parser.parse_known_args(args, namespace=copy.copy(self.option))\n         rootpath, inipath, inicfg, ignored_config_files = determine_setup(\n             inifile=ns.inifilename,\n@@ -1533,7 +1535,12 @@ def parse(self, args: list[str], addopts: bool = True) -> None:\n         # are going to be loaded.\n         self.pluginmanager.consider_env()\n \n-        self._parser.parse_known_args(args, namespace=self.known_args_namespace)\n+        # Parse again, now including options added in pytest_addoption\n+        # by third-party plugins loaded above. This way they're available\n+        # on early_config in the pytest_load_initial_conftests hook call below.\n+        self.known_args_namespace = self._parser.parse_known_args(\n+            args, namespace=copy.copy(self.option)\n+        )\n \n         self._validate_plugins()\n         self._warn_about_skipped_plugins()\n",
+  "test_patch": "diff --git a/testing/test_warnings.py b/testing/test_warnings.py\nindex d4a5038d5d2..e2363bd884a 100644\n--- a/testing/test_warnings.py\n+++ b/testing/test_warnings.py\n@@ -1038,3 +1038,12 @@ def test_one():\n         result = pytester.runpytest()\n         result.assert_outcomes(passed=1, warnings=1)\n         assert result.ret == ExitCode.OK\n+\n+\n+def test_pythonwarnings_not_duplicated(pytester: Pytester) -> None:\n+    \"\"\"Regression test for #13484: -W values should not be duplicated in\n+    known_args_namespace due to the arg parser being called multiple times.\"\"\"\n+    config = pytester.parseconfig(\"-W\", \"error\")\n+    warnings_list = config.known_args_namespace.pythonwarnings\n+    assert warnings_list is not None\n+    assert warnings_list == [\"error\"]\n",
+  "problem_statement": "Ran into #13484 while looking at the config parsing code. The third `parse_known_args` call passes `self.known_args_namespace` as the namespace, which already has values from the second parse. For `action=\"append\"` options like `-W`, this causes duplicates.\n\nFix is to use `copy.copy(self.option)` instead, same as the first two calls. This way each parse starts from a clean namespace and `append` actions don't accumulate across multiple parses.\n\nNot sure if there was a reason the third call used `known_args_namespace` directly, but from what I can tell the only new things after the second parse are plugin-registered options, and those would still be picked up correctly with a fresh namespace.\n\nCloses #13484",
+  "title": "Fix duplicate values in Config.known_args_namespace for append actions",
+  "FAIL_TO_PASS": [
+    "testing/test_warnings.py::test_pythonwarnings_not_duplicated"
+  ],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-26T09:00:52Z",
+  "merged_at": "2026-04-29T08:50:08Z",
+  "pr_url": "https://github.com/pytest-dev/pytest/pull/14422",
+  "labels": [
+    "bot:chronographer:provided"
+  ],
+  "runner": {
+    "kind": "python",
+    "python_version": "3.11",
+    "install": "pip install -e .[test] || pip install -e .[testing] || pip install -e .",
+    "test_cmd": "pytest -p no:cacheprovider --tb=short -v",
+    "test_id_separator": "::"
+  },
+  "verified": true,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (1 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

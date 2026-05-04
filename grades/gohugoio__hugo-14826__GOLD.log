@@ -1,0 +1,29 @@
+[clone gohugoio/hugo@2bfcc6b9 ok]
+
+Checking patch config/security/securityConfig_test.go...
+Checking patch common/hexec/exec_test.go...
+Checking patch config/security/securityConfig_test.go...
+Applied patch config/security/securityConfig_test.go cleanly.
+Applied patch common/hexec/exec_test.go cleanly.
+Applied patch config/security/securityConfig_test.go cleanly.
+
+
+Checking patch config/security/securityConfig.go...
+Checking patch common/hexec/exec.go...
+Checking patch config/security/securityConfig.go...
+Applied patch config/security/securityConfig.go cleanly.
+Applied patch common/hexec/exec.go cleanly.
+Applied patch config/security/securityConfig.go cleanly.
+
+
+[install rc=0]
+
+[config/security/TestCheckAllowedHTTPURLAtInPathIssue14825] rc=0
+=== RUN   TestCheckAllowedHTTPURLAtInPathIssue14825
+=== PAUSE TestCheckAllowedHTTPURLAtInPathIssue14825
+=== CONT  TestCheckAllowedHTTPURLAtInPathIssue14825
+--- PASS: TestCheckAllowedHTTPURLAtInPathIssue14825 (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/config/security	0.005s
+
+---

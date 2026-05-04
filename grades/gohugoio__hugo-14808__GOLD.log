@@ -1,0 +1,25 @@
+[clone gohugoio/hugo@633cc772 ok]
+
+Checking patch hugolib/alias_test.go...
+Checking patch hugolib/disableKinds_test.go...
+Applied patch hugolib/alias_test.go cleanly.
+Applied patch hugolib/disableKinds_test.go cleanly.
+
+
+Checking patch hugolib/page__output.go...
+Checking patch hugolib/site_render.go...
+Applied patch hugolib/page__output.go cleanly.
+Applied patch hugolib/site_render.go cleanly.
+
+
+[install rc=0]
+
+[hugolib/TestDoNotRenderAliasesIfPageNotRendered14807] rc=0
+=== RUN   TestDoNotRenderAliasesIfPageNotRendered14807
+=== PAUSE TestDoNotRenderAliasesIfPageNotRendered14807
+=== CONT  TestDoNotRenderAliasesIfPageNotRendered14807
+--- PASS: TestDoNotRenderAliasesIfPageNotRendered14807 (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/hugolib	0.127s
+
+---

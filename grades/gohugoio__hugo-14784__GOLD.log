@@ -1,0 +1,21 @@
+[clone gohugoio/hugo@92766600 ok]
+
+Checking patch modules/client_test.go...
+Applied patch modules/client_test.go cleanly.
+
+
+Checking patch modules/client.go...
+Checking patch testscripts/commands/mod_tidy.txt...
+Applied patch modules/client.go cleanly.
+Applied patch testscripts/commands/mod_tidy.txt cleanly.
+
+
+[install rc=0]
+
+[modules/TestGetModlineSplitterIgnoresToolBlockIssue14783] rc=0
+=== RUN   TestGetModlineSplitterIgnoresToolBlockIssue14783
+--- PASS: TestGetModlineSplitterIgnoresToolBlockIssue14783 (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/modules	0.073s
+
+---

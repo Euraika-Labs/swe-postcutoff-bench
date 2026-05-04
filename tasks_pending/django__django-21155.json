@@ -1,0 +1,27 @@
+{
+  "instance_id": "django__django-21155",
+  "repo": "django/django",
+  "language": "python",
+  "base_commit": "fa2a3de6ede10b005fc2c1d23f4cffb53eaec425",
+  "merge_commit": "183e6505b64c140ad2ad64626c52bba88fc13edd",
+  "patch": "From e5c6b1cea5d0f15c91bf3896178e1f82abbf8ca5 Mon Sep 17 00:00:00 2001\nFrom: Mariusz Felisiak <felisiak.mariusz@gmail.com>\nDate: Thu, 23 Apr 2026 08:17:17 +0200\nSubject: [PATCH] Refs #35943 -- Fixed admin_views.test_related_object_lookups\n crash when selenium is not installed.\n\n---\n tests/admin_views/test_related_object_lookups.py | 3 +--\n 1 file changed, 1 insertion(+), 2 deletions(-)\n\n",
+  "test_patch": "diff --git a/tests/admin_views/test_related_object_lookups.py b/tests/admin_views/test_related_object_lookups.py\nindex eeba23f4f3b0..d15625efa66f 100644\n--- a/tests/admin_views/test_related_object_lookups.py\n+++ b/tests/admin_views/test_related_object_lookups.py\n@@ -1,5 +1,3 @@\n-from selenium.common.exceptions import TimeoutException\n-\n from django.contrib.admin.tests import AdminSeleniumTestCase\n from django.contrib.auth.models import User\n from django.test import override_settings\n@@ -183,6 +181,7 @@ def test_related_object_add_js_actions(self):\n         )\n \n     def test_child_popup_not_closed_when_parent_minimized(self):\n+        from selenium.common.exceptions import TimeoutException\n         from selenium.webdriver.common.by import By\n \n         album_add_url = reverse(\"admin:admin_views_album_add\")\n",
+  "problem_statement": "ticket-35943\r\n\r\n#### Branch description\r\n\r\n```\r\nFailed to import test module: admin_views.test_related_object_lookups\r\nTraceback (most recent call last):\r\n  File \"/home/jenkins/.local/share/uv/python/cpython-3.14-linux-x86_64-gnu/lib/python3.14/unittest/loader.py\", line 426, in _find_test_path\r\n    module = self._get_module_from_name(name)\r\n  File \"/home/jenkins/.local/share/uv/python/cpython-3.14-linux-x86_64-gnu/lib/python3.14/unittest/loader.py\", line 367, in _get_module_from_name\r\n    __import__(name)\r\n    ~~~~~~~~~~^^^^^^\r\n  File \"/home/jenkins/workspace/main-no-requirements/database/sqlite3/label/noble/python/python3.14/tests/admin_views/test_related_object_lookups.py\", line 1, in <module>\r\n    from selenium.common.exceptions import TimeoutException\r\nModuleNotFoundError: No module named 'selenium'\r\n```\r\n\r\n#### AI Assistance Disclosure (REQUIRED)\r\n<!-- Please select exactly ONE of the following: -->\r\n- [x] **No AI tools were used** in preparing this PR.\r\n- [ ] **If AI tools were used**, I have disclosed which ones, and fully reviewed and verified their output.",
+  "title": "Refs #35943 -- Fixed admin_views.test_related_object_lookups crash when selenium is not installed.",
+  "FAIL_TO_PASS": [],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-23T06:19:23Z",
+  "merged_at": "2026-04-23T06:52:42Z",
+  "pr_url": "https://github.com/django/django/pull/21155",
+  "labels": [],
+  "runner": {
+    "kind": "python",
+    "python_version": "3.11",
+    "install": "pip install -e .[test] || pip install -e .[testing] || pip install -e .",
+    "test_cmd": "pytest -p no:cacheprovider --tb=short -v",
+    "test_id_separator": "::"
+  },
+  "verified": false,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (0 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

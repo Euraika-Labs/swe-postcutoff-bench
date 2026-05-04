@@ -1,0 +1,28 @@
+[clone spf13/cobra@f98cf421 ok]
+
+Checking patch completions_test.go...
+Applied patch completions_test.go cleanly.
+
+
+Checking patch completions.go...
+Checking patch site/content/completions/_index.md...
+Checking patch site/content/completions/_index.md...
+Applied patch completions.go cleanly.
+Applied patch site/content/completions/_index.md cleanly.
+Applied patch site/content/completions/_index.md cleanly.
+
+
+[install rc=0]
+
+[./TestCustomDefaultShellCompDirective] rc=0
+Directive/flag_completion_on_root_command_with_custom_DefaultShellCompDirective
+=== RUN   TestCustomDefaultShellCompDirective/flag_completion_on_subcommand_with_inherited_custom_DefaultShellCompDirective
+=== RUN   TestCustomDefaultShellCompDirective/flag_completion_on_subcommand_with_reset_DefaultShellCompDirective
+--- PASS: TestCustomDefaultShellCompDirective (0.00s)
+    --- PASS: TestCustomDefaultShellCompDirective/flag_completion_on_root_command_with_custom_DefaultShellCompDirective (0.00s)
+    --- PASS: TestCustomDefaultShellCompDirective/flag_completion_on_subcommand_with_inherited_custom_DefaultShellCompDirective (0.00s)
+    --- PASS: TestCustomDefaultShellCompDirective/flag_completion_on_subcommand_with_reset_DefaultShellCompDirective (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.003s
+
+---

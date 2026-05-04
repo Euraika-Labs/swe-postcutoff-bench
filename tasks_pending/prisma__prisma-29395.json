@@ -1,0 +1,33 @@
+{
+  "instance_id": "prisma__prisma-29395",
+  "repo": "prisma/prisma",
+  "language": "typescript",
+  "base_commit": "4131568160a0efe49285991ced9bb2fa4133f50a",
+  "merge_commit": "f2ca67e71d82a57dc5324a8cb5e6ed0d903c996a",
+  "patch": "From a3d73c2f018cb77fd4e4b91df072e491ecdb1e4c Mon Sep 17 00:00:00 2001\nFrom: Jacek Malec <malec@prisma.io>\nDate: Wed, 25 Mar 2026 20:10:29 +0700\nSubject: [PATCH] feat: pg statement name generator\n\n---\n packages/adapter-pg/src/__tests__/pg.test.ts | 43 ++++++++++++++++++++\n packages/adapter-pg/src/pg.ts                | 19 +++++++++\n 2 files changed, 62 insertions(+)\n\ndiff --git a/packages/adapter-pg/src/pg.ts b/packages/adapter-pg/src/pg.ts\nindex 2e9687e24ead..e0e26c55ff45 100644\n--- a/packages/adapter-pg/src/pg.ts\n+++ b/packages/adapter-pg/src/pg.ts\n@@ -105,6 +105,7 @@ class PgQueryable<ClientT extends StdClient | TransactionClient> implements SqlQ\n     try {\n       const result = await this.client.query(\n         {\n+          name: this.pgOptions?.statementNameGenerator?.(query),\n           text: sql,\n           values,\n           rowMode: 'array',\n@@ -171,14 +172,32 @@ class PgTransaction extends PgQueryable<TransactionClient> implements Transactio\n }\n \n export type PrismaPgOptions = {\n+  /** The name of the schema to use in generated queries */\n   schema?: string\n+  /**\n+   * Whether to call `pool.end()` on an externally provided pool when the adapter is disposed.\n+   * Defaults to `false`.\n+   */\n   disposeExternalPool?: boolean\n+  /** Callback attached to the pool's 'error' events. */\n   onPoolError?: (err: Error) => void\n+  /** Callback attached to connection's 'error' events. */\n   onConnectionError?: (err: Error) => void\n+  /**\n+   * Optional parser for user-defined types. Called with the type's OID, the value to parse, and\n+   * a queryable for performing additional queries if necessary.\n+   */\n   userDefinedTypeParser?: UserDefinedTypeParser\n+  /**\n+   * Optional function to generate names for prepared statements. The generated strings are passed\n+   * as the `name` property in the query to `pg.Client#query()`, which uses them to cache the\n+   * underlying statements. If not provided, prepared statements are not cached.\n+   */\n+  statementNameGenerator?: StatementNameGenerator\n }\n \n export type UserDefinedTypeParser = (oid: number, value: unknown, adapter: SqlQueryable) => Promise<unknown>\n+export type StatementNameGenerator = (query: SqlQuery) => string\n \n export class PrismaPgAdapter extends PgQueryable<StdClient> implements SqlDriverAdapter {\n   constructor(\n",
+  "test_patch": "diff --git a/packages/adapter-pg/src/__tests__/pg.test.ts b/packages/adapter-pg/src/__tests__/pg.test.ts\nindex 13b75a5288f0..0a5cf86c0531 100644\n--- a/packages/adapter-pg/src/__tests__/pg.test.ts\n+++ b/packages/adapter-pg/src/__tests__/pg.test.ts\n@@ -1,4 +1,5 @@\n import { getLogs } from '@prisma/debug'\n+import type { SqlQuery } from '@prisma/driver-adapter-utils'\n import pg, { DatabaseError } from 'pg'\n import { describe, expect, it, vi } from 'vitest'\n \n@@ -109,4 +110,46 @@ describe('PrismaPgAdapterFactory', () => {\n \n     await adapter.dispose()\n   })\n+\n+  it('should pass generated name when statement name generator is provided', async () => {\n+    const mockGenerator = vi.fn(() => 'test-name')\n+    const factory = new PrismaPgAdapterFactory('postgresql://test:test@localhost/test', {\n+      statementNameGenerator: mockGenerator,\n+    })\n+    const adapter = await factory.connect()\n+\n+    const mockQuery = vi.fn().mockResolvedValue({\n+      rows: [],\n+      fields: [],\n+      rowCount: 0,\n+    })\n+    adapter['client'].query = mockQuery\n+\n+    const query: SqlQuery = { sql: 'SELECT 1', args: [], argTypes: [] }\n+    await adapter.queryRaw(query)\n+\n+    expect(mockGenerator).toHaveBeenCalledWith(query)\n+    expect(mockQuery).toHaveBeenCalledWith(expect.objectContaining({ name: 'test-name' }), [])\n+\n+    await adapter.dispose()\n+  })\n+\n+  it('should not pass name when statement name generator is not provided', async () => {\n+    const factory = new PrismaPgAdapterFactory('postgresql://test:test@localhost/test')\n+    const adapter = await factory.connect()\n+\n+    const mockQuery = vi.fn().mockResolvedValue({\n+      rows: [],\n+      fields: [],\n+      rowCount: 0,\n+    })\n+    adapter['client'].query = mockQuery\n+\n+    const query: SqlQuery = { sql: 'SELECT 1', args: [], argTypes: [] }\n+    await adapter.queryRaw(query)\n+\n+    expect(mockQuery).toHaveBeenCalledWith(expect.objectContaining({ name: undefined }), [])\n+\n+    await adapter.dispose()\n+  })\n })\n",
+  "problem_statement": "Adds a `statementNameGenerator` `pg` setting for pasing a custom name generator to allow users to leverage `pg` statement caching\r\n\r\nTackles https://github.com/prisma/prisma/discussions/28683\r\n\r\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\r\n\r\n## Summary by CodeRabbit\r\n\r\n* **New Features**\r\n  * Added optional `statementNameGenerator` configuration option to the PostgreSQL adapter, enabling customization of how statement names are generated and assigned.\r\n  * Introduced `StatementNameGenerator` type to standardize the callback signature used for generating custom statement name identifiers.\r\n\r\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->",
+  "title": "feat: pg statement name generator",
+  "FAIL_TO_PASS": [
+    "packages/adapter-pg/src/__tests__/pg.test.ts > should pass generated name when statement name generator is provided",
+    "packages/adapter-pg/src/__tests__/pg.test.ts > should not pass name when statement name generator is not provided"
+  ],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-03-25T13:11:30Z",
+  "merged_at": "2026-03-25T15:48:00Z",
+  "pr_url": "https://github.com/prisma/prisma/pull/29395",
+  "labels": [
+    "lgtm"
+  ],
+  "runner": {
+    "kind": "node",
+    "node_version": "20",
+    "package_manager": "pnpm",
+    "install": "pnpm install --frozen-lockfile || npm ci",
+    "test_cmd": "pnpm test || npm test",
+    "test_id_separator": " > "
+  },
+  "verified": false,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (2 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

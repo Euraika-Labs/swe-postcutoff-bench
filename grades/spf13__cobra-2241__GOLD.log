@@ -1,0 +1,27 @@
+[clone spf13/cobra@f98cf421 ok]
+
+Checking patch command_test.go...
+Checking patch command_test.go...
+Checking patch command_test.go...
+Checking patch command_test.go...
+Checking patch command_test.go...
+Applied patch command_test.go cleanly.
+Applied patch command_test.go cleanly.
+Applied patch command_test.go cleanly.
+Applied patch command_test.go cleanly.
+Applied patch command_test.go cleanly.
+
+
+Checking patch command.go...
+Applied patch command.go cleanly.
+
+
+[install rc=0]
+
+[./TestHelpFuncExecuted] rc=0
+=== RUN   TestHelpFuncExecuted
+--- PASS: TestHelpFuncExecuted (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.003s
+
+---

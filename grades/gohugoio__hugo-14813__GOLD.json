@@ -1,0 +1,17 @@
+{
+  "instance_id": "gohugoio__hugo-14813",
+  "fail_to_pass_passed": 3,
+  "fail_to_pass_total": 5,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "common/hstrings/TestHasUppercase": true,
+    "resources/resource_transformers/tocss/dartsass/TestOptionVarsNestedIssue14705": false,
+    "resources/resource_transformers/tocss/dartsass/TestOptionVarsNestedFromParamsIssue14705": false,
+    "tpl/css/TestCSSBuildVarsNestedIssue14705": true,
+    "tpl/css/TestCSSBuildVarsNestedUpperCase": true
+  },
+  "agent_seconds": 30.727421045303345,
+  "candidate_label": "GOLD"
+}

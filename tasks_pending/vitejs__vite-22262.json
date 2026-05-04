@@ -1,0 +1,30 @@
+{
+  "instance_id": "vitejs__vite-22262",
+  "repo": "vitejs/vite",
+  "language": "typescript",
+  "base_commit": "e6e9fc9e4cbefc482e068d03a19401fb7d9226cc",
+  "merge_commit": "6b00462546931c135fb2e1e4be1daf57f59cf463",
+  "patch": "From f00705017b6bd0bd4b92b1f44684e086f569941e Mon Sep 17 00:00:00 2001\nFrom: grzdev <damilolaoyeniyi13@gmail.com>\nDate: Sat, 18 Apr 2026 06:34:05 +0100\nSubject: [PATCH] docs(create-vite): list overwrite flag in help\n\n---\n packages/create-vite/__tests__/cli.spec.ts | 1 +\n packages/create-vite/src/index.ts          | 1 +\n 2 files changed, 2 insertions(+)\n\ndiff --git a/packages/create-vite/src/index.ts b/packages/create-vite/src/index.ts\nindex 88f822b4de9cfd..edc3617d2ec3d9 100755\n--- a/packages/create-vite/src/index.ts\n+++ b/packages/create-vite/src/index.ts\n@@ -45,6 +45,7 @@ When running in TTY, the CLI will start in interactive mode.\n Options:\n   -t, --template NAME                   use a specific template\n   -i, --immediate                       install dependencies and start dev\n+  --overwrite                           remove existing files if target directory is not empty\n   --interactive / --no-interactive      force interactive / non-interactive mode\n \n Available templates:\n",
+  "test_patch": "diff --git a/packages/create-vite/__tests__/cli.spec.ts b/packages/create-vite/__tests__/cli.spec.ts\nindex f1ac985bf5d0e1..a0f87c6b296646 100644\n--- a/packages/create-vite/__tests__/cli.spec.ts\n+++ b/packages/create-vite/__tests__/cli.spec.ts\n@@ -218,6 +218,7 @@ test('return help usage how to use create-vite', () => {\n   const { stdout } = run(['--help'], { cwd: import.meta.dirname })\n   const message = 'Usage: create-vite [OPTION]... [DIRECTORY]'\n   expect(stdout).toContain(message)\n+  expect(stdout).toContain('--overwrite')\n })\n \n test('return help usage how to use create-vite with -h alias', () => {\n",
+  "problem_statement": "## Summary\r\n\r\n- add the supported `--overwrite` flag to `create-vite --help`\r\n- add a small CLI test assertion so the help output keeps listing it\r\n\r\n## Problem\r\n\r\n`create-vite` already parses `--overwrite` and has behavior coverage for using it with a non-empty target directory, but the flag was missing from the hand-written help output.\r\n\r\nThat made a supported option harder to discover from `create-vite --help`.\r\n\r\n## Fix\r\n\r\n- add `--overwrite` to the help text in `packages/create-vite/src/index.ts`\r\n- add a CLI test assertion to ensure the help output includes it\r\n\r\n## Verification\r\n\r\n```bash\r\npnpm --filter=./packages/create-vite run build\r\nnode packages/create-vite --help\r\npnpm exec oxfmt --check packages/create-vite/src/index.ts packages/create-vite/__tests__/cli.spec.ts\r\npnpm exec vitest run packages/create-vite/__tests__/cli.spec.ts\r\ngit diff --check -- packages/create-vite/src/index.ts packages/create-vite/__tests__/cli.spec.ts",
+  "title": "docs(create-vite): list overwrite flag in help",
+  "FAIL_TO_PASS": [],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-18T05:35:19Z",
+  "merged_at": "2026-04-20T04:04:25Z",
+  "pr_url": "https://github.com/vitejs/vite/pull/22262",
+  "labels": [
+    "feat: create-vite"
+  ],
+  "runner": {
+    "kind": "node",
+    "node_version": "20",
+    "package_manager": "pnpm",
+    "install": "pnpm install --frozen-lockfile || npm ci",
+    "test_cmd": "pnpm test || npm test",
+    "test_id_separator": " > "
+  },
+  "verified": false,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (0 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

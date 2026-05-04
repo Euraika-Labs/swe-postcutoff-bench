@@ -1,0 +1,29 @@
+{
+  "instance_id": "django__django-21178",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 17,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "tests/deprecation/test_warn_about_external_use.py::test_external_use_warns": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_internal_use_does_not_warn": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_external_skip_frames_warns": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_internal_skip_frames_does_not_warn": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_internal_skip_multiple_frames_does_not_warn": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_external_skip_module_name_warns": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_internal_skip_module_name_does_not_warn": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_skip_fully_qualified_name": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_skip_name_prefixes_tuple": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_skip_name_prefixes_is_applied_before_skip_frames": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_skip_name_prefixes_is_not_applied_after_skip_frames": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_nested_qualname": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_does_not_mistake_third_party_packages_for_django": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_internal_modules_must_be_tuple": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_warns_if_effective_caller_has_no_filename": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_handles_skip_frames_overflow": false,
+    "tests/deprecation/test_warn_about_external_use.py::test_handles_skip_name_prefixes_overflow": false
+  },
+  "agent_seconds": 33.458558559417725,
+  "candidate_label": "GOLD"
+}

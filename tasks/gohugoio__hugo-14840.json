@@ -1,0 +1,29 @@
+{
+  "instance_id": "gohugoio__hugo-14840",
+  "repo": "gohugoio/hugo",
+  "language": "go",
+  "base_commit": "ff22c62a32628fcf51f82de2f72a749e1cdf4fc3",
+  "merge_commit": "62cef3678b219d0daf15dad040bd3df9384e5162",
+  "patch": "From 47967a630329b0812df2df8cab85d6f03fd8ca35 Mon Sep 17 00:00:00 2001\nFrom: =?UTF-8?q?Bj=C3=B8rn=20Erik=20Pedersen?=\n <bjorn.erik.pedersen@gmail.com>\nDate: Fri, 1 May 2026 14:17:06 +0200\nSubject: [PATCH] security: Allow hostnames starting with digits in default\n http.urls\n\nDomains like 1password.com and 37signals.com were blocked by the default\nallow rule '^https?://[a-z]'. Allow [a-z0-9] for the first hostname char\nand add an explicit deny for hosts whose first label is all-digit (IP\nliterals like 127.0.0.1) to retain the prior SSRF protections.\n\nFixes #14837\n---\n config/security/securityConfig.go      |  3 ++-\n config/security/securityConfig_test.go | 27 +++++++++++++++++++++++++-\n 2 files changed, 28 insertions(+), 2 deletions(-)\n\ndiff --git a/config/security/securityConfig.go b/config/security/securityConfig.go\nindex 0e9208790cd..3ecc67fcf6d 100644\n--- a/config/security/securityConfig.go\n+++ b/config/security/securityConfig.go\n@@ -57,7 +57,8 @@ var DefaultConfig = Config{\n \t\t// foil the obvious SSRF bypass. Public IP literals are collateral\n \t\t// blocks; users who need them can override security.http.urls.\n \t\tURLs: MustNewWhitelist(\n-\t\t\t`(?i)^https?://[a-z]`,\n+\t\t\t`(?i)^https?://[a-z0-9]`,\n+\t\t\t`! ^https?://\\d+\\.`,\n \t\t\t`! (?i)localhost`,\n \t\t\t`! (?i)^https?://[^/?#]*@`,\n \t\t),\n",
+  "test_patch": "diff --git a/config/security/securityConfig_test.go b/config/security/securityConfig_test.go\nindex 4e120a28545..da82b0c493f 100644\n--- a/config/security/securityConfig_test.go\n+++ b/config/security/securityConfig_test.go\n@@ -135,7 +135,7 @@ func TestToTOML(t *testing.T) {\n \tgot := DefaultConfig.ToTOML()\n \n \tc.Assert(got, qt.Equals,\n-\t\t\"[security]\\n  enableInlineShortcodes = false\\n\\n  [security.exec]\\n    allow = ['^(dart-)?sass(-embedded)?$', '^go$', '^git$', '^node$', '^postcss$', '^tailwindcss$']\\n    osEnv = ['(?i)^((HTTPS?|NO)_PROXY|PATH(EXT)?|APPDATA|TE?MP|TERM|GO\\\\w+|(XDG_CONFIG_)?HOME|USERPROFILE|SSH_AUTH_SOCK|DISPLAY|LANG|SYSTEMDRIVE|PROGRAMDATA)$']\\n\\n  [security.funcs]\\n    getenv = ['^HUGO_', '^CI$']\\n\\n  [security.http]\\n    methods = ['(?i)GET|POST']\\n    urls = ['(?i)^https?://[a-z]', '! (?i)localhost', '! (?i)^https?://[^/?#]*@']\\n\\n  [security.node]\\n    [security.node.permissions]\\n      allowAddons = ['tailwindcss']\\n      allowChildProcess = ['tailwindcss']\\n      allowRead = ['.']\\n      allowWorker = ['tailwindcss']\\n      allowWrite = []\\n      disable = false\",\n+\t\t\"[security]\\n  enableInlineShortcodes = false\\n\\n  [security.exec]\\n    allow = ['^(dart-)?sass(-embedded)?$', '^go$', '^git$', '^node$', '^postcss$', '^tailwindcss$']\\n    osEnv = ['(?i)^((HTTPS?|NO)_PROXY|PATH(EXT)?|APPDATA|TE?MP|TERM|GO\\\\w+|(XDG_CONFIG_)?HOME|USERPROFILE|SSH_AUTH_SOCK|DISPLAY|LANG|SYSTEMDRIVE|PROGRAMDATA)$']\\n\\n  [security.funcs]\\n    getenv = ['^HUGO_', '^CI$']\\n\\n  [security.http]\\n    methods = ['(?i)GET|POST']\\n    urls = ['(?i)^https?://[a-z0-9]', '! ^https?://\\\\d+\\\\.', '! (?i)localhost', '! (?i)^https?://[^/?#]*@']\\n\\n  [security.node]\\n    [security.node.permissions]\\n      allowAddons = ['tailwindcss']\\n      allowChildProcess = ['tailwindcss']\\n      allowRead = ['.']\\n      allowWorker = ['tailwindcss']\\n      allowWrite = []\\n      disable = false\",\n \t)\n }\n \n@@ -273,6 +273,31 @@ func TestCheckAllowedHTTPURLAtInPathIssue14825(t *testing.T) {\n \t}\n }\n \n+func TestCheckAllowedHTTPURLDigitHostnameIssue14837(t *testing.T) {\n+\tt.Parallel()\n+\tc := qt.New(t)\n+\n+\tpc, err := DecodeConfig(config.New())\n+\tc.Assert(err, qt.IsNil)\n+\n+\tfor _, u := range []string{\n+\t\t\"https://1password.com/\",\n+\t\t\"https://37signals.com/foo\",\n+\t} {\n+\t\tc.Assert(pc.CheckAllowedHTTPURL(u), qt.IsNil, qt.Commentf(u))\n+\t}\n+\n+\tfor _, u := range []string{\n+\t\t\"http://127.0.0.1/\",\n+\t\t\"http://10.0.0.1/\",\n+\t\t\"http://192.168.1.1/\",\n+\t\t\"http://0.0.0.0/\",\n+\t} {\n+\t\terr := pc.CheckAllowedHTTPURL(u)\n+\t\tc.Assert(err, qt.IsNotNil, qt.Commentf(u))\n+\t}\n+}\n+\n func TestDecodeConfigNodePermissions(t *testing.T) {\n \tc := qt.New(t)\n \n",
+  "problem_statement": "Domains like 1password.com and 37signals.com were blocked by the default\nallow rule '^https?://[a-z]'. Allow [a-z0-9] for the first hostname char\nand add an explicit deny for hosts whose first label is all-digit (IP\nliterals like 127.0.0.1) to retain the prior SSRF protections.\n\nFixes #14837",
+  "title": "security: Allow hostnames starting with digits in default http.urls",
+  "FAIL_TO_PASS": [
+    "config/security/TestCheckAllowedHTTPURLDigitHostnameIssue14837"
+  ],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-05-01T12:19:37Z",
+  "merged_at": "2026-05-01T13:34:21Z",
+  "pr_url": "https://github.com/gohugoio/hugo/pull/14840",
+  "labels": [],
+  "runner": {
+    "kind": "go",
+    "go_version": "1.23",
+    "install": "go mod download",
+    "test_cmd": "go test ./...",
+    "test_id_separator": "/"
+  },
+  "verified": true,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (1 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

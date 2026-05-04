@@ -1,0 +1,42 @@
+[clone spf13/cobra@f2878bab ok]
+
+Checking patch args_test.go...
+Applied patch args_test.go cleanly.
+
+
+Checking patch args.go...
+Checking patch site/content/user_guide.md...
+Applied patch args.go cleanly.
+Applied patch site/content/user_guide.md cleanly.
+
+
+[install rc=0]
+
+[./TestNoDuplicateArgs] rc=0
+=== RUN   TestNoDuplicateArgs
+--- PASS: TestNoDuplicateArgs (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.003s
+
+---
+[./TestNoDuplicateArgs_WithDuplicateArgs] rc=0
+=== RUN   TestNoDuplicateArgs_WithDuplicateArgs
+--- PASS: TestNoDuplicateArgs_WithDuplicateArgs (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.003s
+
+---
+[./TestNoDuplicateArgs_WithValid_WithDuplicateArgs] rc=0
+=== RUN   TestNoDuplicateArgs_WithValid_WithDuplicateArgs
+--- PASS: TestNoDuplicateArgs_WithValid_WithDuplicateArgs (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.002s
+
+---
+[./TestNoDuplicateArgs_WithValidOnly_WithInvalidArgs] rc=0
+=== RUN   TestNoDuplicateArgs_WithValidOnly_WithInvalidArgs
+--- PASS: TestNoDuplicateArgs_WithValidOnly_WithInvalidArgs (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.003s
+
+---

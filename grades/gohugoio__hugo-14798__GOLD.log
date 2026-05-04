@@ -1,0 +1,21 @@
+[clone gohugoio/hugo@4c03129f ok]
+
+Checking patch langs/languages_integration_test.go...
+Applied patch langs/languages_integration_test.go cleanly.
+
+
+Checking patch langs/i18n/translationProvider.go...
+Applied patch langs/i18n/translationProvider.go cleanly.
+
+
+[install rc=0]
+
+[langs/TestMultipleLanguageVariants7982] rc=0
+=== RUN   TestMultipleLanguageVariants7982
+=== PAUSE TestMultipleLanguageVariants7982
+=== CONT  TestMultipleLanguageVariants7982
+--- PASS: TestMultipleLanguageVariants7982 (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/langs	0.142s
+
+---

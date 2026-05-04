@@ -1,0 +1,33 @@
+{
+  "instance_id": "vitejs__vite-22283",
+  "repo": "vitejs/vite",
+  "language": "typescript",
+  "base_commit": "04f974fbae1df6b7b6423d9083130579cdfa06ef",
+  "merge_commit": "ac36eb6907107734ff011413efea248b9f775373",
+  "patch": "From 2adbfaa8dbe33d245f103b2a1ef0b12eb31a2b09 Mon Sep 17 00:00:00 2001\nFrom: shulaoda <165626830+shulaoda@users.noreply.github.com>\nDate: Tue, 21 Apr 2026 15:45:13 +0800\nSubject: [PATCH] test(glob-import): add backslash-escaped glob pattern test\n\n---\n .../glob-import/__tests__/glob-import.spec.ts       | 10 ++++++++++\n playground/glob-import/index.html                   | 13 +++++++++++++\n 2 files changed, 23 insertions(+)\n\ndiff --git a/playground/glob-import/index.html b/playground/glob-import/index.html\nindex 2c211774e58769..998597aa44a261 100644\n--- a/playground/glob-import/index.html\n+++ b/playground/glob-import/index.html\n@@ -21,6 +21,8 @@ <h2>Escape relative glob</h2>\n <pre class=\"escape-relative\"></pre>\n <h2>Escape alias glob</h2>\n <pre class=\"escape-alias\"></pre>\n+<h2>Escape literal parenthesis</h2>\n+<pre class=\"escape-literal-parenthesis\"></pre>\n <h2>Subpath imports</h2>\n <pre class=\"subpath-imports\"></pre>\n <h2>Subpath imports (sub dir)</h2>\n@@ -150,6 +152,17 @@ <h2>Base</h2>\n   document.querySelector('.escape-alias').textContent = alias.sort().join('\\n')\n </script>\n \n+<script type=\"module\">\n+  // https://github.com/vitejs/vite/issues/22166\n+  // Backslash-escaped glob metachars must match their literal counterparts\n+  // consistently in dev and build.\n+  const literalParen = import.meta.glob('/escape/\\\\(parenthesis\\\\)/mod/*.js', {\n+    eager: true,\n+  })\n+  document.querySelector('.escape-literal-parenthesis').textContent =\n+    JSON.stringify(Object.keys(literalParen).sort())\n+</script>\n+\n <script type=\"module\">\n   const subpathImports = import.meta.glob('#imports/*', { eager: true })\n   document.querySelector('.subpath-imports').textContent = Object.values(\n",
+  "test_patch": "diff --git a/playground/glob-import/__tests__/glob-import.spec.ts b/playground/glob-import/__tests__/glob-import.spec.ts\nindex 1944ae249b9b04..005edcbef70669 100644\n--- a/playground/glob-import/__tests__/glob-import.spec.ts\n+++ b/playground/glob-import/__tests__/glob-import.spec.ts\n@@ -311,6 +311,16 @@ test('escapes special chars in globs without mangling user supplied glob suffix'\n     .toEqual(expectedNames)\n })\n \n+test('escape literal parenthesis in glob pattern', async () => {\n+  // https://github.com/vitejs/vite/issues/22166\n+  // Backslash-escaped parens must match literal \"(\" / \")\" in both dev and build.\n+  await expect\n+    .poll(async () =>\n+      JSON.parse(await page.textContent('.escape-literal-parenthesis')),\n+    )\n+    .toStrictEqual(['/escape/(parenthesis)/mod/index.js'])\n+})\n+\n test('subpath imports', async () => {\n   await expect\n     .poll(async () => await page.textContent('.subpath-imports'))\n",
+  "problem_statement": "## Description\r\n\r\nAdds a regression test for the dev/build inconsistency reported in #22166, where `import.meta.glob` produced different results for directories containing parentheses depending on whether the pattern's metacharacters were backslash-escaped:\r\n\r\n```js\r\n// before the rolldown fix:\r\nimport.meta.glob('./\\\\(dir\\\\)/*.js', { eager: true }) // populated only in dev\r\nimport.meta.glob('./(dir)/*.js',       { eager: true }) // populated only in build\r\n```\r\n\r\nThe upstream fix landed in rolldown/rolldown#9077, which switches the `vite_import_glob` plugin to POSIX path join/normalize so backslash-escaped glob syntax (`\\(`, `\\)`, `\\?`, `\\[`) is preserved instead of being mistaken for a Windows path separator, and normalizes separators consistently during matching.\r\n\r\nThe existing `escape/**/glob.js` playground cases only exercise the `**` wildcard traversing into a special-char directory \u2014 they never hit the user-written backslash-escape code path. This PR adds a focused test for that path.\r\n\r\nRelated:\r\n- Closes #22166\r\n- Upstream fix: rolldown/rolldown#9077",
+  "title": "test(glob-import): add backslash-escaped glob pattern test",
+  "FAIL_TO_PASS": [
+    "playground/glob-import/__tests__/glob-import.spec.ts > escape literal parenthesis in glob pattern"
+  ],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-21T07:46:50Z",
+  "merged_at": "2026-04-23T04:00:32Z",
+  "pr_url": "https://github.com/vitejs/vite/pull/22283",
+  "labels": [
+    "p1-chore",
+    "test"
+  ],
+  "runner": {
+    "kind": "node",
+    "node_version": "20",
+    "package_manager": "pnpm",
+    "install": "pnpm install --frozen-lockfile || npm ci",
+    "test_cmd": "pnpm test || npm test",
+    "test_id_separator": " > "
+  },
+  "verified": false,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (1 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

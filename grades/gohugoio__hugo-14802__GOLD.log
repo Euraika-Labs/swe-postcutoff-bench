@@ -1,0 +1,23 @@
+[clone gohugoio/hugo@4c40c6d5 ok]
+
+Checking patch hugolib/menu_test.go...
+Checking patch langs/languages_integration_test.go...
+Applied patch hugolib/menu_test.go cleanly.
+Applied patch langs/languages_integration_test.go cleanly.
+
+
+Checking patch langs/i18n/translationProvider.go...
+Applied patch langs/i18n/translationProvider.go cleanly.
+
+
+[install rc=0]
+
+[langs/TestDefaultContentLanguageFallback14243] rc=0
+=== RUN   TestDefaultContentLanguageFallback14243
+=== PAUSE TestDefaultContentLanguageFallback14243
+=== CONT  TestDefaultContentLanguageFallback14243
+--- PASS: TestDefaultContentLanguageFallback14243 (0.05s)
+PASS
+ok  	github.com/gohugoio/hugo/langs	0.180s
+
+---

@@ -1,0 +1,81 @@
+[clone django/django@a49be25e ok]
+
+Checking patch tests/deprecation/test_warn_about_external_use.py...
+Applied patch tests/deprecation/test_warn_about_external_use.py cleanly.
+
+
+Checking patch django/conf/__init__.py...
+Checking patch django/utils/deprecation.py...
+Checking patch tests/deprecation/internal.py...
+Applied patch django/conf/__init__.py cleanly.
+Applied patch django/utils/deprecation.py cleanly.
+Applied patch tests/deprecation/internal.py cleanly.
+
+
+[install rc=0]
+Obtaining file:///tmp/pcb_workdirs/django__django-21178
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting asgiref>=3.9.1 (from Django==6.1.dev20260427194914)
+  Using cached asgiref-3.11.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting sqlparse>=0.5.0 (from Django==6.1.dev20260427194914)
+  Using cached sqlparse-0.5.5-py3-none-any.whl.metadata (4.7 kB)
+Using cached asgiref-3.11.1-py3-none-any.whl (24 kB)
+Using cached sqlparse-0.5.5-py3-none-any.whl (46 kB)
+Building wheels for collected packages: Django
+  Building editable for Django (pyproject.toml): started
+  Building editable for Django (pyproject.toml): finished with status 'done'
+  Created wheel for Django: filename=django-6.1.dev20260427194914-0.editable-py3-none-any.whl size=48064 sha256=aada0b8eab54036316ad005a705c7897b3243feb4dc782630986429e63bc9f2c
+  Stored in directory: /tmp/pip-ephem-wheel-cache-uoopoavj/wheels/3e/7c/05/27f0cd2370bca839251635205285062d1f3e2b9c00e341a0b9
+Successfully built Django
+Installing collected packages: sqlparse, asgiref, Django
+
+Successfully installed Django-6.1.dev20260427194914 asgiref-3.11.1 sqlparse-0.5.5
+WARNING: django 6.1.dev20260427194914 does not provide the extra 'test'
+
+[test rc=4]
+duleNotFoundError: No module named 'django'
+=========================== short test summary info ============================
+ERROR tests/deprecation/test_warn_about_external_use.py
+=============================== 1 error in 0.03s ===============================
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_external_use_warns
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_internal_use_does_not_warn
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_external_skip_frames_warns
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_internal_skip_frames_does_not_warn
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_internal_skip_multiple_frames_does_not_warn
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_external_skip_module_name_warns
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_internal_skip_module_name_does_not_warn
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_skip_fully_qualified_name
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_skip_name_prefixes_tuple
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_skip_name_prefixes_is_applied_before_skip_frames
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_skip_name_prefixes_is_not_applied_after_skip_frames
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_nested_qualname
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_does_not_mistake_third_party_packages_for_django
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_internal_modules_must_be_tuple
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_warns_if_effective_caller_has_no_filename
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_handles_skip_frames_overflow
+
+ERROR: found no collectors for /tmp/pcb_workdirs/django__django-21178/tests/deprecation/test_warn_about_external_use.py::test_handles_skip_name_prefixes_overflow
+
+

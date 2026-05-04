@@ -1,0 +1,14 @@
+{
+  "instance_id": "prisma__prisma-29395",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 2,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/adapter-pg/src/__tests__/pg.test.ts > should pass generated name when statement name generator is provided": false,
+    "packages/adapter-pg/src/__tests__/pg.test.ts > should not pass name when statement name generator is not provided": false
+  },
+  "agent_seconds": 90.12574768066406,
+  "candidate_label": "GOLD"
+}

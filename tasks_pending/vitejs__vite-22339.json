@@ -1,0 +1,30 @@
+{
+  "instance_id": "vitejs__vite-22339",
+  "repo": "vitejs/vite",
+  "language": "typescript",
+  "base_commit": "672c96288fd5440bbecddc65551e713edeb8d403",
+  "merge_commit": "0c162e96a6545c93808e7338b9adeca2636596fa",
+  "patch": "From f03f2de4e086c67d2621b5a197425446baa512a9 Mon Sep 17 00:00:00 2001\nFrom: bluwy <bjornlu.dev@gmail.com>\nDate: Mon, 27 Apr 2026 23:39:10 +0800\nSubject: [PATCH 1/2] refactor: show direct path type in bad character warning\n\nCo-authored-by: Copilot <copilot@github.com>\n---\n packages/vite/src/node/config.ts | 12 +++++++++---\n 1 file changed, 9 insertions(+), 3 deletions(-)\n\ndiff --git a/packages/vite/src/node/config.ts b/packages/vite/src/node/config.ts\nindex cbbeefab65a698..5113a0f8a1020a 100644\n--- a/packages/vite/src/node/config.ts\n+++ b/packages/vite/src/node/config.ts\n@@ -1016,6 +1016,7 @@ export type ResolveFn = (\n  */\n function checkBadCharactersInPath(\n   name: string,\n+  type: 'directory' | 'file',\n   path: string,\n   logger: Logger,\n ): void {\n@@ -1039,7 +1040,7 @@ function checkBadCharactersInPath(\n       colors.yellow(\n         `${name} contains the ${charString} ${inflectedChars} (${colors.cyan(\n           path,\n-        )}), which may not work when running Vite. Consider renaming the directory / file to remove the characters.`,\n+        )}), which may not work when running Vite. Consider renaming the ${type} without the characters.`,\n       ),\n     )\n   }\n@@ -1487,7 +1488,12 @@ export async function resolveConfig(\n     config.root ? path.resolve(config.root) : process.cwd(),\n   )\n \n-  checkBadCharactersInPath('The project root', resolvedRoot, logger)\n+  checkBadCharactersInPath(\n+    'The project root',\n+    'directory',\n+    resolvedRoot,\n+    logger,\n+  )\n \n   const configEnvironmentsClient = config.environments!.client!\n   configEnvironmentsClient.dev ??= {}\n@@ -2283,7 +2289,7 @@ export async function loadConfigFromFile(\n     }\n   } catch (e) {\n     const logger = createLogger(logLevel, { customLogger })\n-    checkBadCharactersInPath('The config path', resolvedPath, logger)\n+    checkBadCharactersInPath('The config path', 'file', resolvedPath, logger)\n     logger.error(colors.red(`failed to load config from ${resolvedPath}`), {\n       error: e,\n     })\n\nFrom a69f3a9e9ede82bfb8b94267f197572d7b1f4a41 Mon Sep 17 00:00:00 2001\nFrom: bluwy <bjornlu.dev@gmail.com>\nDate: Mon, 27 Apr 2026 23:46:42 +0800\nSubject: [PATCH 2/2] chore: fix test\n\nCo-authored-by: Copilot <copilot@github.com>\n---\n packages/vite/src/node/__tests__/config.spec.ts | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)\n\n",
+  "test_patch": "diff --git a/packages/vite/src/node/__tests__/config.spec.ts b/packages/vite/src/node/__tests__/config.spec.ts\nindex 85737eafe3f8fb..98e61f0c4142a9 100644\n--- a/packages/vite/src/node/__tests__/config.spec.ts\n+++ b/packages/vite/src/node/__tests__/config.spec.ts\n@@ -915,7 +915,7 @@ describe('resolveConfig', () => {\n     const logger = createLogger('info')\n     logger.warn = (str) => {\n       expect(str).to.include(\n-        'Consider renaming the directory / file to remove the characters',\n+        'Consider renaming the directory without the characters',\n       )\n     }\n \n",
+  "problem_statement": "A little improvement I stumbled in #22329",
+  "title": "refactor: show direct path type in bad character warning",
+  "FAIL_TO_PASS": [],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-27T15:40:43Z",
+  "merged_at": "2026-04-28T02:25:20Z",
+  "pr_url": "https://github.com/vitejs/vite/pull/22339",
+  "labels": [
+    "p2-nice-to-have"
+  ],
+  "runner": {
+    "kind": "node",
+    "node_version": "20",
+    "package_manager": "pnpm",
+    "install": "pnpm install --frozen-lockfile || npm ci",
+    "test_cmd": "pnpm test || npm test",
+    "test_id_separator": " > "
+  },
+  "verified": false,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (0 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

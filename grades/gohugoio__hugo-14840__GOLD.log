@@ -1,0 +1,21 @@
+[clone gohugoio/hugo@ff22c62a ok]
+
+Checking patch config/security/securityConfig_test.go...
+Applied patch config/security/securityConfig_test.go cleanly.
+
+
+Checking patch config/security/securityConfig.go...
+Applied patch config/security/securityConfig.go cleanly.
+
+
+[install rc=0]
+
+[config/security/TestCheckAllowedHTTPURLDigitHostnameIssue14837] rc=0
+=== RUN   TestCheckAllowedHTTPURLDigitHostnameIssue14837
+=== PAUSE TestCheckAllowedHTTPURLDigitHostnameIssue14837
+=== CONT  TestCheckAllowedHTTPURLDigitHostnameIssue14837
+--- PASS: TestCheckAllowedHTTPURLDigitHostnameIssue14837 (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/config/security	0.005s
+
+---

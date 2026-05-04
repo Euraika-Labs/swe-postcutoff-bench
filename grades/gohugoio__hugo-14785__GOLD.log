@@ -1,0 +1,21 @@
+[clone gohugoio/hugo@92766600 ok]
+
+Checking patch tpl/collections/collections_integration_test.go...
+Applied patch tpl/collections/collections_integration_test.go cleanly.
+
+
+Checking patch tpl/collections/where.go...
+Applied patch tpl/collections/where.go cleanly.
+
+
+[install rc=0]
+
+[tpl/collections/TestWhereWithPageEqualityIssue14777] rc=0
+=== RUN   TestWhereWithPageEqualityIssue14777
+=== PAUSE TestWhereWithPageEqualityIssue14777
+=== CONT  TestWhereWithPageEqualityIssue14777
+--- PASS: TestWhereWithPageEqualityIssue14777 (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/tpl/collections	0.093s
+
+---

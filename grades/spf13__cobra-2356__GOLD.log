@@ -1,0 +1,31 @@
+[clone spf13/cobra@61968e89 ok]
+
+Checking patch completions_test.go...
+Checking patch completions_test.go...
+Checking patch completions_test.go...
+Applied patch completions_test.go cleanly.
+Applied patch completions_test.go cleanly.
+Applied patch completions_test.go cleanly.
+
+
+Checking patch completions.go...
+Checking patch completions.go...
+Applied patch completions.go cleanly.
+Applied patch completions.go cleanly.
+
+
+[install rc=0]
+
+[./TestCompletionDoesNotMutateArgs] rc=0
+testing: warning: no tests to run
+PASS
+ok  	github.com/spf13/cobra	0.003s [no tests to run]
+
+---
+[./TestCompletionDoesNotMutateOsArgs] rc=0
+=== RUN   TestCompletionDoesNotMutateOsArgs
+--- PASS: TestCompletionDoesNotMutateOsArgs (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.003s
+
+---

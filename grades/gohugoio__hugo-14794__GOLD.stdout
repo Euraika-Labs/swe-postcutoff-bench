@@ -1,0 +1,13 @@
+{
+  "instance_id": "gohugoio__hugo-14794",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "langs/TestLocaleAsLocalizationKeyIssue9109": true
+  },
+  "agent_seconds": 18.56682515144348,
+  "candidate_label": "GOLD"
+}

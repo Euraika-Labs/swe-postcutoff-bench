@@ -1,0 +1,13 @@
+{
+  "instance_id": "prisma__prisma-29426",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/client-engine-runtime/src/user-facing-error.test.ts > rethrowAsUserFacing re-throws the original error for unknown cause kinds": false
+  },
+  "agent_seconds": 88.76189708709717,
+  "candidate_label": "GOLD"
+}

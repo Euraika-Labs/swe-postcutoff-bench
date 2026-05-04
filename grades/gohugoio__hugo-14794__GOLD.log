@@ -1,0 +1,21 @@
+[clone gohugoio/hugo@79f030be ok]
+
+Checking patch langs/languages_integration_test.go...
+Applied patch langs/languages_integration_test.go cleanly.
+
+
+Checking patch langs/language.go...
+Applied patch langs/language.go cleanly.
+
+
+[install rc=0]
+
+[langs/TestLocaleAsLocalizationKeyIssue9109] rc=0
+=== RUN   TestLocaleAsLocalizationKeyIssue9109
+=== PAUSE TestLocaleAsLocalizationKeyIssue9109
+=== CONT  TestLocaleAsLocalizationKeyIssue9109
+--- PASS: TestLocaleAsLocalizationKeyIssue9109 (0.02s)
+PASS
+ok  	github.com/gohugoio/hugo/langs	0.205s
+
+---

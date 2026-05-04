@@ -1,0 +1,53 @@
+[clone django/django@25043486 ok]
+
+Checking patch scripts/pr_quality/tests/test_check_pr.py...
+Applied patch scripts/pr_quality/tests/test_check_pr.py cleanly.
+
+
+Checking patch scripts/pr_quality/check_pr.py...
+Checking patch scripts/pr_quality/errors.py...
+Applied patch scripts/pr_quality/check_pr.py cleanly.
+Applied patch scripts/pr_quality/errors.py cleanly.
+
+
+[install rc=0]
+Obtaining file:///tmp/pcb_workdirs/django__django-21129
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting asgiref>=3.9.1 (from Django==6.1.dev20260419084853)
+  Using cached asgiref-3.11.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting sqlparse>=0.5.0 (from Django==6.1.dev20260419084853)
+  Using cached sqlparse-0.5.5-py3-none-any.whl.metadata (4.7 kB)
+Using cached asgiref-3.11.1-py3-none-any.whl (24 kB)
+Using cached sqlparse-0.5.5-py3-none-any.whl (46 kB)
+Building wheels for collected packages: Django
+  Building editable for Django (pyproject.toml): started
+  Building editable for Django (pyproject.toml): finished with status 'done'
+  Created wheel for Django: filename=django-6.1.dev20260419084853-0.editable-py3-none-any.whl size=48063 sha256=ad3819a04b8f04ec3c2b3d8eede62e01fecdcc03d4bfe5d88e7b8a4fb6641b28
+  Stored in directory: /tmp/pip-ephem-wheel-cache-hj8by_sw/wheels/a2/3c/16/fe4d223a9713962f2522bb2b07705c0d96f9bcda9cfd9fecb5
+Successfully built Django
+Installing collected packages: sqlparse, asgiref, Django
+
+Successfully installed Django-6.1.dev20260419084853 asgiref-3.11.1 sqlparse-0.5.5
+WARNING: Cache entry deserialization failed, entry ignored
+WARNING: Cache entry deserialization failed, entry ignored
+WARNING: django 6.1.dev20260419084853 does not provide the extra 'test'
+
+[test rc=4]
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.0.3, pluggy-1.6.0 -- /home/linuxbrew/.linuxbrew/opt/python@3.14/bin/python3.14
+rootdir: /tmp/pcb_workdirs/django__django-21129
+configfile: pyproject.toml
+collecting ... collected 0 items
+
+============================ no tests ran in 0.03s =============================
+ERROR: not found: /tmp/pcb_workdirs/django__django-21129/scripts/pr_quality/tests/test_check_pr.py::test_ready_for_checkin_assigned_unresolved_passes
+(no match in any of [<Module test_check_pr.py>])
+
+

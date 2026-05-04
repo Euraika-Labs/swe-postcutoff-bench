@@ -1,0 +1,25 @@
+[clone gohugoio/hugo@8b40a96b ok]
+
+Checking patch resources/resource_factories/create/create_integration_test.go...
+Applied patch resources/resource_factories/create/create_integration_test.go cleanly.
+
+
+Checking patch resources/resource_factories/create/remote.go...
+Applied patch resources/resource_factories/create/remote.go cleanly.
+
+
+[install rc=0]
+
+[resources/resource_factories/create/TestGetRemoteRetryAfterIssue14828] rc=0
+=== RUN   TestGetRemoteRetryAfterIssue14828
+=== PAUSE TestGetRemoteRetryAfterIssue14828
+=== CONT  TestGetRemoteRetryAfterIssue14828
+=== RUN   TestGetRemoteRetryAfterIssue14828/Honored
+=== RUN   TestGetRemoteRetryAfterIssue14828/TimeoutMessage
+--- PASS: TestGetRemoteRetryAfterIssue14828 (2.11s)
+    --- PASS: TestGetRemoteRetryAfterIssue14828/Honored (2.04s)
+    --- PASS: TestGetRemoteRetryAfterIssue14828/TimeoutMessage (0.07s)
+PASS
+ok  	github.com/gohugoio/hugo/resources/resource_factories/create	2.229s
+
+---

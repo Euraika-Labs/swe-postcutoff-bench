@@ -1,0 +1,53 @@
+[clone pytest-dev/pytest@200e8c66 ok]
+
+Checking patch testing/test_warnings.py...
+Applied patch testing/test_warnings.py cleanly.
+
+
+Checking patch changelog/13484.bugfix.rst...
+Checking patch src/_pytest/config/__init__.py...
+Applied patch changelog/13484.bugfix.rst cleanly.
+Applied patch src/_pytest/config/__init__.py cleanly.
+
+
+[install rc=0]
+lling build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting iniconfig>=1.0.1 (from pytest==9.1.0.dev340+g200e8c66f.d20260504)
+  Using cached iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Requirement already satisfied: packaging>=22 in ./.pcb_venv/lib/python3.14/site-packages (from pytest==9.1.0.dev340+g200e8c66f.d20260504) (26.2)
+Collecting pluggy<2,>=1.5 (from pytest==9.1.0.dev340+g200e8c66f.d20260504)
+  Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest==9.1.0.dev340+g200e8c66f.d20260504)
+  Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+Building wheels for collected packages: pytest
+  Building editable for pytest (pyproject.toml): started
+  Building editable for pytest (pyproject.toml): finished with status 'done'
+  Created wheel for pytest: filename=pytest-9.1.0.dev340+g200e8c66f.d20260504-0.editable-py3-none-any.whl size=5351 sha256=d1a4bdb19be2acbdccdb75e506b1ddc0fa1eff9634c7333bf2127839e928e46f
+  Stored in directory: /tmp/pip-ephem-wheel-cache-9hh24kli/wheels/da/45/7e/5b8f374cd623c470948f54546169119c9c05ff47dd9229af49
+Successfully built pytest
+Installing collected packages: pygments, pluggy, iniconfig, pytest
+
+Successfully installed iniconfig-2.3.0 pluggy-1.6.0 pygments-2.20.0 pytest-9.1.0.dev340+g200e8c66f.d20260504
+WARNING: pytest 9.1.0.dev340+g200e8c66f.d20260504 does not provide the extra 'test'
+
+[test rc=0]
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.1.0.dev340+g200e8c66f.d20260504, pluggy-1.6.0 -- /tmp/pcb_workdirs/pytest-dev__pytest-14422/.pcb_venv/bin/python3.14
+rootdir: /tmp/pcb_workdirs/pytest-dev__pytest-14422
+configfile: pyproject.toml
+collecting ... collected 1 item
+
+testing/test_warnings.py::test_pythonwarnings_not_duplicated PASSED      [100%]
+
+============================== 1 passed in 0.04s ===============================
+

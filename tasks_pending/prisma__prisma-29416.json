@@ -1,0 +1,30 @@
+{
+  "instance_id": "prisma__prisma-29416",
+  "repo": "prisma/prisma",
+  "language": "typescript",
+  "base_commit": "8659f92d08d39470565db36f8b29a82bac8cec5e",
+  "merge_commit": "727a61ae916846267a98358d103b3e8a2afebd45",
+  "patch": "From 054e521612cfd4d344d0d2d038f64d8e86c188cf Mon Sep 17 00:00:00 2001\nFrom: Jacek Malec <malec@prisma.io>\nDate: Mon, 30 Mar 2026 14:54:44 +0100\nSubject: [PATCH 1/2] chore: bump effect to fix vulnerability\n\n---\n packages/config/package.json |  2 +-\n pnpm-lock.yaml               | 10 +++++-----\n 2 files changed, 6 insertions(+), 6 deletions(-)\n\ndiff --git a/packages/config/package.json b/packages/config/package.json\nindex aef2b0b02de0..304ed28ee0bd 100644\n--- a/packages/config/package.json\n+++ b/packages/config/package.json\n@@ -14,7 +14,7 @@\n   \"dependencies\": {\n     \"c12\": \"3.1.0\",\n     \"deepmerge-ts\": \"7.1.5\",\n-    \"effect\": \"3.18.4\",\n+    \"effect\": \"3.21.0\",\n     \"empathic\": \"2.0.0\"\n   },\n   \"devDependencies\": {\ndiff --git a/pnpm-lock.yaml b/pnpm-lock.yaml\nindex 8acc35c47c15..c67907a11e30 100644\n--- a/pnpm-lock.yaml\n+++ b/pnpm-lock.yaml\n@@ -1051,8 +1051,8 @@ importers:\n         specifier: 7.1.5\n         version: 7.1.5\n       effect:\n-        specifier: 3.18.4\n-        version: 3.18.4\n+        specifier: 3.21.0\n+        version: 3.21.0\n       empathic:\n         specifier: 2.0.0\n         version: 2.0.0\n@@ -4654,8 +4654,8 @@ packages:\n   ee-first@1.1.1:\n     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}\n \n-  effect@3.18.4:\n-    resolution: {integrity: sha512-b1LXQJLe9D11wfnOKAk3PKxuqYshQ0Heez+y5pnkd3jLj1yx9QhM72zZ9uUrOQyNvrs2GZZd/3maL0ZV18YuDA==}\n+  effect@3.21.0:\n+    resolution: {integrity: sha512-PPN80qRokCd1f015IANNhrwOnLO7GrrMQfk4/lnZRE/8j7UPWrNNjPV0uBrZutI/nHzernbW+J0hdqQysHiSnQ==}\n \n   electron-to-chromium@1.4.645:\n     resolution: {integrity: sha512-EeS1oQDCmnYsRDRy2zTeC336a/4LZ6WKqvSaM1jLocEk5ZuyszkQtCpsqvuvaIXGOUjwtvF6LTcS8WueibXvSw==}\n@@ -11087,7 +11087,7 @@ snapshots:\n \n   ee-first@1.1.1: {}\n \n-  effect@3.18.4:\n+  effect@3.21.0:\n     dependencies:\n       '@standard-schema/spec': 1.0.0\n       fast-check: 3.23.2\n\nFrom b36a1a3d86c8e1b5b71cb4b679cb6a6c963d1499 Mon Sep 17 00:00:00 2001\nFrom: jacek-prisma <malec@prisma.io>\nDate: Wed, 25 Mar 2026 11:11:11 +0000\nSubject: [PATCH 2/2] fix: pin E2E typescript to prevent 6 upgrade (#29383)\n\nE2E tests run into errors due to recently released Typescript 6\n\n<!-- This is an auto-generated comment: release notes by coderabbit.ai\n-->\n\n## Summary by CodeRabbit\n\n* **Chores**\n* Updated TypeScript version pinning in test infrastructure to ensure\nconsistent build environments.\n  * Resolved minor whitespace formatting in configuration files.\n\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->\n---\n packages/client/tests/e2e/_utils/standard.dockerfile | 4 ++--\n 1 file changed, 2 insertions(+), 2 deletions(-)\n\n",
+  "test_patch": "diff --git a/packages/client/tests/e2e/_utils/standard.dockerfile b/packages/client/tests/e2e/_utils/standard.dockerfile\nindex 00c76c742f01..0b238d3b3178 100644\n--- a/packages/client/tests/e2e/_utils/standard.dockerfile\n+++ b/packages/client/tests/e2e/_utils/standard.dockerfile\n@@ -2,13 +2,13 @@ FROM node:18\n \n RUN npm -v\n \n-# zx is pinned to v7 because v8 fails with: \n+# zx is pinned to v7 because v8 fails with:\n # [esbuild Error]: Top-level await is currently not supported with the \"cjs\" output format\n # at /usr/local/lib/node_modules/zx/build/vendor.js:2:17\n RUN npm i -g \\\n   zx@7 \\\n   pnpm \\\n-  typescript \\\n+  typescript@5.9.3 \\\n   ts-node \\\n   esbuild \\\n   tsx \\\n",
+  "problem_statement": "Vulnerability fix for 6.19\r\nCloses https://github.com/prisma/prisma/issues/29380",
+  "title": "chore: bump effect to fix vulnerability",
+  "FAIL_TO_PASS": [],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-03-30T13:56:02Z",
+  "merged_at": "2026-03-31T08:26:23Z",
+  "pr_url": "https://github.com/prisma/prisma/pull/29416",
+  "labels": [
+    "lgtm"
+  ],
+  "runner": {
+    "kind": "node",
+    "node_version": "20",
+    "package_manager": "pnpm",
+    "install": "pnpm install --frozen-lockfile || npm ci",
+    "test_cmd": "pnpm test || npm test",
+    "test_id_separator": " > "
+  },
+  "verified": false,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (0 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

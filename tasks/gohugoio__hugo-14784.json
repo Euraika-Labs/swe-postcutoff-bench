@@ -1,0 +1,29 @@
+{
+  "instance_id": "gohugoio__hugo-14784",
+  "repo": "gohugoio/hugo",
+  "language": "go",
+  "base_commit": "927666005c2380d08c3611e199cb0924d542ceb0",
+  "merge_commit": "4169c1f70fc24a9f18fedc9f77ec33c53856e23b",
+  "patch": "From a8fbcc59d11198011a9276548e4998bef5d65eda Mon Sep 17 00:00:00 2001\nFrom: =?UTF-8?q?Bj=C3=B8rn=20Erik=20Pedersen?=\n <bjorn.erik.pedersen@gmail.com>\nDate: Mon, 20 Apr 2026 17:47:12 +0200\nSubject: [PATCH] modules: Ignore non-require blocks in go.mod rewrite\n\nThe Go 1.24 tool directive uses single-token entries inside a\ntool ( ... ) block. The previous splitter treated any tab-indented\nline as a require entry, causing an index out of range panic when\nrunning hugo mod tidy on a module with a tool block.\n\nTrack the require block state explicitly so other blocks (tool,\nreplace, exclude, retract) are left untouched.\n\nFixes #14783\n---\n modules/client.go                 | 18 ++++++++++++++++--\n modules/client_test.go            | 15 ++++++++++++++-\n testscripts/commands/mod_tidy.txt |  8 ++++++++\n 3 files changed, 38 insertions(+), 3 deletions(-)\n\ndiff --git a/modules/client.go b/modules/client.go\nindex 2d111229c77..2e2f65b1918 100644\n--- a/modules/client.go\n+++ b/modules/client.go\n@@ -1045,18 +1045,32 @@ func (modules goModules) GetMain() *goModule {\n \n func getModlineSplitter(isGoMod bool) func(line string) []string {\n \tif isGoMod {\n+\t\tvar inRequireBlock bool\n \t\treturn func(line string) []string {\n \t\t\tif strings.HasPrefix(line, \"require (\") {\n+\t\t\t\tinRequireBlock = true\n \t\t\t\treturn nil\n \t\t\t}\n-\t\t\tif !strings.HasPrefix(line, \"require\") && !strings.HasPrefix(line, \"\\t\") {\n+\t\t\tif inRequireBlock {\n+\t\t\t\tif strings.HasPrefix(line, \")\") {\n+\t\t\t\t\tinRequireBlock = false\n+\t\t\t\t\treturn nil\n+\t\t\t\t}\n+\t\t\t\tif !strings.HasPrefix(line, \"\\t\") {\n+\t\t\t\t\treturn nil\n+\t\t\t\t}\n+\t\t\t} else if !strings.HasPrefix(line, \"require \") {\n \t\t\t\treturn nil\n \t\t\t}\n \t\t\tline = strings.TrimPrefix(line, \"require\")\n \t\t\tline = strings.TrimSpace(line)\n \t\t\tline = strings.TrimSuffix(line, \"// indirect\")\n \n-\t\t\treturn strings.Fields(line)\n+\t\t\tparts := strings.Fields(line)\n+\t\t\tif len(parts) < 2 {\n+\t\t\t\treturn nil\n+\t\t\t}\n+\t\t\treturn parts\n \t\t}\n \t}\n \ndiff --git a/testscripts/commands/mod_tidy.txt b/testscripts/commands/mod_tidy.txt\nindex 1a250f37086..13331a1b6c6 100644\n--- a/testscripts/commands/mod_tidy.txt\n+++ b/testscripts/commands/mod_tidy.txt\n@@ -11,9 +11,17 @@ go 1.19\n \n require github.com/bep/empty-hugo-module v1.0.0\n \n+tool (\n+    github.com/gohugoio/hugo\n+)\n+\n module github.com/gohugoio/testmod\n -- golden/go.mod.cleaned --\n go 1.19\n \n \n+tool (\n+    github.com/gohugoio/hugo\n+)\n+\n module github.com/gohugoio/testmod\n",
+  "test_patch": "diff --git a/modules/client_test.go b/modules/client_test.go\nindex 54e36be3a03..188646c1f6f 100644\n--- a/modules/client_test.go\n+++ b/modules/client_test.go\n@@ -210,14 +210,27 @@ func TestGetModlineSplitter(t *testing.T) {\n \n \tgomodSplitter := getModlineSplitter(true)\n \n+\tc.Assert(gomodSplitter(\"require (\"), qt.IsNil)\n \tc.Assert(gomodSplitter(\"\\tgithub.com/BurntSushi/toml v0.3.1\"), qt.DeepEquals, []string{\"github.com/BurntSushi/toml\", \"v0.3.1\"})\n \tc.Assert(gomodSplitter(\"\\tgithub.com/cpuguy83/go-md2man v1.0.8 // indirect\"), qt.DeepEquals, []string{\"github.com/cpuguy83/go-md2man\", \"v1.0.8\"})\n-\tc.Assert(gomodSplitter(\"require (\"), qt.IsNil)\n \n \tgosumSplitter := getModlineSplitter(false)\n \tc.Assert(gosumSplitter(\"github.com/BurntSushi/toml v0.3.1\"), qt.DeepEquals, []string{\"github.com/BurntSushi/toml\", \"v0.3.1\"})\n }\n \n+// Issue 14783\n+func TestGetModlineSplitterIgnoresToolBlockIssue14783(t *testing.T) {\n+\tc := qt.New(t)\n+\n+\tgomodSplitter := getModlineSplitter(true)\n+\n+\tc.Assert(gomodSplitter(\"tool (\"), qt.IsNil)\n+\tc.Assert(gomodSplitter(\"\\tgithub.com/gohugoio/hugo\"), qt.IsNil)\n+\tc.Assert(gomodSplitter(\")\"), qt.IsNil)\n+\tc.Assert(gomodSplitter(\"require (\"), qt.IsNil)\n+\tc.Assert(gomodSplitter(\"\\tgithub.com/foo/bar v1.2.3\"), qt.DeepEquals, []string{\"github.com/foo/bar\", \"v1.2.3\"})\n+}\n+\n func TestClientConfigToEnv(t *testing.T) {\n \tc := qt.New(t)\n \n",
+  "problem_statement": "The Go 1.24 tool directive uses single-token entries inside a\ntool ( ... ) block. The previous splitter treated any tab-indented\nline as a require entry, causing an index out of range panic when\nrunning hugo mod tidy on a module with a tool block.\n\nTrack the require block state explicitly so other blocks (tool,\nreplace, exclude, retract) are left untouched.\n\nFixes #14783",
+  "title": "modules: Ignore non-require blocks in go.mod rewrite",
+  "FAIL_TO_PASS": [
+    "modules/TestGetModlineSplitterIgnoresToolBlockIssue14783"
+  ],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-20T16:00:01Z",
+  "merged_at": "2026-04-20T17:11:42Z",
+  "pr_url": "https://github.com/gohugoio/hugo/pull/14784",
+  "labels": [],
+  "runner": {
+    "kind": "go",
+    "go_version": "1.23",
+    "install": "go mod download",
+    "test_cmd": "go test ./...",
+    "test_id_separator": "/"
+  },
+  "verified": true,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (1 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

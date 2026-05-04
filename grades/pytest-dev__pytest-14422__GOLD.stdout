@@ -1,0 +1,13 @@
+{
+  "instance_id": "pytest-dev__pytest-14422",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "testing/test_warnings.py::test_pythonwarnings_not_duplicated": true
+  },
+  "agent_seconds": 9.703397989273071,
+  "candidate_label": "GOLD"
+}

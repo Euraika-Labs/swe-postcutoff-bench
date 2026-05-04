@@ -1,0 +1,29 @@
+{
+  "instance_id": "gohugoio__hugo-14798",
+  "repo": "gohugoio/hugo",
+  "language": "go",
+  "base_commit": "4c03129fcf3d2bc0d1d83cf3fade8390efaef762",
+  "merge_commit": "72b85d5f9c2d40c06b81d496cd3ccf1f2105c383",
+  "patch": "From 594ebc50926eeeb74e5d76c66a981e22e8f011fc Mon Sep 17 00:00:00 2001\nFrom: Joe Mooring <joe.mooring@veriphor.com>\nDate: Wed, 22 Apr 2026 12:59:06 -0700\nSubject: [PATCH] langs/i18n: Fix translation lookup when using language\n variants\n\nCloses #7982\n\nCo-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>\n---\n langs/i18n/translationProvider.go   | 20 ++++++++++++++++++-\n langs/languages_integration_test.go | 30 +++++++++++++++++++++++++++++\n 2 files changed, 49 insertions(+), 1 deletion(-)\n\ndiff --git a/langs/i18n/translationProvider.go b/langs/i18n/translationProvider.go\nindex 85d7719c37b..11aeaa7818c 100644\n--- a/langs/i18n/translationProvider.go\n+++ b/langs/i18n/translationProvider.go\n@@ -17,6 +17,7 @@ import (\n \t\"context\"\n \t\"encoding/json\"\n \t\"fmt\"\n+\t\"sort\"\n \t\"strings\"\n \n \t\"github.com/gohugoio/hugo/common/paths\"\n@@ -59,6 +60,7 @@ func (tp *TranslationProvider) NewResource(dst *deps.Deps) error {\n \tbundle.RegisterUnmarshalFunc(\"yml\", metadecoders.UnmarshalYaml)\n \tbundle.RegisterUnmarshalFunc(\"json\", json.Unmarshal)\n \n+\tvar files []hugofs.FileMetaInfo\n \tw := hugofs.NewWalkway(\n \t\thugofs.WalkwayConfig{\n \t\t\tFs:         dst.BaseFs.I18n.Fs,\n@@ -68,7 +70,8 @@ func (tp *TranslationProvider) NewResource(dst *deps.Deps) error {\n \t\t\t\tif info.IsDir() {\n \t\t\t\t\treturn nil\n \t\t\t\t}\n-\t\t\t\treturn addTranslationFile(bundle, source.NewFileInfo(info))\n+\t\t\t\tfiles = append(files, info)\n+\t\t\t\treturn nil\n \t\t\t},\n \t\t})\n \n@@ -76,6 +79,21 @@ func (tp *TranslationProvider) NewResource(dst *deps.Deps) error {\n \t\treturn err\n \t}\n \n+\t// Sort translation files so that base tags (e.g. \"de\") are always registered\n+\t// before their subtag variants (e.g. \"de-DE\"); without this ordering the\n+\t// fallback chain breaks. See https://github.com/gohugoio/hugo/issues/7982.\n+\tsort.Slice(files, func(i, j int) bool {\n+\t\tsi := files[i].Meta().PathInfo.NameNoExt()\n+\t\tsj := files[j].Meta().PathInfo.NameNoExt()\n+\t\treturn strings.Count(si, \"-\") < strings.Count(sj, \"-\")\n+\t})\n+\n+\tfor _, info := range files {\n+\t\tif err := addTranslationFile(bundle, source.NewFileInfo(info)); err != nil {\n+\t\t\treturn err\n+\t\t}\n+\t}\n+\n \ttp.t = NewTranslator(bundle, dst.Conf, dst.Log)\n \n \tdst.Translate = tp.getTranslateFunc(dst)\n",
+  "test_patch": "diff --git a/langs/languages_integration_test.go b/langs/languages_integration_test.go\nindex 5e58cdc8c55..fbf04d8746a 100644\n--- a/langs/languages_integration_test.go\n+++ b/langs/languages_integration_test.go\n@@ -296,3 +296,33 @@ FormatCurrency: {{ 512.5032 | lang.FormatCurrency 2 \"USD\" }}|\n \t\t`FormatCurrency: US$512.50|`,\n \t)\n }\n+\n+func TestMultipleLanguageVariants7982(t *testing.T) {\n+\tt.Parallel()\n+\n+\tfiles := `\n+-- hugo.toml --\n+disableKinds = ['page','section','rss','sitemap','taxonomy','term']\n+defaultContentLanguageInSubdir = true\n+[languages.en]\n+weight = 1\n+[languages.de]\n+weight = 2\n+[languages.de-de]\n+weight = 3\n+-- i18n/en.toml --\n+file = 'en'\n+-- i18n/de.toml --\n+file = 'de'\n+-- i18n/de-de.toml --\n+file = 'de-de'\n+-- layouts/index.html --\n+language: {{ site.Language.Name }} file: {{ T \"file\" }}|\n+`\n+\n+\tb := hugolib.Test(t, files)\n+\n+\tb.AssertFileContent(\"public/en/index.html\", \"language: en file: en|\")\n+\tb.AssertFileContent(\"public/de/index.html\", \"language: de file: de|\")\n+\tb.AssertFileContent(\"public/de-de/index.html\", \"language: de-de file: de-de|\")\n+}\n",
+  "problem_statement": "Closes #7982",
+  "title": "langs/i18n: Fix translation lookup when using language variants",
+  "FAIL_TO_PASS": [
+    "langs/TestMultipleLanguageVariants7982"
+  ],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-23T13:34:41Z",
+  "merged_at": "2026-04-23T16:47:13Z",
+  "pr_url": "https://github.com/gohugoio/hugo/pull/14798",
+  "labels": [],
+  "runner": {
+    "kind": "go",
+    "go_version": "1.23",
+    "install": "go mod download",
+    "test_cmd": "go test ./...",
+    "test_id_separator": "/"
+  },
+  "verified": true,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (1 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}
