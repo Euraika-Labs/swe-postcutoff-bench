@@ -1,0 +1,50 @@
+diff --git a/resources/resource_factories/create/remote.go b/resources/resource_factories/create/remote.go
+index 7c6104e9c..b9b25558a 100644
+--- a/resources/resource_factories/create/remote.go
++++ b/resources/resource_factories/create/remote.go
+@@ -476,13 +476,45 @@ func (t *transport) RoundTrip(req *http.Request) (resp *http.Response, err error
+ 			if start.IsZero() {
+ 				start = time.Now()
+ 			} else if d := time.Since(start) + nextSleep; d >= t.Cfg.Timeout() {
++				retryAfter := resp.Header.Get("Retry-After")
++				retryAfterDisplay := retryAfter
++				// Format the retryAfter value for display
++				if retryAfter != "" {
++					// Try to parse as seconds first
++					if d, err := time.ParseDuration(retryAfter + "s"); err == nil {
++						retryAfterDisplay = d.String()
++					} else if t, err := time.Parse(time.RFC1123, retryAfter); err == nil {
++						// It's an HTTP-date, convert to duration
++						d := time.Until(t)
++						if d < 0 {
++							d = 0
++						}
++						retryAfterDisplay = d.String()
++					}
++				}
+ 				msg := "<nil>"
+ 				if resp != nil {
+ 					msg = resp.Status
++					if retryAfter != "" {
++						msg += fmt.Sprintf(" (Retry-After: %s)", retryAfterDisplay)
++					}
+ 				}
+ 				err := toHTTPError(fmt.Errorf("retry timeout (configured to %s) fetching remote resource: %s", t.Cfg.Timeout(), msg), resp, req.Method != "HEAD", nil)
+ 				return resp, err
+ 			}
++			// Check for Retry-After header to use as sleep duration
++			if retryAfter := resp.Header.Get("Retry-After"); retryAfter != "" {
++				// Retry-After can be either a number of seconds or an HTTP-date
++				if d, err := time.ParseDuration(retryAfter + "s"); err == nil {
++					nextSleep = d
++				} else if t, err := time.Parse(time.RFC1123, retryAfter); err == nil {
++					// It's an HTTP-date, calculate the duration until that time
++					nextSleep = time.Until(t)
++					if nextSleep < 0 {
++						nextSleep = 0
++					}
++				}
++			}
+ 			time.Sleep(nextSleep)
+ 			if nextSleep < nextSleepLimit {
+ 				nextSleep *= 2

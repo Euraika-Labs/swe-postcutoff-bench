@@ -1,0 +1,33 @@
+{
+  "instance_id": "spf13__cobra-2234",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "./TestCompletionFuncCompatibility": true
+  },
+  "agent_seconds": 1.5415525436401367,
+  "candidate_label": "agent.diff"
+}
+ommand.go cleanly.
+Applied patch completions.go cleanly.
+
+
+[install rc=0]
+
+[./TestCompletionFuncCompatibility] rc=0
+ned_completion_helper/type_alias_helper
+--- PASS: TestCompletionFuncCompatibility (0.00s)
+    --- PASS: TestCompletionFuncCompatibility/validate_signature (0.00s)
+        --- PASS: TestCompletionFuncCompatibility/validate_signature/format_with_[]string (0.00s)
+        --- PASS: TestCompletionFuncCompatibility/validate_signature/format_with_[]Completion (0.00s)
+        --- PASS: TestCompletionFuncCompatibility/validate_signature/format_with_CompletionFunc (0.00s)
+    --- PASS: TestCompletionFuncCompatibility/user_defined_completion_helper (0.00s)
+        --- PASS: TestCompletionFuncCompatibility/user_defined_completion_helper/type_helper (0.00s)
+        --- PASS: TestCompletionFuncCompatibility/user_defined_completion_helper/type_alias_helper (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.003s
+
+---

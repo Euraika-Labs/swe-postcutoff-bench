@@ -1,0 +1,27 @@
+diff --git a/modules/client.go b/modules/client.go
+index 2d111229c..c7329711c 100644
+--- a/modules/client.go
++++ b/modules/client.go
+@@ -1045,11 +1045,20 @@ func (modules goModules) GetMain() *goModule {
+ 
+ func getModlineSplitter(isGoMod bool) func(line string) []string {
+ 	if isGoMod {
++		var inRequireBlock bool
+ 		return func(line string) []string {
+-			if strings.HasPrefix(line, "require (") {
++			if strings.HasSuffix(line, " (") || strings.HasPrefix(line, "require (") {
++				inRequireBlock = strings.HasPrefix(line, "require")
+ 				return nil
+ 			}
+-			if !strings.HasPrefix(line, "require") && !strings.HasPrefix(line, "\t") {
++			if strings.HasPrefix(line, ")") {
++				inRequireBlock = false
++				return nil
++			}
++			if !inRequireBlock {
++				return nil
++			}
++			if !strings.HasPrefix(line, "\t") {
+ 				return nil
+ 			}
+ 			line = strings.TrimPrefix(line, "require")

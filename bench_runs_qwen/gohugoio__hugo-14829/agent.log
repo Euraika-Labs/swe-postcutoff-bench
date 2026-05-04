@@ -1,0 +1,20 @@
+(node:4155481) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+All tests pass. Let me summarize the changes I made:
+
+## Summary
+
+I fixed the issue by modifying the `transport.RoundTrip` method in `/tmp/swe-postcutoff-bench/bench_runs_qwen/gohugoio__hugo-14829/workdir/resources/resource_factories/create/remote.go`.
+
+The changes implement the `Retry-After` header support:
+
+1. **Honoring the Retry-After header**: When a temporary HTTP error (429, 503, etc.) occurs and a `Retry-After` header is present, the code now uses that value as the sleep duration instead of the default exponential backoff.
+
+2. **Support for both formats**: The `Retry-After` header can be either:
+   - A number of seconds (e.g., "1", "2")
+   - An HTTP-date (e.g., "Wed, 21 Oct 2015 07:28:00 GMT")
+
+3. **Surfacing in error messages**: When the retry timeout is exceeded, the `Retry-After` value is included in the error message.
+
+The code handles both numeric seconds and HTTP-date formats for the `Retry-After` header, converting them appropriately for use as sleep durations and displaying them in a consistent format in error messages.
+[done rc=0 elapsed=421s]

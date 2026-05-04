@@ -1,0 +1,20 @@
+(node:3868952) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+All tests pass. The fix is complete.
+
+## Summary
+
+The issue was that when using `SetHelpFunc` with a custom help function that needs to access the context via `cmd.Context()`, the context was not being passed to the target command when help was invoked via the default help command.
+
+**Root cause:** When the default help command's `Run` function executed `cmd.Help()` on the target command, the context that was set on the root command (via `ExecuteContext`) was not flowing to the target command.
+
+**Fix:** Added context propagation in the default help command's `Run` function, similar to how context flows in `ExecuteC()`. Before calling `cmd.Help()`, we now check if `cmd.ctx` is nil and set it to the help command's context (which was propagated from the root command):
+
+```go
+if cmd.ctx == nil {
+    cmd.ctx = c.ctx
+}
+```
+
+This ensures that when a custom help function is executed via `SetHelpFunc`, it has access to the context that was passed to `ExecuteContext`.
+[done rc=0 elapsed=211s]

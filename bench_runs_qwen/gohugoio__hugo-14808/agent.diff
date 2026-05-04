@@ -1,0 +1,21 @@
+diff --git a/hugolib/site_render.go b/hugolib/site_render.go
+index b69e3dcbc..212b5b91a 100644
+--- a/hugolib/site_render.go
++++ b/hugolib/site_render.go
+@@ -30,6 +30,7 @@ import (
+ 
+ 	"github.com/gohugoio/hugo/resources/kinds"
+ 	"github.com/gohugoio/hugo/resources/page"
++	"github.com/gohugoio/hugo/resources/page/pagemeta"
+ )
+ 
+ type siteRenderContext struct {
+@@ -154,7 +155,7 @@ func pageRenderer(
+ 			}
+ 		}
+ 
+-		if !s.conf.DisableAliases && !s.h.BuildState.IsRebuild() {
++		if !s.conf.DisableAliases && !s.h.BuildState.IsRebuild() && p.m.pageConfig.Build.Render == pagemeta.Always {
+ 			of := p.outputFormat()
+ 			if of.IsHTML && of.Permalinkable {
+ 				// Render any aliases for this page.

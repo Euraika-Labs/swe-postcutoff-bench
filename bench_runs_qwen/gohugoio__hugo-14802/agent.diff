@@ -1,0 +1,60 @@
+diff --git a/langs/i18n/translationProvider.go b/langs/i18n/translationProvider.go
+index 11aeaa781..f410b3c2c 100644
+--- a/langs/i18n/translationProvider.go
++++ b/langs/i18n/translationProvider.go
+@@ -151,16 +151,52 @@ func (tp *TranslationProvider) CloneResource(dst, src *deps.Deps) error {
+ }
+ 
+ // getTranslateFunc returns the translation function for the language in Deps.
+-// We first try the locale (e.g. "en-US"), then the language key (e.g. "en").
++// We first try the locale (e.g. "en-US"), then the language key (e.g. "en"),
++// then the default language's locale, and finally the default language's key.
+ func (tp *TranslationProvider) getTranslateFunc(dst *deps.Deps) func(ctx context.Context, translationID string, templateData any) string {
+ 	l := dst.Conf.Language().(*langs.Language)
++	defaultLang := dst.Conf.DefaultContentLanguage()
++
++	// Try current language's locale (e.g. "pt-br")
+ 	if locale := l.Locale(); locale != "" {
+ 		if fn, ok := tp.t.Lookup(strings.ToLower(locale)); ok {
+ 			return fn
+ 		}
+ 	}
+-	// Func will fall back to the default language if not found.
+-	return tp.t.Func(l.Lang)
++
++	// Try current language's key (e.g. "pt")
++	if fn, ok := tp.t.Lookup(l.Lang); ok {
++		return fn
++	}
++
++	// Try default language's locale
++	defaultLocale := tp.getDefaultLocale(dst)
++	if defaultLocale != "" {
++		if fn, ok := tp.t.Lookup(strings.ToLower(defaultLocale)); ok {
++			return fn
++		}
++	}
++
++	// Try default language's key (e.g. "es")
++	if fn, ok := tp.t.Lookup(defaultLang); ok {
++		return fn
++	}
++
++	tp.t.logger.Infof("Translation func for language %q not found, and no fallback available.", l.Lang)
++	return func(ctx context.Context, translationID string, templateData any) string {
++		return ""
++	}
++}
++
++func (tp *TranslationProvider) getDefaultLocale(dst *deps.Deps) string {
++	// Get the default language from the Languages collection
++	languages := dst.Conf.Languages().(langs.Languages)
++	for _, lang := range languages {
++		if lang.IsDefault() {
++			return lang.Locale()
++		}
++	}
++	return ""
+ }
+ 
+ func errWithFileContext(inerr error, r *source.File) error {

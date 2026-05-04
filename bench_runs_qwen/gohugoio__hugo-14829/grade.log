@@ -1,0 +1,28 @@
+{
+  "instance_id": "gohugoio__hugo-14829",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "resources/resource_factories/create/TestGetRemoteRetryAfterIssue14828": true
+  },
+  "agent_seconds": 21.12678861618042,
+  "candidate_label": "agent.diff"
+}
+ rc=0]
+
+[resources/resource_factories/create/TestGetRemoteRetryAfterIssue14828] rc=0
+=== RUN   TestGetRemoteRetryAfterIssue14828
+=== PAUSE TestGetRemoteRetryAfterIssue14828
+=== CONT  TestGetRemoteRetryAfterIssue14828
+=== RUN   TestGetRemoteRetryAfterIssue14828/Honored
+=== RUN   TestGetRemoteRetryAfterIssue14828/TimeoutMessage
+--- PASS: TestGetRemoteRetryAfterIssue14828 (3.04s)
+    --- PASS: TestGetRemoteRetryAfterIssue14828/Honored (2.03s)
+    --- PASS: TestGetRemoteRetryAfterIssue14828/TimeoutMessage (1.01s)
+PASS
+ok  	github.com/gohugoio/hugo/resources/resource_factories/create	3.148s
+
+---

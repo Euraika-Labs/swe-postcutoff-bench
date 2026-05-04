@@ -1,0 +1,31 @@
+(node:8284) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+All edge cases work correctly. The fix is complete. Let me provide a summary:
+
+## Summary
+
+I've fixed the bug where the `-V` flag was not being recognized as a version flag. The fix was made in `src/_pytest/config/__init__.py` in the `main()` function.
+
+### Changes Made:
+1. Updated the comment to mention both `--version` and `-V`
+2. Modified the condition to count both `--version` and `-V` occurrences using `new_args.count("--version") + new_args.count("-V")`
+
+### The Fix:
+```python
+# Before:
+if isinstance(new_args, Sequence) and new_args.count("--version") == 1:
+
+# After:
+if (
+    isinstance(new_args, Sequence)
+    and (new_args.count("--version") + new_args.count("-V")) == 1
+):
+```
+
+### Test Results:
+- All 13 tests in `testing/test_helpconfig.py` pass
+- `pytest -V` now correctly shows only the version without loading plugins
+- `pytest --version` continues to work as expected
+- `pytest -V -V` and `pytest --version --version` correctly show verbose output (plugin info)
+- `pytest -V --version` and `pytest --version -V` correctly show verbose output (2 version flags)
+[done rc=0 elapsed=271s]

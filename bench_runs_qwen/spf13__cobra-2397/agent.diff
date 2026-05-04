@@ -1,0 +1,23 @@
+diff --git a/args.go b/args.go
+index ed1e70c..b5c86ad 100644
+--- a/args.go
++++ b/args.go
+@@ -110,6 +110,18 @@ func RangeArgs(min int, max int) PositionalArgs {
+ 	}
+ }
+ 
++// NoDuplicateArgs returns an error if any args are duplicated.
++func NoDuplicateArgs(cmd *Command, args []string) error {
++	seen := make(map[string]bool)
++	for _, arg := range args {
++		if seen[arg] {
++			return fmt.Errorf("duplicate argument %q for %q", arg, cmd.CommandPath())
++		}
++		seen[arg] = true
++	}
++	return nil
++}
++
+ // MatchAll allows combining several PositionalArgs to work in concert.
+ func MatchAll(pargs ...PositionalArgs) PositionalArgs {
+ 	return func(cmd *Command, args []string) error {

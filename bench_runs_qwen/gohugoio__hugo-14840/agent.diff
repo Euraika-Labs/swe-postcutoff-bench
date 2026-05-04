@@ -1,0 +1,23 @@
+diff --git a/config/security/securityConfig.go b/config/security/securityConfig.go
+index 0e9208790..61987f936 100644
+--- a/config/security/securityConfig.go
++++ b/config/security/securityConfig.go
+@@ -51,13 +51,12 @@ var DefaultConfig = Config{
+ 		Getenv: MustNewWhitelist("^HUGO_", "^CI$"),
+ 	},
+ 	HTTP: HTTP{
+-		// Allow URLs whose host starts with a letter (the typical
+-		// "https://example.com" shape), deny anything that looks like
+-		// localhost, and deny URLs with userinfo ("http://user@...") to
+-		// foil the obvious SSRF bypass. Public IP literals are collateral
+-		// blocks; users who need them can override security.http.urls.
++		// Allow URLs whose host starts with a letter or digit (the typical
++		// "https://example.com" shape), but deny IP literals (e.g. 127.0.0.1)
++		// to prevent SSRF. Also deny localhost and URLs with userinfo.
+ 		URLs: MustNewWhitelist(
+-			`(?i)^https?://[a-z]`,
++			`(?i)^https?://[a-z0-9]`,
++			`! ^https?://\d+\.`,
+ 			`! (?i)localhost`,
+ 			`! (?i)^https?://[^/?#]*@`,
+ 		),

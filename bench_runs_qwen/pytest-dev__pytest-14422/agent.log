@@ -1,0 +1,9 @@
+(node:15015) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+The fix is complete and all tests pass. The change is minimal and targeted:
+
+- **File modified**: `src/_pytest/config/__init__.py`
+- **Change**: Line 1536-1537 now uses `copy.copy(self.option)` instead of `self.known_args_namespace` when calling `parse_known_args`
+
+This ensures that each parse starts from a clean namespace, preventing `action="append"` options from accumulating duplicate values across multiple parse calls.
+[done rc=0 elapsed=1270s]

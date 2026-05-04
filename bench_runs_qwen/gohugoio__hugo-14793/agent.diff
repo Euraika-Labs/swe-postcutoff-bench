@@ -1,0 +1,105 @@
+diff --git a/config/security/securityConfig.go b/config/security/securityConfig.go
+index 8ba51a981..0f6257212 100644
+--- a/config/security/securityConfig.go
++++ b/config/security/securityConfig.go
+@@ -51,7 +51,7 @@ var DefaultConfig = Config{
+ 		Getenv: MustNewWhitelist("^HUGO_", "^CI$"),
+ 	},
+ 	HTTP: HTTP{
+-		URLs:    MustNewWhitelist(".*"),
++		URLs:    MustNewWhitelist("(?i)^https?://[a-z]", "! (?i)localhost", "! @"),
+ 		Methods: MustNewWhitelist("(?i)GET|POST"),
+ 	},
+ 	Node: Node{
+diff --git a/config/security/whitelist.go b/config/security/whitelist.go
+index 5ce369a1f..ef7d154e9 100644
+--- a/config/security/whitelist.go
++++ b/config/security/whitelist.go
+@@ -27,7 +27,8 @@ const (
+ // Whitelist holds a whitelist.
+ type Whitelist struct {
+ 	acceptNone bool
+-	patterns   []*regexp.Regexp
++	allow      []*regexp.Regexp
++	deny       []*regexp.Regexp
+ 
+ 	// Store this for debugging/error reporting
+ 	patternsStrings []string
+@@ -45,6 +46,9 @@ func (w Whitelist) MarshalJSON() ([]byte, error) {
+ // NewWhitelist creates a new Whitelist from zero or more patterns.
+ // An empty patterns list or a pattern with the value 'none' will create
+ // a whitelist that will Accept none.
++// Patterns starting with "! " (space after exclamation mark) are deny rules.
++// Deny rules take precedence over allow rules.
++// A whitelist with only deny rules implicitly allows everything it does not deny.
+ func NewWhitelist(patterns ...string) (Whitelist, error) {
+ 	if len(patterns) == 0 {
+ 		return Whitelist{acceptNone: true}, nil
+@@ -71,21 +75,34 @@ func NewWhitelist(patterns ...string) (Whitelist, error) {
+ 		}, nil
+ 	}
+ 
+-	var patternsr []*regexp.Regexp
++	var allow []*regexp.Regexp
++	var deny []*regexp.Regexp
+ 
+ 	for i := range patterns {
+ 		p := strings.TrimSpace(patterns[i])
+ 		if p == "" {
+ 			continue
+ 		}
+-		re, err := regexp.Compile(p)
++		var re *regexp.Regexp
++		var err error
++		if strings.HasPrefix(p, "! ") {
++			// Deny rule: strip the "! " prefix
++			re, err = regexp.Compile(p[2:])
++		} else {
++			// Allow rule
++			re, err = regexp.Compile(p)
++		}
+ 		if err != nil {
+ 			return Whitelist{}, fmt.Errorf("failed to compile whitelist pattern %q: %w", p, err)
+ 		}
+-		patternsr = append(patternsr, re)
++		if strings.HasPrefix(p, "! ") {
++			deny = append(deny, re)
++		} else {
++			allow = append(allow, re)
++		}
+ 	}
+ 
+-	return Whitelist{patterns: patternsr, patternsStrings: patternsStrings}, nil
++	return Whitelist{allow: allow, deny: deny, patternsStrings: patternsStrings}, nil
+ }
+ 
+ // MustNewWhitelist creates a new Whitelist from zero or more patterns and panics on error.
+@@ -103,11 +120,27 @@ func (w Whitelist) Accept(name string) bool {
+ 		return false
+ 	}
+ 
+-	for _, p := range w.patterns {
++	// Check deny rules first (they take precedence)
++	for _, p := range w.deny {
++		if p.MatchString(name) {
++			return false
++		}
++	}
++
++	// If no deny rules matched, check allow rules
++	for _, p := range w.allow {
+ 		if p.MatchString(name) {
+ 			return true
+ 		}
+ 	}
++
++	// If no allow rules matched and we have at least one allow rule,
++	// the input is not whitelisted. But if we have only deny rules,
++	// the input is whitelisted (implicit allow for everything not denied).
++	if len(w.allow) == 0 && len(w.deny) > 0 {
++		return true
++	}
++
+ 	return false
+ }
+ 

@@ -1,0 +1,30 @@
+(node:21690) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+All tests pass. Let me summarize the changes I made:
+
+## Summary of Changes
+
+The issue was that the `CompletionFunc` type was defined using a type definition (`type CompletionFunc func(...)`) with `[]Completion` as the return type, which caused incompatibility with user-defined completion functions that use `[]string` as the return type.
+
+### Changes Made:
+
+1. **completions.go**:
+   - Changed `type CompletionFunc func(...)` to `type CompletionFunc = func(...)` (type alias instead of type definition)
+   - Changed the return type from `[]Completion` to `[]string`
+   - Updated `NoFileCompletions` return type to `[]string`
+   - Updated `FixedCompletions` parameter and inner function return type to `[]string`
+   - Updated all local variables from `[]Completion` to `[]string` in `getCompletions`, `getFlagNameCompletions`, and `completeRequireFlags`
+
+2. **command.go**:
+   - Changed `ValidArgs` type from `[]Completion` to `[]string`
+   - Updated the help command's `ValidArgsFunction` to use `[]string` instead of `[]Completion`
+
+3. **active_help.go**:
+   - Updated `AppendActiveHelp` parameter and return type from `[]Completion` to `[]string`
+
+The key insight is that by using a type alias (`type CompletionFunc = func(...)`) instead of a type definition, and using `[]string` as the return type, the `CompletionFunc` type is now compatible with:
+- Functions that return `[]string`
+- Functions that return `[]Completion` (since `Completion = string`)
+
+This maintains backward compatibility with existing user code while also supporting the new `[]Completion` return type.
+[done rc=0 elapsed=937s]

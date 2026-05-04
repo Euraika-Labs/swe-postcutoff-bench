@@ -1,0 +1,27 @@
+{
+  "instance_id": "gohugoio__hugo-14802",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "langs/TestDefaultContentLanguageFallback14243": true
+  },
+  "agent_seconds": 27.914124727249146,
+  "candidate_label": "agent.diff"
+}
+vider.go cleanly.
+
+
+[install rc=0]
+
+[langs/TestDefaultContentLanguageFallback14243] rc=0
+=== RUN   TestDefaultContentLanguageFallback14243
+=== PAUSE TestDefaultContentLanguageFallback14243
+=== CONT  TestDefaultContentLanguageFallback14243
+--- PASS: TestDefaultContentLanguageFallback14243 (0.11s)
+PASS
+ok  	github.com/gohugoio/hugo/langs	0.309s
+
+---

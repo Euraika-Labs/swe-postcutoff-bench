@@ -1,0 +1,27 @@
+(node:3876996) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+The fix is complete. Let me summarize the changes:
+
+## Summary of Changes
+
+The fix adds support for the `Eqer` interface in the `where` function comparisons in `tpl/collections/where.go`.
+
+### Problem
+The `where` function previously fell through to a no-op (returning `false, nil`) when comparing two values whose kinds were not handled by the primitive type switches (e.g., two Page interface values). This made `where pages "Parent" $page` return an empty list, while the equivalent `range pages` + `if eq` worked.
+
+### Solution
+Added a `default` case to the equality operator (`eq`, `==`, `=`, empty/no-op) and inequality operator (`!=`, `<>`, `ne`) switch blocks in the `checkCondition` function. When none of the primitive type checks match, the code now falls back to using `compare.Eq()` from the `compare` package, which properly handles types that implement the `Eqer` interface.
+
+### Changes Made
+1. Added import for `"github.com/gohugoio/hugo/compare"`
+2. Added a `default` case for equality operations that uses `compare.Eq(v.Interface(), mv.Interface())`
+3. Added a `default` case for inequality operations that uses `!compare.Eq(v.Interface(), mv.Interface())`
+
+This matches the behavior of the `eq/ne` template functions in the `compare` package, which also use the `Eqer` interface when available.
+
+### Testing
+- The specific test `TestWhereWithPageEqualityIssue14777` now passes
+- All existing tests in `tpl/collections/` continue to pass
+- All tests in `tpl/compare/` continue to pass
+- All tests in `resources/page/` continue to pass
+[done rc=0 elapsed=974s]

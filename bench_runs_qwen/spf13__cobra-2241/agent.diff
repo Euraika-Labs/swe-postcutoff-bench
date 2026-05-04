@@ -1,0 +1,16 @@
+diff --git a/command.go b/command.go
+index dbb2c29..ef0a5de 100644
+--- a/command.go
++++ b/command.go
+@@ -1298,6 +1298,11 @@ Simply type ` + c.DisplayName() + ` help [path to command] for full details.`,
+ 				} else {
+ 					cmd.InitDefaultHelpFlag()    // make possible 'help' flag to be shown
+ 					cmd.InitDefaultVersionFlag() // make possible 'version' flag to be shown
++					// We have to pass global context to target command
++					// if context is present on the parent command.
++					if cmd.ctx == nil {
++						cmd.ctx = c.ctx
++					}
+ 					CheckErr(cmd.Help())
+ 				}
+ 			},

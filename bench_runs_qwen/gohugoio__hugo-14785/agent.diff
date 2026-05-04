@@ -1,0 +1,32 @@
+diff --git a/tpl/collections/where.go b/tpl/collections/where.go
+index 0cb84b8f5..47396a810 100644
+--- a/tpl/collections/where.go
++++ b/tpl/collections/where.go
+@@ -20,6 +20,7 @@ import (
+ 	"reflect"
+ 	"strings"
+ 
++	"github.com/gohugoio/hugo/compare"
+ 	"github.com/gohugoio/hugo/common/hmaps"
+ 	"github.com/gohugoio/hugo/common/hreflect"
+ 	"github.com/gohugoio/hugo/common/hstrings"
+@@ -200,6 +201,9 @@ func (ns *Namespace) checkCondition(v, mv reflect.Value, op string) (bool, error
+ 			return *svp == *smvp, nil
+ 		case fvp != nil && fmvp != nil:
+ 			return *fvp == *fmvp, nil
++		default:
++			// Use Eqer interface if available for other types.
++			return compare.Eq(v.Interface(), mv.Interface()), nil
+ 		}
+ 	case "!=", "<>", "ne":
+ 		switch {
+@@ -209,6 +213,9 @@ func (ns *Namespace) checkCondition(v, mv reflect.Value, op string) (bool, error
+ 			return *svp != *smvp, nil
+ 		case fvp != nil && fmvp != nil:
+ 			return *fvp != *fmvp, nil
++		default:
++			// Use Eqer interface if available for other types.
++			return !compare.Eq(v.Interface(), mv.Interface()), nil
+ 		}
+ 	case ">=", "ge":
+ 		switch {

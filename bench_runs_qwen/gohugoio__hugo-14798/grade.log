@@ -1,0 +1,22 @@
+{
+  "instance_id": "gohugoio__hugo-14798",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "langs/TestMultipleLanguageVariants7982": true
+  },
+  "agent_seconds": 15.633941411972046,
+  "candidate_label": "agent.diff"
+}
+ rc=0
+=== RUN   TestMultipleLanguageVariants7982
+=== PAUSE TestMultipleLanguageVariants7982
+=== CONT  TestMultipleLanguageVariants7982
+--- PASS: TestMultipleLanguageVariants7982 (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/langs	0.115s
+
+---

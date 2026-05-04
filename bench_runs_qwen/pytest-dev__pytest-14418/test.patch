@@ -1,0 +1,46 @@
+diff --git a/testing/test_assertion.py b/testing/test_assertion.py
+index d68fd0b1fba..9a7305a2905 100644
+--- a/testing/test_assertion.py
++++ b/testing/test_assertion.py
+@@ -24,7 +24,13 @@ class TerminalWriter:
+         def _highlight(self, source, lexer="python"):
+             return source
+ 
++    class PluginManager:
++        def has_plugin(self, name: str) -> bool:
++            return True
++
+     class Config:
++        pluginmanager = PluginManager()
++
+         def get_terminal_writer(self):
+             return TerminalWriter()
+ 
+diff --git a/testing/test_assertrewrite.py b/testing/test_assertrewrite.py
+index 92664354470..2668001af65 100644
+--- a/testing/test_assertrewrite.py
++++ b/testing/test_assertrewrite.py
+@@ -2404,3 +2404,22 @@ def test_saferepr_unbounded(self):
+             _saferepr(self.Help)
+             == f"<class '{Path(__file__).stem}.{self.__class__.__name__}.Help'>"
+         )
++
++
++def test_assertion_failure_when_terminalreporter_is_disabled(
++    pytester: Pytester,
++) -> None:
++    """Assertion rewriting doesn't crash when the terminalreporter plugin is
++    disabled (#14378)."""
++    pytester.makepyfile(
++        """
++        import pytest
++
++        def test():
++            with pytest.raises(AssertionError) as excinfo:
++                assert 0 == 1
++            assert excinfo.value.args[0] == 'assert 0 == 1'
++        """
++    )
++    reprec = pytester.inline_run("-p", "no:terminalreporter")
++    reprec.assertoutcome(passed=1)
+

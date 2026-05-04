@@ -1,0 +1,17 @@
+(node:3972539) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+The fix is complete and verified. Let me summarize what was done:
+
+## Summary
+
+**Issue**: Translation lookup when using language variants (like `de-de`) was incorrectly matching translations from subtag variants instead of the base language.
+
+**Root Cause**: Translation files were being loaded in an unpredictable order during file system traversal. When a subtag variant file (e.g., `de-de.toml`) was loaded before its base tag file (e.g., `de.toml`), the i18n bundle's fallback chain would break, causing translations to leak from variants to base languages.
+
+**Fix**: Modified `translationProvider.go` to:
+1. Collect all translation files during the walk
+2. Sort them by the number of hyphens in the filename (base tags like `de` have 0 hyphens, variants like `de-de` have 1 hyphen)
+3. Load them in sorted order so base tags are always registered before their subtag variants
+
+This ensures that when `de` language needs a translation, it finds `de.toml` first, and when `de-de` needs a translation, it finds `de-de.toml` first, with proper fallback behavior.
+[done rc=0 elapsed=571s]

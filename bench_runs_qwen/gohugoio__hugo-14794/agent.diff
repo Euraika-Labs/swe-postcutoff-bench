@@ -1,0 +1,29 @@
+diff --git a/langs/language.go b/langs/language.go
+index 1ff15b266..e05437f09 100644
+--- a/langs/language.go
++++ b/langs/language.go
+@@ -79,12 +79,20 @@ func (l *Language) IsDefault() bool {
+ 
+ // NewLanguage creates a new language.
+ func NewLanguage(lang, defaultContentLanguage, timeZone string, languageConfig LanguageConfig, logger loggers.Logger) (*Language, error) {
++	// Try to get a translator. We try the locale first (if set), then languageCode (if set),
++	// then the language key, then defaultContentLanguage, and finally "en".
+ 	translator := golocales.New(lang)
+-	if translator == nil {
++	if translator == nil && languageConfig.Locale != "" {
++		translator = golocales.New(languageConfig.Locale)
++	}
++	if translator == nil && languageConfig.LanguageCode != "" {
++		translator = golocales.New(languageConfig.LanguageCode)
++	}
++	if translator == nil && defaultContentLanguage != "" {
+ 		translator = golocales.New(defaultContentLanguage)
+-		if translator == nil {
+-			translator = golocales.New("en")
+-		}
++	}
++	if translator == nil {
++		translator = golocales.New("en")
+ 	}
+ 
+ 	var coll1, coll2 *Collator

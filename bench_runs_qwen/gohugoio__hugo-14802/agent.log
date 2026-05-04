@@ -1,0 +1,25 @@
+(node:4036400) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+The implementation is complete. Let me summarize the changes:
+
+## Summary
+
+The fix implements the new fallback order for translations as described in the issue:
+
+1. **Current language's locale** (e.g., `pt-BR` → `pt-br.toml`)
+2. **Current language's key** (e.g., `pt` → `pt.toml`)
+3. **Default language's locale** (e.g., `es-AR` → `es-ar.toml`) ← **NEW**
+4. **Default language's key** (e.g., `es` → `es.toml`)
+
+### Changes made to `/tmp/swe-postcutoff-bench/bench_runs_qwen/gohugoio__hugo-14802/workdir/langs/i18n/translationProvider.go`:
+
+1. Modified `getTranslateFunc` to implement the new fallback chain:
+   - First tries the current language's locale
+   - Then tries the current language's key
+   - Then tries the default language's locale (NEW)
+   - Finally tries the default language's key
+
+2. Added `getDefaultLocale` helper function to get the default language's locale from the Languages collection
+
+The fix is minimal, focused, and doesn't change any test files. All tests pass including the new test `TestDefaultContentLanguageFallback14243`.
+[done rc=0 elapsed=519s]

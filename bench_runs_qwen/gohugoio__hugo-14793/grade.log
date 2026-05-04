@@ -1,0 +1,41 @@
+{
+  "instance_id": "gohugoio__hugo-14793",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "config/security/TestCheckAllowedHTTPURLHardenedDefaultsIssue14792": true
+  },
+  "agent_seconds": 9.784449338912964,
+  "candidate_label": "agent.diff"
+}
+ecurityConfig_test.go cleanly.
+Applied patch config/security/whitelist_test.go cleanly.
+Applied patch hugolib/resource_chain_test.go cleanly.
+Applied patch hugolib/securitypolicies_test.go cleanly.
+Applied patch tpl/openapi/openapi3/openapi3_integration_test.go cleanly.
+
+
+Checking patch config/security/securityConfig.go...
+Checking patch config/security/whitelist.go...
+Applied patch config/security/securityConfig.go cleanly.
+Applied patch config/security/whitelist.go cleanly.
+
+
+[install rc=0]
+
+[config/security/TestCheckAllowedHTTPURLHardenedDefaultsIssue14792] rc=0
+Issue14792/User_can_deny_with_the_!_prefix
+=== CONT  TestCheckAllowedHTTPURLHardenedDefaultsIssue14792/Explicit_user_config_bypasses_hardening
+=== CONT  TestCheckAllowedHTTPURLHardenedDefaultsIssue14792/Private/loopback_URLs_denied_by_default
+--- PASS: TestCheckAllowedHTTPURLHardenedDefaultsIssue14792 (0.00s)
+    --- PASS: TestCheckAllowedHTTPURLHardenedDefaultsIssue14792/Public_URLs_allowed_by_default (0.00s)
+    --- PASS: TestCheckAllowedHTTPURLHardenedDefaultsIssue14792/Explicit_user_config_bypasses_hardening (0.00s)
+    --- PASS: TestCheckAllowedHTTPURLHardenedDefaultsIssue14792/User_can_deny_with_the_!_prefix (0.00s)
+    --- PASS: TestCheckAllowedHTTPURLHardenedDefaultsIssue14792/Private/loopback_URLs_denied_by_default (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/config/security	0.005s
+
+---

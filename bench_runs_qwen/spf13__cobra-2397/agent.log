@@ -1,0 +1,15 @@
+(node:49077) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+The implementation is complete. I've added the `NoDuplicateArgs` function that:
+
+1. Takes a `*Command` and `[]string` args as parameters (matching the `PositionalArgs` signature)
+2. Uses a map to track seen arguments
+3. Returns an error with the format `duplicate argument "X" for "command"` if a duplicate is found
+4. Returns `nil` if no duplicates exist
+
+All tests pass:
+- `TestNoDuplicateArgs` - passes with unique args
+- `TestNoDuplicateArgs_WithDuplicateArgs` - fails with duplicates
+- `TestNoDuplicateArgs_WithValid_WithDuplicateArgs` - fails with duplicates even when ValidArgs is set
+- `TestNoDuplicateArgs_WithValidOnly_WithInvalidArgs` - works correctly with MatchAll + OnlyValidArgs
+[done rc=0 elapsed=110s]

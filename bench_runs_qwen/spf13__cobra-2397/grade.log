@@ -1,0 +1,33 @@
+{
+  "instance_id": "spf13__cobra-2397",
+  "fail_to_pass_passed": 4,
+  "fail_to_pass_total": 4,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "./TestNoDuplicateArgs": true,
+    "./TestNoDuplicateArgs_WithDuplicateArgs": true,
+    "./TestNoDuplicateArgs_WithValid_WithDuplicateArgs": true,
+    "./TestNoDuplicateArgs_WithValidOnly_WithInvalidArgs": true
+  },
+  "agent_seconds": 2.1895198822021484,
+  "candidate_label": "agent.diff"
+}
+ 	github.com/spf13/cobra	0.003s
+
+---
+[./TestNoDuplicateArgs_WithValid_WithDuplicateArgs] rc=0
+=== RUN   TestNoDuplicateArgs_WithValid_WithDuplicateArgs
+--- PASS: TestNoDuplicateArgs_WithValid_WithDuplicateArgs (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.003s
+
+---
+[./TestNoDuplicateArgs_WithValidOnly_WithInvalidArgs] rc=0
+=== RUN   TestNoDuplicateArgs_WithValidOnly_WithInvalidArgs
+--- PASS: TestNoDuplicateArgs_WithValidOnly_WithInvalidArgs (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.003s
+
+---

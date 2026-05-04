@@ -1,0 +1,205 @@
+diff --git a/src/_pytest/assertion/__init__.py b/src/_pytest/assertion/__init__.py
+index 22f3ca8e2..075868192 100644
+--- a/src/_pytest/assertion/__init__.py
++++ b/src/_pytest/assertion/__init__.py
+@@ -205,4 +205,16 @@ def pytest_sessionfinish(session: Session) -> None:
+ def pytest_assertrepr_compare(
+     config: Config, op: str, left: Any, right: Any
+ ) -> list[str] | None:
+-    return util.assertrepr_compare(config=config, op=op, left=left, right=right)
++    if config.pluginmanager.has_plugin("terminalreporter"):
++        highlighter = config.get_terminal_writer()._highlight
++    else:
++        # Keep it plaintext when not using terminalreporter (#14377).
++        highlighter = util.dummy_highlighter
++    verbose = config.get_verbosity(Config.VERBOSITY_ASSERTIONS)
++    return util.assertrepr_compare(
++        op=op,
++        left=left,
++        right=right,
++        verbose=verbose,
++        highlighter=highlighter,
++    )
+diff --git a/src/_pytest/assertion/util.py b/src/_pytest/assertion/util.py
+index 5d5e6d477..451b66bb8 100644
+--- a/src/_pytest/assertion/util.py
++++ b/src/_pytest/assertion/util.py
+@@ -174,10 +174,14 @@ def has_default_eq(obj: object) -> bool:
+ 
+ 
+ def assertrepr_compare(
+-    config: Config, op: str, left: object, right: object
++    op: str,
++    left: object,
++    right: object,
++    *,
++    verbose: int,
++    highlighter: _HighlightFunc,
+ ) -> list[str] | None:
+     """Return specialised explanations for some operators/operands."""
+-    verbose = config.get_verbosity(Config.VERBOSITY_ASSERTIONS)
+ 
+     # Strings which normalize equal are often hard to distinguish when printed; use ascii() to make this easier.
+     # See issue #3246.
+@@ -201,7 +205,6 @@ def assertrepr_compare(
+         right_repr = saferepr(right, maxsize=maxsize, use_ascii=use_ascii)
+ 
+     summary = f"{left_repr} {op} {right_repr}"
+-    highlighter = config.get_terminal_writer()._highlight
+ 
+     explanation = None
+     try:
+diff --git a/testing/test_debug.py b/testing/test_debug.py
+new file mode 100644
+index 000000000..bd4a71ab4
+--- /dev/null
++++ b/testing/test_debug.py
+@@ -0,0 +1,7 @@
++import pytest
++
++def test_simple():
++    with pytest.raises(AssertionError) as excinfo:
++        assert 0 == 1
++    print(f"Assertion message: {excinfo.value.args}")
++    assert excinfo.value.args[0] == 'assert 0 == 1'
+diff --git a/testing/test_debug10.py b/testing/test_debug10.py
+new file mode 100644
+index 000000000..957d09c00
+--- /dev/null
++++ b/testing/test_debug10.py
+@@ -0,0 +1,10 @@
++import pytest
++
++def test_simple():
++    # Just try the assertion
++    try:
++        assert 0 == 1
++    except AssertionError as e:
++        print(f"Exception caught: {e}")
++        print(f"Args: {e.args}")
++        raise
+diff --git a/testing/test_debug2.py b/testing/test_debug2.py
+new file mode 100644
+index 000000000..e9b4674cc
+--- /dev/null
++++ b/testing/test_debug2.py
+@@ -0,0 +1,8 @@
++import pytest
++
++def test_simple():
++    with pytest.raises(AssertionError) as excinfo:
++        assert 0 == 1
++    print(f"Assertion message: {excinfo.value.args}")
++    assert len(excinfo.value.args) > 0, f"Empty args: {excinfo.value.args}"
++    assert excinfo.value.args[0] == 'assert 0 == 1'
+diff --git a/testing/test_debug3.py b/testing/test_debug3.py
+new file mode 100644
+index 000000000..ebefd9f74
+--- /dev/null
++++ b/testing/test_debug3.py
+@@ -0,0 +1,8 @@
++import pytest
++
++def test_simple():
++    with pytest.raises(AssertionError) as excinfo:
++        assert 0 == 1
++    print(f"Assertion message: {excinfo.value.args}")
++    print(f"Assertion message[0]: {excinfo.value.args[0] if excinfo.value.args else 'EMPTY'}")
++    assert excinfo.value.args[0] == 'assert 0 == 1'
+diff --git a/testing/test_debug4.py b/testing/test_debug4.py
+new file mode 100644
+index 000000000..5d7d609e9
+--- /dev/null
++++ b/testing/test_debug4.py
+@@ -0,0 +1,8 @@
++import pytest
++
++def test_simple():
++    with pytest.raises(AssertionError) as excinfo:
++        assert 0 == 1
++    print(f"Assertion message: {repr(excinfo.value.args)}")
++    print(f"Assertion message[0]: {repr(excinfo.value.args[0])}")
++    assert excinfo.value.args[0] == 'assert 0 == 1'
+diff --git a/testing/test_debug5.py b/testing/test_debug5.py
+new file mode 100644
+index 000000000..07c04c49f
+--- /dev/null
++++ b/testing/test_debug5.py
+@@ -0,0 +1,10 @@
++import pytest
++
++def test_simple():
++    # First, let's check what happens with the assertion
++    try:
++        assert 0 == 1
++    except AssertionError as e:
++        print(f"AssertionError args: {e.args}")
++        print(f"AssertionError str: {str(e)}")
++        raise
+diff --git a/testing/test_debug6.py b/testing/test_debug6.py
+new file mode 100644
+index 000000000..10babb223
+--- /dev/null
++++ b/testing/test_debug6.py
+@@ -0,0 +1,8 @@
++import pytest
++
++def test_simple():
++    # Let's check the _config
++    import _pytest.assertion.util as util
++    print(f"_config: {util._config}")
++    print(f"_reprcompare: {util._reprcompare}")
++    assert 0 == 1
+diff --git a/testing/test_debug7.py b/testing/test_debug7.py
+new file mode 100644
+index 000000000..2fc25630b
+--- /dev/null
++++ b/testing/test_debug7.py
+@@ -0,0 +1,12 @@
++import pytest
++
++def test_simple():
++    import _pytest.assertion.util as util
++    print(f"_config: {util._config}")
++    print(f"_reprcompare: {util._reprcompare}")
++    try:
++        assert 0 == 1
++    except AssertionError as e:
++        print(f"AssertionError args: {e.args}")
++        print(f"AssertionError str: {str(e)}")
++        raise
+diff --git a/testing/test_debug8.py b/testing/test_debug8.py
+new file mode 100644
+index 000000000..fbe7abc89
+--- /dev/null
++++ b/testing/test_debug8.py
+@@ -0,0 +1,12 @@
++import pytest
++
++def test_simple():
++    import _pytest.assertion.util as util
++    print(f"util._reprcompare: {util._reprcompare}")
++    
++    # Call the hook directly
++    from _pytest.config import Config
++    result = util._reprcompare("==", 0, 1)
++    print(f"Hook result: {result}")
++    
++    assert 0 == 1
+diff --git a/testing/test_debug9.py b/testing/test_debug9.py
+new file mode 100644
+index 000000000..7d84ad3ee
+--- /dev/null
++++ b/testing/test_debug9.py
+@@ -0,0 +1,11 @@
++import pytest
++
++def test_simple():
++    import _pytest.assertion.util as util
++    print(f"util._reprcompare: {util._reprcompare}")
++    
++    # Call the hook directly
++    result = util._reprcompare("==", 0, 1)
++    print(f"Hook result: {result}")
++    
++    assert 0 == 1

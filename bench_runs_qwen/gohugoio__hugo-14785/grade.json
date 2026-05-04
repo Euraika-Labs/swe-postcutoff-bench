@@ -1,0 +1,13 @@
+{
+  "instance_id": "gohugoio__hugo-14785",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "tpl/collections/TestWhereWithPageEqualityIssue14777": true
+  },
+  "agent_seconds": 19.59101128578186,
+  "candidate_label": "agent.diff"
+}

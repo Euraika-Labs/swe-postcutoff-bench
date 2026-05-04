@@ -1,0 +1,17 @@
+(node:45818) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+The fix is complete. Here's a summary of what was implemented:
+
+**Changes made to `completions.go`:**
+
+1. **Added `DefaultShellCompDirective` field** to the `CompletionOptions` struct - a pointer to `ShellCompDirective` that stores the custom directive value.
+
+2. **Added `SetDefaultShellCompDirective(directive ShellCompDirective)` method** - allows users to set a custom default directive that will be inherited by subcommands.
+
+3. **Modified `getCompletions` function** - added a loop that traverses up the command hierarchy from the final command to the root, checking for a custom `DefaultShellCompDirective`. The first one found (starting from the final command and going up to parent commands) is used as the directive, allowing subcommands to override their parent's setting.
+
+The implementation follows the recursive solution where:
+- A custom directive set on a parent command applies to that command and all its subcommands
+- Subcommands can reset the directive back to the default value
+- The check traverses from the final command upward to find the nearest command with a custom directive set
+[done rc=0 elapsed=263s]

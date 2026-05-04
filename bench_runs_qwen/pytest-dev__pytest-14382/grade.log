@@ -1,0 +1,53 @@
+{
+  "instance_id": "pytest-dev__pytest-14382",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "testing/test_helpconfig.py::test_version_less_verbose": true
+  },
+  "agent_seconds": 10.493998050689697,
+  "candidate_label": "agent.diff"
+}
+ status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting iniconfig>=1.0.1 (from pytest==9.1.0.dev312+g8ecf49ec2.d20260504)
+  Using cached iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Requirement already satisfied: packaging>=22 in ./.pcb_venv/lib/python3.14/site-packages (from pytest==9.1.0.dev312+g8ecf49ec2.d20260504) (26.2)
+Collecting pluggy<2,>=1.5 (from pytest==9.1.0.dev312+g8ecf49ec2.d20260504)
+  Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest==9.1.0.dev312+g8ecf49ec2.d20260504)
+  Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+Building wheels for collected packages: pytest
+  Building editable for pytest (pyproject.toml): started
+  Building editable for pytest (pyproject.toml): finished with status 'done'
+  Created wheel for pytest: filename=pytest-9.1.0.dev312+g8ecf49ec2.d20260504-0.editable-py3-none-any.whl size=5361 sha256=f8a69f92428f14648f583cb41c8442c30a9cdb0b61d5ec5e95f00131a93815c9
+  Stored in directory: /tmp/pip-ephem-wheel-cache-dzbdjug7/wheels/61/9a/0e/bc56ba9f7ec6afac547594b9c929d5c66e523eaf6d38e1737f
+Successfully built pytest
+Installing collected packages: pygments, pluggy, iniconfig, pytest
+
+Successfully installed iniconfig-2.3.0 pluggy-1.6.0 pygments-2.20.0 pytest-9.1.0.dev312+g8ecf49ec2.d20260504
+WARNING: pytest 9.1.0.dev312+g8ecf49ec2.d20260504 does not provide the extra 'test'
+
+[test rc=0]
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.1.0.dev312+g8ecf49ec2.d20260504, pluggy-1.6.0 -- /tmp/pcb_grade_workdirs_qwen/pytest-dev__pytest-14382/.pcb_venv/bin/python3.14
+rootdir: /tmp/pcb_grade_workdirs_qwen/pytest-dev__pytest-14382
+configfile: pyproject.toml
+collecting ... collected 2 items
+
+testing/test_helpconfig.py::test_version_less_verbose[--version] PASSED  [ 50%]
+testing/test_helpconfig.py::test_version_less_verbose[-V] PASSED         [100%]
+
+============================== 2 passed in 0.23s ===============================
+

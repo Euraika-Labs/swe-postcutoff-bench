@@ -1,0 +1,35 @@
+(node:3877369) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+All tests pass. Here's a summary of the changes made:
+
+## Summary
+
+I implemented the negation (`! `) feature for the `Whitelist` in the Hugo config/security package:
+
+### Changes to `config/security/whitelist.go`:
+
+1. **Updated the `Whitelist` struct** to have two separate slices: `allow` and `deny` instead of a single `patterns` slice.
+
+2. **Updated `NewWhitelist` function** to:
+   - Detect patterns starting with `! ` (space after exclamation mark) as deny rules
+   - Store deny rules separately from allow rules
+   - Compile the regex without the `! ` prefix
+
+3. **Updated `Accept` function** to:
+   - Check deny rules first (they take precedence over allow rules)
+   - If no deny rules match, check allow rules
+   - If there are only deny rules and no matches, implicitly allow (deny-only whitelist)
+
+### Changes to `config/security/securityConfig.go`:
+
+1. **Updated `DefaultConfig.HTTP.URLs`** to use hardened defaults:
+   - `(?i)^https?://[a-z]` - allow URLs with host starting with a letter
+   - `! (?i)localhost` - deny localhost references
+   - `! @` - deny URLs with userinfo (to prevent `http://user@127.0.0.1` bypasses)
+
+All tests pass, including:
+- `TestWhitelist` with negation tests
+- `TestToTOML` with updated default config
+- `TestCheckAllowedHTTPURLHardenedDefaultsIssue14792` with hardened URL tests
+- All other security policy tests
+[done rc=0 elapsed=366s]

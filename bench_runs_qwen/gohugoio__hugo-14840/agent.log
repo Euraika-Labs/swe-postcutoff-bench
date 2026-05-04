@@ -1,0 +1,11 @@
+(node:4161212) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+The fix is complete. Here's a summary of what was changed:
+
+**In `config/security/securityConfig.go`:**
+- Changed the default `URLs` pattern from `(?i)^https?://[a-z]` to `(?i)^https?://[a-z0-9]` to allow hostnames starting with digits (like `1password.com`, `37signals.com`)
+- Added a deny rule `! ^https?://\d+\.` to block IP literals (like `127.0.0.1`, `10.0.0.1`)
+- Updated the comment to reflect the new behavior
+
+The test `TestCheckAllowedHTTPURLDigitHostnameIssue14837` now passes.
+[done rc=0 elapsed=102s]
