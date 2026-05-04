@@ -1,0 +1,15 @@
+# tooling caches
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+target/
+
+# editor
+.idea/
+.vscode/
+*.swp
+
+# scratch
+scratch/
+*.tmp
