@@ -1,0 +1,22 @@
+[clone gohugoio/hugo@161d0d47 ok]
+
+Checking patch hugolib/rebuild_test.go...
+Applied patch hugolib/rebuild_test.go cleanly.
+
+
+Checking patch tpl/tplimpl/templates.go...
+Checking patch tpl/tplimpl/templatestore.go...
+Applied patch tpl/tplimpl/templates.go cleanly.
+Applied patch tpl/tplimpl/templatestore.go cleanly.
+
+
+[install rc=0]
+
+[hugolib/TestRebuildEditTagsListLayout] rc=0
+=== RUN   TestRebuildEditTagsListLayout
+Template changed /tags/list.html
+--- PASS: TestRebuildEditTagsListLayout (0.08s)
+PASS
+ok  	github.com/gohugoio/hugo/hugolib	0.356s
+
+---

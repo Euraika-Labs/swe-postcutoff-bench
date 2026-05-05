@@ -1,0 +1,140 @@
+[clone vuejs/core@a93ae869 ok]
+
+Checking patch packages/runtime-vapor/__tests__/hydration.spec.ts...
+Checking patch packages/compiler-vapor/__tests__/transforms/__snapshots__/transformElement.spec.ts.snap...
+Checking patch packages/compiler-vapor/__tests__/transforms/transformElement.spec.ts...
+Checking patch packages/runtime-vapor/__tests__/hydration.spec.ts...
+Checking patch packages/runtime-vapor/__tests__/hydration.spec.ts...
+Checking patch packages/runtime-vapor/__tests__/hydration.spec.ts...
+Checking patch packages/runtime-vapor/__tests__/components/KeepAlive.spec.ts...
+Checking patch packages/runtime-vapor/__tests__/hydration.spec.ts...
+Checking patch packages/runtime-vapor/__tests__/hydration.spec.ts...
+Applied patch packages/runtime-vapor/__tests__/hydration.spec.ts cleanly.
+Applied patch packages/compiler-vapor/__tests__/transforms/__snapshots__/transformElement.spec.ts.snap cleanly.
+Applied patch packages/compiler-vapor/__tests__/transforms/transformElement.spec.ts cleanly.
+Applied patch packages/runtime-vapor/__tests__/hydration.spec.ts cleanly.
+Applied patch packages/runtime-vapor/__tests__/hydration.spec.ts cleanly.
+Applied patch packages/runtime-vapor/__tests__/hydration.spec.ts cleanly.
+Applied patch packages/runtime-vapor/__tests__/components/KeepAlive.spec.ts cleanly.
+Applied patch packages/runtime-vapor/__tests__/hydration.spec.ts cleanly.
+Applied patch packages/runtime-vapor/__tests__/hydration.spec.ts cleanly.
+
+
+Checking patch packages/runtime-vapor/src/apiCreateFor.ts...
+Checking patch packages/runtime-vapor/src/components/TransitionGroup.ts...
+Checking patch packages/runtime-vapor/src/dom/hydration.ts...
+Checking patch packages/compiler-vapor/src/transforms/vOn.ts...
+Checking patch packages/runtime-vapor/src/dom/template.ts...
+Checking patch packages/runtime-vapor/src/apiCreateFor.ts...
+Checking patch packages/runtime-vapor/src/helpers/setKey.ts...
+Checking patch packages/runtime-vapor/src/apiCreateFor.ts...
+Checking patch packages/runtime-vapor/src/components/TransitionGroup.ts...
+Checking patch packages/runtime-vapor/src/dom/hydration.ts...
+Applied patch packages/runtime-vapor/src/apiCreateFor.ts cleanly.
+Applied patch packages/runtime-vapor/src/components/TransitionGroup.ts cleanly.
+Applied patch packages/runtime-vapor/src/dom/hydration.ts cleanly.
+Applied patch packages/compiler-vapor/src/transforms/vOn.ts cleanly.
+Applied patch packages/runtime-vapor/src/dom/template.ts cleanly.
+Applied patch packages/runtime-vapor/src/apiCreateFor.ts cleanly.
+Applied patch packages/runtime-vapor/src/helpers/setKey.ts cleanly.
+Applied patch packages/runtime-vapor/src/apiCreateFor.ts cleanly.
+Applied patch packages/runtime-vapor/src/components/TransitionGroup.ts cleanly.
+Applied patch packages/runtime-vapor/src/dom/hydration.ts cleanly.
+
+
+[install rc=0]
+vitest/coverage-v8 4.1.4
++ @vitest/ui 4.1.4
++ @vue/consolidate 1.0.0
++ conventional-changelog 7.2.0
++ conventional-changelog-angular 8.3.1
++ enquirer 2.4.1
++ estree-walker 2.0.2
++ fast-glob 3.3.3
++ jsdom 29.0.2
++ lodash 4.18.1
++ magic-string 0.30.21
++ markdown-table 3.0.4
++ marked 13.0.3
++ npm-run-all2 8.0.4
++ oxc-minify 0.116.0
++ oxc-parser 0.116.0
++ oxc-transform 0.116.0
++ picocolors 1.1.1
++ playwright 1.59.1
++ pretty-bytes 7.1.0
++ pug 3.0.4
++ puppeteer 24.40.0
++ rimraf 6.1.3
++ rolldown 1.0.0-rc.15
++ rolldown-plugin-dts 0.22.5
++ semver 7.7.4
++ serve 14.2.6
++ serve-handler 6.1.7
++ todomvc-app-css 2.4.3
++ tslib 2.8.1
++ typescript 5.6.3
++ vite <- @voidzero-dev/vite-plus-core 0.1.16
++ vite-plus 0.1.16
++ vitest <- @voidzero-dev/vite-plus-test 0.1.16
+
+. prepare$ vp config --hooks-dir .vite-hooks
+. prepare: Done
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: @parcel/watcher@2.5.6, esbuild@0.21.5,              │
+│   vue-demi@0.14.10.                                                          │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 1.6s using pnpm v10.33.0
+
+[test rc=1]
+/Frame.ts:488:11
+ ❯ CdpPage.evaluate node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/src/api/Page.ts:2362:11
+ ❯ packages/vue/__tests__/e2e/trusted-types.spec.ts:68:7
+     66|     'should render static vnode without error',
+     67|     async () => {
+     68|       await page().evaluate(() => {
+       |       ^
+     69|         const { createApp, createStaticVNode } = (window as any).Vue
+     70|         createApp({
+ ❯ node_modules/.pnpm/@voidzero-dev+vite-plus-test@0.1.16_@types+node@24.12.2_@vitest+ui@4.1.4_@voidzero-dev+_70a29a87ee9e414e5007a60e1afb1358/node_modules/@voidzero-dev/vite-plus-test/dist/@vitest/runner/chunk-artifact.js:1893:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[101/106]⎯
+
+ FAIL  |e2e| packages/vue/__tests__/e2e/trusted-types.spec.ts > e2e: trusted types > should accept v-html with custom policy
+TypeError: Cannot destructure property 'createApp' of 'window.Vue' as it is undefined.
+ ❯ evaluate evaluate at /tmp/pcb_hard_workdirs/vuejs__core-14755/packages/vue/__tests__/e2e/trusted-types.spec.ts:63:16, <anonymous>:2:11
+ ❯ ExecutionContext.#evaluate node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/src/cdp/ExecutionContext.ts:456:12
+ ❯ ExecutionContext.evaluate node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/src/cdp/ExecutionContext.ts:293:11
+ ❯ IsolatedWorld.evaluate node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/src/cdp/IsolatedWorld.ts:196:11
+ ❯ CdpFrame.evaluate node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/src/api/Frame.ts:488:11
+ ❯ CdpPage.evaluate node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/src/api/Page.ts:2362:11
+ ❯ packages/vue/__tests__/e2e/trusted-types.spec.ts:84:7
+     82|     'should accept v-html with custom policy',
+     83|     async () => {
+     84|       await page().evaluate(() => {
+       |       ^
+     85|         const testPolicy = (window as any).trustedTypes.createPolicy('…
+     86|           createHTML: (input: string): string => input,
+ ❯ node_modules/.pnpm/@voidzero-dev+vite-plus-test@0.1.16_@types+node@24.12.2_@vitest+ui@4.1.4_@voidzero-dev+_70a29a87ee9e414e5007a60e1afb1358/node_modules/@voidzero-dev/vite-plus-test/dist/@vitest/runner/chunk-artifact.js:1893:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[102/106]⎯
+
+ FAIL  |e2e| packages/vue/__tests__/e2e/vModel.spec.ts > checkbox click with v-model
+Error: ENOENT: no such file or directory, open '/tmp/pcb_hard_workdirs/vuejs__core-14755/packages/vue/dist/vue.global.js'
+ ❯ CdpFrame.addScriptTag node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/src/api/Frame.ts:914:16
+ ❯ CdpPage.addScriptTag node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/src/api/Page.ts:1536:11
+ ❯ packages/vue/__tests__/e2e/vModel.spec.ts:8:3
+      6|
+      7| beforeEach(async () => {
+      8|   await page().addScriptTag({
+       |   ^
+      9|     path: path.resolve(__dirname, '../../dist/vue.global.js'),
+     10|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[103/106]⎯
+
+

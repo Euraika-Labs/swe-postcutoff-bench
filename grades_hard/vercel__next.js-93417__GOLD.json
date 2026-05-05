@@ -1,0 +1,13 @@
+{
+  "instance_id": "vercel__next.js-93417",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "test/e2e/app-dir/cache-components/cache-components.draft-mode.test.ts > should stream Suspense fallbacks when draft mode is enabled": false
+  },
+  "agent_seconds": 147.67329740524292,
+  "candidate_label": "GOLD"
+}

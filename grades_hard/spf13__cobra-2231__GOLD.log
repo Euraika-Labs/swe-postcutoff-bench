@@ -1,0 +1,53 @@
+[clone spf13/cobra@17b6dca2 ok]
+
+Checking patch completions_test.go...
+Checking patch completions_test.go...
+Checking patch completions_test.go...
+Applied patch completions_test.go cleanly.
+Applied patch completions_test.go cleanly.
+Applied patch completions_test.go cleanly.
+
+
+Checking patch command.go...
+Checking patch completions.go...
+Checking patch command.go...
+Checking patch completions.go...
+Checking patch command.go...
+Checking patch completions.go...
+Checking patch active_help.go...
+Checking patch command.go...
+Checking patch completions.go...
+Checking patch site/content/active_help.md...
+Checking patch site/content/completions/_index.md...
+Applied patch command.go cleanly.
+Applied patch completions.go cleanly.
+Applied patch command.go cleanly.
+Applied patch completions.go cleanly.
+Applied patch command.go cleanly.
+Applied patch completions.go cleanly.
+Applied patch active_help.go cleanly.
+Applied patch command.go cleanly.
+Applied patch completions.go cleanly.
+Applied patch site/content/active_help.md cleanly.
+Applied patch site/content/completions/_index.md cleanly.
+
+
+[install rc=0]
+
+[./TestFixedCompletionsWithCompletionChoiceHelpers] rc=0
+testing: warning: no tests to run
+PASS
+ok  	github.com/spf13/cobra	0.002s [no tests to run]
+
+---
+[./TestFixedCompletionsWithCompletionHelpers] rc=0
+=== RUN   TestFixedCompletionsWithCompletionHelpers
+=== RUN   TestFixedCompletionsWithCompletionHelpers/completion_with_description
+=== RUN   TestFixedCompletionsWithCompletionHelpers/completion_with_no_description
+--- PASS: TestFixedCompletionsWithCompletionHelpers (0.00s)
+    --- PASS: TestFixedCompletionsWithCompletionHelpers/completion_with_description (0.00s)
+    --- PASS: TestFixedCompletionsWithCompletionHelpers/completion_with_no_description (0.00s)
+PASS
+ok  	github.com/spf13/cobra	0.002s
+
+---

@@ -1,0 +1,15 @@
+{
+  "instance_id": "prisma__prisma-29376",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 3,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/cli/src/__tests__/Studio.vitest.ts > routes transaction requests to executor.executeTransaction": false,
+    "packages/cli/src/__tests__/Studio.vitest.ts > serves the Prisma logo as the favicon": false,
+    "packages/cli/src/__tests__/Studio.vitest.ts > links the favicon from the Studio HTML shell": false
+  },
+  "agent_seconds": 28.436729192733765,
+  "candidate_label": "GOLD"
+}

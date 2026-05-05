@@ -1,0 +1,33 @@
+diff --git a/resources/page/pagemeta/page_frontmatter.go b/resources/page/pagemeta/page_frontmatter.go
+index 53788d9b3..e163322e5 100644
+--- a/resources/page/pagemeta/page_frontmatter.go
++++ b/resources/page/pagemeta/page_frontmatter.go
+@@ -503,6 +503,19 @@ func (rc *ResourceConfig) Compile(basePath string, fim hugofs.FileMetaInfo, conf
+ 	// and this isn't relevant when creating resources from an API where it's easy to add textual meta data.
+ 	rc.Path = paths.NormalizePathStringBasic(path.Join(basePath, rc.Path))
+ 	rc.PathInfo = conf.PathParser().Parse(files.ComponentFolderContent, rc.Path)
++
++	// Filename dimension identifiers (e.g., _role_member_, _version_v2_) should replace
++	// the mount's configuration for that dimension, matching how language identifiers already worked.
++	if rc.Sites.Matrix.Languages == nil {
++		rc.Sites.Matrix.Languages = rc.PathInfo.Langs()
++	}
++	if rc.Sites.Matrix.Versions == nil {
++		rc.Sites.Matrix.Versions = rc.PathInfo.Versions()
++	}
++	if rc.Sites.Matrix.Roles == nil {
++		rc.Sites.Matrix.Roles = rc.PathInfo.Roles()
++	}
++
+ 	if rc.Content.MediaType != "" {
+ 		var found bool
+ 		rc.ContentMediaType, found = mediaTypes.GetByType(rc.Content.MediaType)
+@@ -511,6 +524,8 @@ func (rc *ResourceConfig) Compile(basePath string, fim hugofs.FileMetaInfo, conf
+ 		}
+ 	}
+ 
++	// hdebug.Printf("ResourceConfig.Compile: Path=%s, Roles=%v, Versions=%v, Langs=%v", rc.Path, rc.Sites.Matrix.Roles, rc.Sites.Matrix.Versions, rc.Sites.Matrix.Languages)
++
+ 	var sitesMatrixFile sitesmatrix.VectorStore
+ 	if fim != nil {
+ 		sitesMatrixFile = fim.Meta().SitesMatrix

@@ -1,0 +1,20 @@
+diff --git a/common/hugo/hugo.go b/common/hugo/hugo.go
+index fbb1e53a4..602d0ada9 100644
+--- a/common/hugo/hugo.go
++++ b/common/hugo/hugo.go
+@@ -368,6 +368,15 @@ func deprecationLogLevelFromVersion(ver string) logg.Level {
+ 	}
+ }
+ 
++// WarnDeprecatedEdition warns about deprecated editions.
++func WarnDeprecatedEdition() {
++	if IsExtended && !IsWithdeploy {
++		loggers.Log().Info().Logf("the extended edition of the Hugo executable is deprecated. Use the standard edition instead")
++	} else if IsExtended && IsWithdeploy {
++		loggers.Log().Info().Logf("the extended_withdeploy edition of the Hugo executable is deprecated. Use the withdeploy edition instead")
++	}
++}
++
+ // BuildVersionString creates a version string. This is what you see when
+ // running "hugo version".
+ func BuildVersionString() string {

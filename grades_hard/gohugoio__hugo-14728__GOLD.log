@@ -1,0 +1,23 @@
+[clone gohugoio/hugo@07558724 ok]
+
+Checking patch common/hugo/hugo_test.go...
+Applied patch common/hugo/hugo_test.go cleanly.
+
+
+Checking patch commands/commandeer.go...
+Checking patch common/hugo/hugo.go...
+Checking patch testscripts/commands/hugo__minify_issue13988.txt...
+Applied patch commands/commandeer.go cleanly.
+Applied patch common/hugo/hugo.go cleanly.
+Applied patch testscripts/commands/hugo__minify_issue13988.txt cleanly.
+
+
+[install rc=0]
+
+[common/hugo/TestWarnDeprecatedEdition] rc=0
+=== RUN   TestWarnDeprecatedEdition
+--- PASS: TestWarnDeprecatedEdition (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/common/hugo	0.121s
+
+---

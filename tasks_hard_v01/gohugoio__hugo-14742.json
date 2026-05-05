@@ -1,0 +1,29 @@
+{
+  "instance_id": "gohugoio__hugo-14742",
+  "repo": "gohugoio/hugo",
+  "language": "go",
+  "base_commit": "c48551677c2504e3f2d7fa53ee42766e0333b957",
+  "merge_commit": "8b00030b344d21635e5634698700f1d13145fead",
+  "patch": "From 9c363022bd80a8b15fdecdd36a14b82f8b73fb66 Mon Sep 17 00:00:00 2001\nFrom: =?UTF-8?q?Bj=C3=B8rn=20Erik=20Pedersen?=\n <bjorn.erik.pedersen@gmail.com>\nDate: Wed, 8 Apr 2026 13:30:14 +0200\nSubject: [PATCH] Fix panic when passthrough elements are used in headings\n\nFixes #14677\n\nCo-Authored-By: xingzihai <1315258019@qq.com>\nCo-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>\n---\n markup/goldmark/convert.go              |  6 +++++\n markup/goldmark/toc.go                  | 29 ++++++++++++++++++++-\n markup/goldmark/toc_integration_test.go | 34 +++++++++++++++++++++++++\n 3 files changed, 68 insertions(+), 1 deletion(-)\n\ndiff --git a/markup/goldmark/convert.go b/markup/goldmark/convert.go\nindex f4519dff45f..8ed16b0c88f 100644\n--- a/markup/goldmark/convert.go\n+++ b/markup/goldmark/convert.go\n@@ -122,6 +122,12 @@ func newMarkdown(pcfg converter.ProviderConfig) goldmark.Markdown {\n \t\t)\n \t}\n \n+\tif cfg.Extensions.Passthrough.Enable {\n+\t\ttocRendererOptions = append(tocRendererOptions,\n+\t\t\trenderer.WithNodeRenderers(util.Prioritized(&tocPassthroughRenderer{}, 90)),\n+\t\t)\n+\t}\n+\n \tvar (\n \t\textensions = []goldmark.Extender{\n \t\t\thugocontext.New(pcfg.Logger),\ndiff --git a/markup/goldmark/toc.go b/markup/goldmark/toc.go\nindex 3fb53f875c2..dd653c9e22d 100644\n--- a/markup/goldmark/toc.go\n+++ b/markup/goldmark/toc.go\n@@ -24,6 +24,7 @@ import (\n \temojiAst \"github.com/yuin/goldmark-emoji/ast\"\n \n \t\"github.com/gohugoio/hugo-goldmark-extensions/extras\"\n+\t\"github.com/gohugoio/hugo-goldmark-extensions/passthrough\"\n \t\"github.com/gohugoio/hugo/markup/tableofcontents\"\n \n \t\"github.com/yuin/goldmark\"\n@@ -116,7 +117,9 @@ func (t *tocTransformer) Transform(n *ast.Document, reader text.Reader, pc parse\n \t\t\tast.KindAutoLink,\n \t\t\tast.KindRawHTML,\n \t\t\tast.KindText,\n-\t\t\tast.KindString:\n+\t\t\tast.KindString,\n+\t\t\tpassthrough.KindPassthroughInline,\n+\t\t\tpassthrough.KindPassthroughBlock:\n \t\t\terr := t.r.Render(&headingText, reader.Source(), n)\n \t\t\tif err != nil {\n \t\t\t\treturn s, err\n@@ -171,6 +174,30 @@ func newTOCSanitizerPolicy() *bluemonday.Policy {\n \treturn p\n }\n \n+// tocPassthroughRenderer renders passthrough nodes as raw text for the TOC.\n+type tocPassthroughRenderer struct{}\n+\n+func (r *tocPassthroughRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {\n+\treg.Register(passthrough.KindPassthroughInline, r.render)\n+\treg.Register(passthrough.KindPassthroughBlock, r.render)\n+}\n+\n+func (r *tocPassthroughRenderer) render(w util.BufWriter, src []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {\n+\tif !entering {\n+\t\treturn ast.WalkContinue, nil\n+\t}\n+\tswitch nn := node.(type) {\n+\tcase *passthrough.PassthroughInline:\n+\t\tw.Write(nn.Segment.Value(src))\n+\tcase *passthrough.PassthroughBlock:\n+\t\tfor i := range nn.Lines().Len() {\n+\t\t\tline := nn.Lines().At(i)\n+\t\t\tw.Write(line.Value(src))\n+\t\t}\n+\t}\n+\treturn ast.WalkSkipChildren, nil\n+}\n+\n var whiteSpaceRe = regexp.MustCompile(`\\s+`)\n \n // sanitizeTOCHeadingTitle sanitizes s for use as a TOC heading title.\n",
+  "test_patch": "diff --git a/markup/goldmark/toc_integration_test.go b/markup/goldmark/toc_integration_test.go\nindex 715828253d4..105e1a7448c 100644\n--- a/markup/goldmark/toc_integration_test.go\n+++ b/markup/goldmark/toc_integration_test.go\n@@ -364,3 +364,37 @@ title: home\n \t\t`<li><a href=\"#1st\">1^st^</a></li>`,\n \t)\n }\n+\n+// Issue 14677\n+func TestTableOfContentsWithPassthrough(t *testing.T) {\n+\tt.Parallel()\n+\n+\tfiles := `\n+-- hugo.toml --\n+disableKinds = ['page','rss','section','sitemap','taxonomy','term']\n+[markup.goldmark.extensions.passthrough]\n+  enable = true\n+[markup.goldmark.extensions.passthrough.delimiters]\n+  inline = [['$', '$']]\n+-- content/_index.md --\n+---\n+title: home\n+---\n+## Heading with **$a$**\n+\n+## Heading with $b$\n+\n+## Heading with *$x + y$*\n+\n+-- layouts/home.html --\n+{{ .TableOfContents }}\n+`\n+\n+\tb := hugolib.Test(t, files)\n+\n+\tb.AssertFileContent(\"public/index.html\",\n+\t\t`<li><a href=\"#heading-with\">Heading with <strong>$a$</strong></a></li>`,\n+\t\t`<li><a href=\"#heading-with-1\">Heading with $b$</a></li>`,\n+\t\t`<li><a href=\"#heading-with-2\">Heading with <em>$x + y$</em></a></li>`,\n+\t)\n+}\n",
+  "problem_statement": "Fixes #14677\n\nCo-Authored-By: bep <bjorn.erik.pedersen@gmail.com>\nCo-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>",
+  "title": "Fix panic when passthrough elements are used in headings",
+  "FAIL_TO_PASS": [
+    "markup/goldmark/TestTableOfContentsWithPassthrough"
+  ],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-08T11:26:31Z",
+  "merged_at": "2026-04-08T13:03:05Z",
+  "pr_url": "https://github.com/gohugoio/hugo/pull/14742",
+  "labels": [],
+  "runner": {
+    "kind": "go",
+    "go_version": "1.23",
+    "install": "go mod download",
+    "test_cmd": "go test ./...",
+    "test_id_separator": "/"
+  },
+  "verified": false,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (1 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

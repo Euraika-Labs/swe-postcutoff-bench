@@ -1,0 +1,14 @@
+All 593 hugolib tests pass, including:
+- The new `TestPublishMultilingualSectionCreation` (issue #14681) 
+- The previously-passing `TestTaxonomyNestedEmptySectionsIssue12188` regression test
+
+## Summary
+
+The bug: when a section directory existed in multiple languages but had no `_index.md`, only the language whose page was processed first got its section page synthesized. Other languages with content under that section were missing their section page.
+
+The fix in `hugolib/content_map_page_assembler.go`:
+
+1. Extracted the existing missing-vectors handler (event listener + post-walk hook) into a `setupMissingHomeOrRootSectionHandler` closure so it can be reused.
+2. After synthesizing a missing root section in `transformPagesAndCreateMissingHome`, install the same handler so that pages from other languages walked later will register those languages as missing — and the post-walk hook then creates section pages for them.
+3. Added a `fromContentOnly` flag: for synthesized sections it ignores `KindTaxonomy`/`KindTerm` events so an empty-language taxonomy under the section doesn't trigger creation of an empty section page in that language (preserves `TestTaxonomyNestedEmptySectionsIssue12188`).
+[done rc=0 elapsed=1001s]

@@ -1,0 +1,13 @@
+{
+  "instance_id": "gohugoio__hugo-14733",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "hugolib/TestRenderShortcodesStandalone": true
+  },
+  "agent_seconds": 12.556878328323364,
+  "candidate_label": "agent.diff"
+}

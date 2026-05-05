@@ -1,0 +1,24 @@
+diff --git a/common/hugo/hugo.go b/common/hugo/hugo.go
+index fbb1e53a4..4937ab314 100644
+--- a/common/hugo/hugo.go
++++ b/common/hugo/hugo.go
+@@ -304,6 +304,19 @@ func IsDartSassGeV2() bool {
+ 	return !strings.Contains(DartSassBinaryName, "embedded")
+ }
+ 
++// WarnDeprecatedEdition logs a deprecation warning if the running binary
++// is from an edition that is being phased out.
++func WarnDeprecatedEdition() {
++	if !IsExtended {
++		return
++	}
++	if IsWithdeploy {
++		Deprecate("the extended_withdeploy edition of the Hugo executable", "Use the withdeploy edition instead.", CurrentVersion.String())
++	} else {
++		Deprecate("the extended edition of the Hugo executable", "Use the standard edition instead.", CurrentVersion.String())
++	}
++}
++
+ // Deprecate informs about a deprecation starting at the given version.
+ //
+ // A deprecation typically needs a simple change in the template, but doing so will make the template incompatible with older versions.

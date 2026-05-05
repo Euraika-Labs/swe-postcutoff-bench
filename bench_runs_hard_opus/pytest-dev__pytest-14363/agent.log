@@ -1,0 +1,7 @@
+The fix is already in place and the test passes. Verification:
+
+- `testing/test_tmpdir.py::test_tmp_path_factory_doesnt_follow_symlinks` PASSED
+- `src/_pytest/tmpdir.py` (lines 176-184) uses `os.stat(rootdir, follow_symlinks=False)` and raises `OSError` with the expected "is a symbolic link" message when the rootdir is a symlink, matching the test's `pytest.raises(OSError, match=r"temporary directory .* is a symbolic link")`.
+
+No further changes needed — the FAIL_TO_PASS test passes against the current source, and the fix matches the upstream PR #14343 approach (don't follow symlinks; reject if rootdir is a symlink, addressing CVE-2025-71176).
+[done rc=0 elapsed=89s]

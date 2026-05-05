@@ -1,0 +1,14 @@
+All relevant tests pass. The only failure is the unrelated `TestPagesFromGoTmplAsciiDocAndSimilar` which fails due to a missing `asciidoctor` external tool in the environment.
+
+## Summary
+
+Fixed issue #14756 where filename dimension identifiers (`_role_X_`, `_version_X_`) were parsed but never applied to the SitesMatrix.
+
+**Changes:**
+
+1. `hugolib/sitesmatrix/dimensions.go:217` — Extended the `VectorStore` interface with `WithVersionIndices(i int) VectorStore` and `WithRoleIndices(i int) VectorStore`, mirroring the existing `WithLanguageIndices` method.
+
+2. `hugolib/sitesmatrix/vectorstores.go` — Added implementations for both `IntSets` and `vectorStoreMap`, using replace semantics consistent with the language counterpart.
+
+3. `hugofs/component_fs.go:322` — In `applyMeta`, after the existing language identifier handling, added equivalent handling for `Version()` and `Role()` from the parsed path: when present, resolve the index via `ConfiguredDimensions` and replace the mount's matrix dimension via the new `WithVersionIndices`/`WithRoleIndices` methods.
+[done rc=0 elapsed=626s]

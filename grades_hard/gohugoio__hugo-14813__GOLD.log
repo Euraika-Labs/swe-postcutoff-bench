@@ -1,0 +1,71 @@
+[clone gohugoio/hugo@8920d56e ok]
+
+Checking patch common/hstrings/strings_test.go...
+Checking patch resources/resource_transformers/tocss/dartsass/dartsass_integration_test.go...
+Checking patch tpl/css/build_integration_test.go...
+Applied patch common/hstrings/strings_test.go cleanly.
+Applied patch resources/resource_transformers/tocss/dartsass/dartsass_integration_test.go cleanly.
+Applied patch tpl/css/build_integration_test.go cleanly.
+
+
+Checking patch common/hstrings/strings.go...
+Checking patch internal/js/esbuild/options.go...
+Checking patch internal/js/esbuild/resolve.go...
+Checking patch resources/resource_transformers/tocss/dartsass/client.go...
+Checking patch resources/resource_transformers/tocss/dartsass/transform.go...
+Checking patch resources/resource_transformers/tocss/sass/helpers.go...
+Applied patch common/hstrings/strings.go cleanly.
+Applied patch internal/js/esbuild/options.go cleanly.
+Applied patch internal/js/esbuild/resolve.go cleanly.
+Applied patch resources/resource_transformers/tocss/dartsass/client.go cleanly.
+Applied patch resources/resource_transformers/tocss/dartsass/transform.go cleanly.
+Applied patch resources/resource_transformers/tocss/sass/helpers.go cleanly.
+
+
+[install rc=0]
+
+[common/hstrings/TestHasUppercase] rc=0
+=== RUN   TestHasUppercase
+--- PASS: TestHasUppercase (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/common/hstrings	0.003s
+
+---
+[resources/resource_transformers/tocss/dartsass/TestOptionVarsNestedIssue14705] rc=0
+=== RUN   TestOptionVarsNestedIssue14705
+=== PAUSE TestOptionVarsNestedIssue14705
+=== CONT  TestOptionVarsNestedIssue14705
+    dartsass_integration_test.go:377: 
+--- SKIP: TestOptionVarsNestedIssue14705 (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/resources/resource_transformers/tocss/dartsass	0.122s
+
+---
+[resources/resource_transformers/tocss/dartsass/TestOptionVarsNestedFromParamsIssue14705] rc=0
+=== RUN   TestOptionVarsNestedFromParamsIssue14705
+=== PAUSE TestOptionVarsNestedFromParamsIssue14705
+=== CONT  TestOptionVarsNestedFromParamsIssue14705
+    dartsass_integration_test.go:415: 
+--- SKIP: TestOptionVarsNestedFromParamsIssue14705 (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/resources/resource_transformers/tocss/dartsass	0.116s
+
+---
+[tpl/css/TestCSSBuildVarsNestedIssue14705] rc=0
+=== RUN   TestCSSBuildVarsNestedIssue14705
+=== PAUSE TestCSSBuildVarsNestedIssue14705
+=== CONT  TestCSSBuildVarsNestedIssue14705
+--- PASS: TestCSSBuildVarsNestedIssue14705 (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/tpl/css	0.126s
+
+---
+[tpl/css/TestCSSBuildVarsNestedUpperCase] rc=0
+=== RUN   TestCSSBuildVarsNestedUpperCase
+=== PAUSE TestCSSBuildVarsNestedUpperCase
+=== CONT  TestCSSBuildVarsNestedUpperCase
+--- PASS: TestCSSBuildVarsNestedUpperCase (0.02s)
+PASS
+ok  	github.com/gohugoio/hugo/tpl/css	0.161s
+
+---

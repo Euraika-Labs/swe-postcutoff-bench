@@ -1,0 +1,29 @@
+diff --git a/src/_pytest/tmpdir.py b/src/_pytest/tmpdir.py
+index 855ad273e..2eef3a058 100644
+--- a/src/_pytest/tmpdir.py
++++ b/src/_pytest/tmpdir.py
+@@ -9,6 +9,7 @@ import os
+ from pathlib import Path
+ import re
+ from shutil import rmtree
++import stat
+ import tempfile
+ from typing import Any
+ from typing import final
+@@ -172,7 +173,15 @@ class TempPathFactory:
+             # just error out on this, at least for a while.
+             uid = get_user_id()
+             if uid is not None:
+-                rootdir_stat = rootdir.stat()
++                # Use lstat semantics (don't follow symlinks): the rootdir
++                # should be a real directory we created, not a symlink
++                # pointing somewhere an attacker controls (CVE-2025-71176).
++                rootdir_stat = os.stat(rootdir, follow_symlinks=False)
++                if stat.S_ISLNK(rootdir_stat.st_mode):
++                    raise OSError(
++                        f"The temporary directory {rootdir} is a symbolic link. "
++                        "Fix this and try again."
++                    )
+                 if rootdir_stat.st_uid != uid:
+                     raise OSError(
+                         f"The temporary directory {rootdir} is not owned by the current user. "

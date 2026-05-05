@@ -1,0 +1,317 @@
+diff --git a/common/paths/pathparser.go b/common/paths/pathparser.go
+index 5d828df14..1622cdf62 100644
+--- a/common/paths/pathparser.go
++++ b/common/paths/pathparser.go
+@@ -93,6 +93,28 @@ func (pp *PathParser) SitesMatrixFromPath(p *Path) sitesmatrix.VectorStore {
+ 			}
+ 		}
+ 
++		// Add version indices from identifiers
++		for _, idx := range p.posIdentifierVersions {
++			if idx >= 0 && idx < len(p.identifiersKnown) {
++				id := p.identifiersKnown[idx]
++				version := p.s[id.Low : id.High]
++				if versionIdx := pp.ConfiguredDimensions.ConfiguredVersions.ResolveIndex(version); versionIdx >= 0 {
++					builder.WithVersionIndices(versionIdx)
++				}
++			}
++		}
++
++		// Add role indices from identifiers
++		for _, idx := range p.posIdentifierRoles {
++			if idx >= 0 && idx < len(p.identifiersKnown) {
++				id := p.identifiersKnown[idx]
++				role := p.s[id.Low : id.High]
++				if roleIdx := pp.ConfiguredDimensions.ConfiguredRoles.ResolveIndex(role); roleIdx >= 0 {
++					builder.WithRoleIndices(roleIdx)
++				}
++			}
++		}
++
+ 		switch p.Component() {
+ 		case files.ComponentFolderContent:
+ 			builder.WithDefaultsIfNotSet()
+@@ -196,13 +218,57 @@ func (pp *PathParser) parseIdentifier(component, s string, p *Path, i, lastDot,
+ 	id := types.LowHigh[string]{Low: i + 1, High: high}
+ 	sid := p.s[id.Low:id.High]
+ 
+-	if isCustomWrapperIdentifier(sid) {
++	// Check for known identifier prefixes first (before custom wrapper)
++	if strings.HasPrefix(sid, "_version_") && strings.HasSuffix(sid, "_") && len(sid) > len("_version_")+1 {
++		// This is a version identifier
++		p.identifiersKnown = append(p.identifiersKnown, id)
++		// Store in reverse order (right-to-left parsing)
++		p.posIdentifierVersions = append([]int{len(p.identifiersKnown) - 1}, p.posIdentifierVersions...)
++		if p.posIdentifierVersion == -1 {
++			p.posIdentifierVersion = len(p.identifiersKnown) - 1
++		}
++		found = true
++	} else if strings.HasPrefix(sid, "_role_") && strings.HasSuffix(sid, "_") && len(sid) > len("_role_")+1 {
++		// This is a role identifier
++		p.identifiersKnown = append(p.identifiersKnown, id)
++		// Store in reverse order (right-to-left parsing)
++		p.posIdentifierRoles = append([]int{len(p.identifiersKnown) - 1}, p.posIdentifierRoles...)
++		if p.posIdentifierRole == -1 {
++			p.posIdentifierRole = len(p.identifiersKnown) - 1
++		}
++		found = true
++	} else if strings.HasPrefix(sid, "_language_") && strings.HasSuffix(sid, "_") && len(sid) > len("_language_")+1 {
++		// Check against language index first
++		langValue := sid[len("_language_") : len(sid)-1]
++		if mayHaveLang {
++			var disabled bool
++			_, langFound = pp.LanguageIndex[langValue]
++
++			if !langFound {
++				disabled = pp.IsLangDisabled != nil && pp.IsLangDisabled(langValue)
++				if disabled {
++					p.disabled = true
++					langFound = true
++				}
++			}
++			if langFound {
++				// This is a language identifier
++				p.identifiersKnown = append(p.identifiersKnown, id)
++				// Store in reverse order (right-to-left parsing)
++				p.posIdentifierLanguages = append([]int{len(p.identifiersKnown) - 1}, p.posIdentifierLanguages...)
++				if p.posIdentifierLanguage == -1 {
++					p.posIdentifierLanguage = len(p.identifiersKnown) - 1
++				}
++				found = true
++			}
++		}
++	} else if isCustomWrapperIdentifier(sid) {
+ 		p.identifiersKnown = append(p.identifiersKnown, id)
+ 		p.posIdentifierCustom = len(p.identifiersKnown) - 1
+ 		found = true
+ 	}
+ 
+-	if len(p.identifiersKnown) == 0 {
++	if !found && len(p.identifiersKnown) == 0 {
+ 		// The first is always the extension.
+ 		p.identifiersKnown = append(p.identifiersKnown, id)
+ 		found = true
+@@ -211,15 +277,21 @@ func (pp *PathParser) parseIdentifier(component, s string, p *Path, i, lastDot,
+ 		if mayHaveOutputFormat && pp.IsOutputFormat(sid, "") {
+ 			p.posIdentifierOutputFormat = 0
+ 		}
+-	} else {
++	} else if !found {
+ 		var langFound bool
++		langValue := sid // Default to the full identifier
+ 
+ 		if mayHaveLang {
++			// Check if this is a _language_ prefix format
++			if strings.HasPrefix(sid, "_language_") && strings.HasSuffix(sid, "_") && len(sid) > len("_language_")+1 {
++				langValue = sid[len("_language_") : len(sid)-1]
++			}
++
+ 			var disabled bool
+-			_, langFound = pp.LanguageIndex[sid]
++			_, langFound = pp.LanguageIndex[langValue]
+ 
+ 			if !langFound {
+-				disabled = pp.IsLangDisabled != nil && pp.IsLangDisabled(sid)
++				disabled = pp.IsLangDisabled != nil && pp.IsLangDisabled(langValue)
+ 				if disabled {
+ 					p.disabled = true
+ 					langFound = true
+@@ -228,7 +300,11 @@ func (pp *PathParser) parseIdentifier(component, s string, p *Path, i, lastDot,
+ 			found = langFound
+ 			if langFound {
+ 				p.identifiersKnown = append(p.identifiersKnown, id)
+-				p.posIdentifierLanguage = len(p.identifiersKnown) - 1
++				// Store in reverse order (right-to-left parsing)
++				p.posIdentifierLanguages = append([]int{len(p.identifiersKnown) - 1}, p.posIdentifierLanguages...)
++				if p.posIdentifierLanguage == -1 {
++					p.posIdentifierLanguage = len(p.identifiersKnown) - 1
++				}
+ 			}
+ 
+ 		}
+@@ -238,7 +314,16 @@ func (pp *PathParser) parseIdentifier(component, s string, p *Path, i, lastDot,
+ 			// but we need to keep looking for a more specific one, e.g. amp before html.
+ 			// Use both name and extension to prevent
+ 			// false positives on the form css.html.
+-			if pp.IsOutputFormat(sid, p.Ext()) {
++
++			// Check if this is a prefix format (e.g., _outputformat_amp_)
++			var outputFormatValue string
++			if strings.HasPrefix(sid, "_outputformat_") && strings.HasSuffix(sid, "_") && len(sid) > len("_outputformat_")+1 {
++				outputFormatValue = sid[len("_outputformat_") : len(sid)-1]
++			} else {
++				outputFormatValue = sid
++			}
++
++			if pp.IsOutputFormat(outputFormatValue, p.Ext()) {
+ 				found = true
+ 				p.identifiersKnown = append(p.identifiersKnown, id)
+ 				p.posIdentifierOutputFormat = len(p.identifiersKnown) - 1
+@@ -246,7 +331,14 @@ func (pp *PathParser) parseIdentifier(component, s string, p *Path, i, lastDot,
+ 		}
+ 
+ 		if !found && mayHaveKind {
+-			if kinds.GetKindMain(sid) != "" {
++			// Check if this is a prefix format (e.g., _kind_section_)
++			var kindValue string
++			if strings.HasPrefix(sid, "_kind_") && strings.HasSuffix(sid, "_") && len(sid) > len("_kind_")+1 {
++				kindValue = sid[len("_kind_") : len(sid)-1]
++			} else {
++				kindValue = sid
++			}
++			if kinds.GetKindMain(kindValue) != "" {
+ 				found = true
+ 				p.identifiersKnown = append(p.identifiersKnown, id)
+ 				p.posIdentifierKind = len(p.identifiersKnown) - 1
+@@ -445,7 +537,17 @@ type Path struct {
+ 	posIdentifierLayout       int
+ 	posIdentifierBaseof       int
+ 	posIdentifierCustom       int
+-	disabled                  bool
++	posIdentifierVersion      int
++	posIdentifierRole         int
++
++	// For multiple values of the same type (e.g. multiple languages, versions, roles)
++	// these store the index of the last identifier of that type in identifiersKnown.
++	// The values are stored in reverse order (right-to-left parsing).
++	posIdentifierLanguages []int
++	posIdentifierVersions  []int
++	posIdentifierRoles     []int
++
++	disabled bool
+ 
+ 	trimLeadingSlash bool
+ 
+@@ -477,12 +579,18 @@ func (p *Path) reset() {
+ 	p.component = ""
+ 	p.pathType = 0
+ 	p.identifiersKnown = p.identifiersKnown[:0]
++	p.identifiersUnknown = p.identifiersUnknown[:0]
+ 	p.posIdentifierLanguage = -1
+ 	p.posIdentifierOutputFormat = -1
+ 	p.posIdentifierKind = -1
+ 	p.posIdentifierLayout = -1
+ 	p.posIdentifierBaseof = -1
+ 	p.posIdentifierCustom = -1
++	p.posIdentifierVersion = -1
++	p.posIdentifierRole = -1
++	p.posIdentifierLanguages = p.posIdentifierLanguages[:0]
++	p.posIdentifierVersions = p.posIdentifierVersions[:0]
++	p.posIdentifierRoles = p.posIdentifierRoles[:0]
+ 	p.disabled = false
+ 	p.trimLeadingSlash = false
+ 	p.unnormalized = nil
+@@ -786,6 +894,63 @@ func (p *Path) Custom() string {
+ 	return strings.TrimSuffix(strings.TrimPrefix(p.identifierAsString(p.posIdentifierCustom), identifierCustomWrapper), identifierCustomWrapper)
+ }
+ 
++// Version returns the version identifier value (without the "_version_" prefix).
++// If multiple versions are specified, returns the rightmost one (last parsed).
++func (p *Path) Version() string {
++	s := p.identifierAsString(p.posIdentifierVersion)
++	if strings.HasPrefix(s, "_version_") && strings.HasSuffix(s, "_") && len(s) > len("_version_")+1 {
++		return s[len("_version_") : len(s)-1]
++	}
++	return s
++}
++
++// Role returns the role identifier value (without the "_role_" prefix).
++// If multiple roles are specified, returns the rightmost one (last parsed).
++func (p *Path) Role() string {
++	s := p.identifierAsString(p.posIdentifierRole)
++	if strings.HasPrefix(s, "_role_") && strings.HasSuffix(s, "_") && len(s) > len("_role_")+1 {
++		return s[len("_role_") : len(s)-1]
++	}
++	return s
++}
++
++// Langs returns all language identifiers in the order they were parsed (right-to-left).
++func (p *Path) Langs() []string {
++	langs := make([]string, len(p.posIdentifierLanguages))
++	for i, idx := range p.posIdentifierLanguages {
++		langs[i] = p.identifierAsString(idx)
++	}
++	return langs
++}
++
++// Roles returns all role identifier values (without the "_role_" prefix) in the order they were parsed (right-to-left).
++func (p *Path) Roles() []string {
++	roles := make([]string, len(p.posIdentifierRoles))
++	for i, idx := range p.posIdentifierRoles {
++		s := p.identifierAsString(idx)
++		if strings.HasPrefix(s, "_role_") && strings.HasSuffix(s, "_") && len(s) > len("_role_")+1 {
++			roles[i] = s[len("_role_") : len(s)-1]
++		} else {
++			roles[i] = s
++		}
++	}
++	return roles
++}
++
++// Versions returns all version identifier values (without the "_version_" prefix) in the order they were parsed (right-to-left).
++func (p *Path) Versions() []string {
++	versions := make([]string, len(p.posIdentifierVersions))
++	for i, idx := range p.posIdentifierVersions {
++		s := p.identifierAsString(idx)
++		if strings.HasPrefix(s, "_version_") && strings.HasSuffix(s, "_") && len(s) > len("_version_")+1 {
++			versions[i] = s[len("_version_") : len(s)-1]
++		} else {
++			versions[i] = s
++		}
++	}
++	return versions
++}
++
+ func (p *Path) Identifier(i int) string {
+ 	return p.identifierAsString(i)
+ }
+@@ -798,6 +963,12 @@ func (p *Path) Identifiers() []string {
+ 	ids := make([]string, len(p.identifiersKnown))
+ 	for i, id := range p.identifiersKnown {
+ 		ids[i] = p.s[id.Low:id.High]
++		// Strip the prefix from version and role identifiers
++		if strings.HasPrefix(ids[i], "_version_") && strings.HasSuffix(ids[i], "_") && len(ids[i]) > len("_version_")+1 {
++			ids[i] = ids[i][len("_version_") : len(ids[i])-1]
++		} else if strings.HasPrefix(ids[i], "_role_") && strings.HasSuffix(ids[i], "_") && len(ids[i]) > len("_role_")+1 {
++			ids[i] = ids[i][len("_role_") : len(ids[i])-1]
++		}
+ 	}
+ 	return ids
+ }
+diff --git a/hugolib/sitesmatrix/vectorstores.go b/hugolib/sitesmatrix/vectorstores.go
+index 4f617df60..174dd6ea9 100644
+--- a/hugolib/sitesmatrix/vectorstores.go
++++ b/hugolib/sitesmatrix/vectorstores.go
+@@ -812,6 +812,32 @@ func (s *IntSetsBuilder) WithLanguageIndices(idxs ...int) *IntSetsBuilder {
+ 	return s
+ }
+ 
++func (s *IntSetsBuilder) WithVersionIndices(idxs ...int) *IntSetsBuilder {
++	if len(idxs) == 0 {
++		return s
++	}
++	if s.s.versions == nil {
++		s.s.versions = hmaps.NewOrderedIntSet()
++	}
++	for _, i := range idxs {
++		s.s.versions.Set(i)
++	}
++	return s
++}
++
++func (s *IntSetsBuilder) WithRoleIndices(idxs ...int) *IntSetsBuilder {
++	if len(idxs) == 0 {
++		return s
++	}
++	if s.s.roles == nil {
++		s.s.roles = hmaps.NewOrderedIntSet()
++	}
++	for _, i := range idxs {
++		s.s.roles.Set(i)
++	}
++	return s
++}
++
+ func (s *IntSetsBuilder) WithDefaultsAndAllLanguagesIfNotSet() *IntSetsBuilder {
+ 	s.s.setDefaultsAndAllLAnguagesIfNotSet(s.cfg)
+ 	return s

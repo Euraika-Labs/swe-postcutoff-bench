@@ -1,0 +1,22 @@
+{
+  "instance_id": "prisma__prisma-29392",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 11,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/adapter-mariadb/src/mariadb.test.ts > useTextProtocol option": false,
+    "packages/adapter-mariadb/src/mariadb.test.ts > PrismaMariaDbAdapterFactory constructor": false,
+    "packages/adapter-mariadb/src/mariadb.test.ts > should create a config with prepareCacheLength set to 0 when config has no prepareCacheLength": false,
+    "packages/adapter-mariadb/src/mariadb.test.ts > should preserve existing prepareCacheLength when config is object and prepareCacheLength is set": false,
+    "packages/adapter-mariadb/src/credentials.test.ts > credential sanitization": false,
+    "packages/adapter-mariadb/src/credentials.test.ts > connection string parse error should not expose password": false,
+    "packages/adapter-mariadb/src/mariadb.test.ts > inferCapabilities(${version})": false,
+    "packages/adapter-mariadb/src/mariadb.test.ts > rewriteConnectionString": false,
+    "packages/adapter-mariadb/src/mariadb.test.ts > should rewrite mysql:// to mariadb://": false,
+    "packages/adapter-mariadb/src/mariadb.test.ts > should preserve mariadb:// connection strings": false
+  },
+  "agent_seconds": 35.71931862831116,
+  "candidate_label": "GOLD"
+}

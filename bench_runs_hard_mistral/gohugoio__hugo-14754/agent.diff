@@ -1,0 +1,105 @@
+diff --git a/common/paths/pathparser.go b/common/paths/pathparser.go
+index 5d828df14..de6decef8 100644
+--- a/common/paths/pathparser.go
++++ b/common/paths/pathparser.go
+@@ -271,6 +271,22 @@ func (pp *PathParser) parseIdentifier(component, s string, p *Path, i, lastDot,
+ 			found = true
+ 		}
+ 
++		if !found && strings.HasPrefix(sid, "_version_") {
++			version := strings.TrimPrefix(sid, "_version_")
++			version = strings.TrimSuffix(version, "_")
++			p.identifiersKnown = append(p.identifiersKnown, id)
++			p.posIdentifierVersion = len(p.identifiersKnown) - 1
++			found = true
++		}
++
++		if !found && strings.HasPrefix(sid, "_role_") {
++			role := strings.TrimPrefix(sid, "_role_")
++			role = strings.TrimSuffix(role, "_")
++			p.identifiersKnown = append(p.identifiersKnown, id)
++			p.posIdentifierRole = len(p.identifiersKnown) - 1
++			found = true
++		}
++
+ 		if !found {
+ 			p.identifiersUnknown = append(p.identifiersUnknown, id)
+ 		}
+@@ -445,6 +461,8 @@ type Path struct {
+ 	posIdentifierLayout       int
+ 	posIdentifierBaseof       int
+ 	posIdentifierCustom       int
++	posIdentifierVersion      int
++	posIdentifierRole         int
+ 	disabled                  bool
+ 
+ 	trimLeadingSlash bool
+@@ -483,6 +501,8 @@ func (p *Path) reset() {
+ 	p.posIdentifierLayout = -1
+ 	p.posIdentifierBaseof = -1
+ 	p.posIdentifierCustom = -1
++	p.posIdentifierVersion = -1
++	p.posIdentifierRole = -1
+ 	p.disabled = false
+ 	p.trimLeadingSlash = false
+ 	p.unnormalized = nil
+@@ -782,6 +802,59 @@ func (p *Path) Lang() string {
+ 	return p.identifierAsString(p.posIdentifierLanguage)
+ }
+ 
++func (p *Path) Version() string {
++	return p.identifierAsString(p.posIdentifierVersion)
++}
++
++func (p *Path) Role() string {
++	return p.identifierAsString(p.posIdentifierRole)
++}
++
++func (p *Path) Roles() []string {
++	ids := make([]string, 0, len(p.identifiersKnown))
++	for i, id := range p.identifiersKnown {
++		if id.Low > 0 && p.s[id.Low-1] == '_' && p.s[id.High] == '_' {
++			if p.posIdentifierRole == i {
++				continue
++			}
++			role := strings.TrimPrefix(p.s[id.Low+1:id.High-1], "_role_")
++			role = strings.TrimSuffix(role, "_")
++			ids = append(ids, role)
++		}
++	}
++	return ids
++}
++
++func (p *Path) Langs() []string {
++	ids := make([]string, 0, len(p.identifiersKnown))
++	for i, id := range p.identifiersKnown {
++		if id.Low > 0 && p.s[id.Low-1] == '_' && p.s[id.High] == '_' {
++			if p.posIdentifierLanguage == i {
++				continue
++			}
++			lang := strings.TrimPrefix(p.s[id.Low+1:id.High-1], "_language_")
++			lang = strings.TrimSuffix(lang, "_")
++			ids = append(ids, lang)
++		}
++	}
++	return ids
++}
++
++func (p *Path) Versions() []string {
++	ids := make([]string, 0, len(p.identifiersKnown))
++	for i, id := range p.identifiersKnown {
++		if id.Low > 0 && p.s[id.Low-1] == '_' && p.s[id.High] == '_' {
++			if p.posIdentifierVersion == i {
++				continue
++			}
++			version := strings.TrimPrefix(p.s[id.Low+1:id.High-1], "_version_")
++			version = strings.TrimSuffix(version, "_")
++			ids = append(ids, version)
++		}
++	}
++	return ids
++}
++
+ func (p *Path) Custom() string {
+ 	return strings.TrimSuffix(strings.TrimPrefix(p.identifierAsString(p.posIdentifierCustom), identifierCustomWrapper), identifierCustomWrapper)
+ }

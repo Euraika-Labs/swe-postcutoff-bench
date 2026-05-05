@@ -1,0 +1,122 @@
+diff --git a/hugolib/content_map_page_assembler.go b/hugolib/content_map_page_assembler.go
+index 5a61795c7..57837b097 100644
+--- a/hugolib/content_map_page_assembler.go
++++ b/hugolib/content_map_page_assembler.go
+@@ -498,44 +498,13 @@ func (a *allPagesAssembler) doCreatePages(prefix string, depth int) error {
+ 		isTaxonomy := !a.h.getFirstTaxonomyConfig(s).IsZero()
+ 		isRootSection := !isTaxonomy && level == 1 && cnh.isBranchNode(n)
+ 
+-		if isRootSection {
+-			// This is a root section.
+-			a.seenRootSections.SetIfAbsent(cnh.PathInfo(n).Section(), true)
+-		} else if !isTaxonomy {
+-			p := cnh.PathInfo(n)
+-			rootSection := p.Section()
+-			_, err := a.seenRootSections.GetOrCreate(rootSection, func() (bool, error) {
+-				// Try to preserve the original casing if possible.
+-				sectionUnnormalized := p.Unnormalized().Section()
+-				rootSectionPath := a.h.Conf.PathParser().Parse(files.ComponentFolderContent, "/"+sectionUnnormalized+"/_index.md")
+-				var rootSectionPages contentNode
+-				rootSectionPages, _, err = transformPages(rootSectionPath.Base(), &pageMetaSource{
+-					pathInfo:        rootSectionPath,
+-					sitesMatrixBase: n2.(contentNodeForSites).siteVectors(),
+-					pageConfigSource: &pagemeta.PageConfigEarly{
+-						Kind: kinds.KindSection,
+-					},
+-				}, cascades)
+-				if err != nil {
+-					return true, err
+-				}
+-				treePages.InsertRaw(rootSectionPath.Base(), rootSectionPages)
+-				return true, nil
+-			})
+-			if err != nil {
+-				return nil, 0, err
+-			}
+-
+-		}
+-
+ 		const eventNameSitesMatrix = "sitesmatrix"
+ 
+-		if s == "" || isRootSection {
+-
+-			// Every page needs a home and a root section (.FirstSection).
+-			// We don't know yet what language, version, role combination that will
+-			// be created below, so collect that information and create the missing pages
+-			// on demand.
++		// Every page needs a home and a root section (.FirstSection).
++		// We don't know yet what language, version, role combination that will
++		// be created below, so collect that information and create the missing pages
++		// on demand.
++		setupMissingHomeOrRootSectionHandler := func(s string, n2 contentNode, cascades *page.PageMatcherParamsConfigs, fromContentOnly bool) {
+ 			nm, replaced := contentNodeToContentNodesPage(n2)
+ 
+ 			missingVectorsForHomeOrRootSection := sitesmatrix.Vectors{}
+@@ -555,6 +524,14 @@ func (a *allPagesAssembler) doCreatePages(prefix string, depth int) error {
+ 						e.StopPropagation()
+ 						n.forEeachContentNode(
+ 							func(vec sitesmatrix.Vector, nn contentNode) bool {
++								if fromContentOnly {
++									if ps, ok := nn.(*pageState); ok {
++										switch ps.Kind() {
++										case kinds.KindTaxonomy, kinds.KindTerm:
++											return true
++										}
++									}
++								}
+ 								if _, found := nm[vec]; !found {
+ 									missingVectorsForHomeOrRootSection[vec] = struct{}{}
+ 								}
+@@ -577,7 +554,7 @@ func (a *allPagesAssembler) doCreatePages(prefix string, depth int) error {
+ 						}
+ 
+ 						pms := &pageMetaSource{
+-							pathInfo:            cnh.PathInfo(n),
++							pathInfo:            cnh.PathInfo(n2),
+ 							sitesMatrixBase:     missingVectorsForHomeOrRootSection,
+ 							sitesMatrixBaseOnly: true,
+ 							pageConfigSource: &pagemeta.PageConfigEarly{
+@@ -604,6 +581,43 @@ func (a *allPagesAssembler) doCreatePages(prefix string, depth int) error {
+ 			)
+ 		}
+ 
++		if isRootSection {
++			// This is a root section.
++			a.seenRootSections.SetIfAbsent(cnh.PathInfo(n).Section(), true)
++		} else if !isTaxonomy {
++			p := cnh.PathInfo(n)
++			rootSection := p.Section()
++			_, err := a.seenRootSections.GetOrCreate(rootSection, func() (bool, error) {
++				// Try to preserve the original casing if possible.
++				sectionUnnormalized := p.Unnormalized().Section()
++				rootSectionPath := a.h.Conf.PathParser().Parse(files.ComponentFolderContent, "/"+sectionUnnormalized+"/_index.md")
++				sectionKey := rootSectionPath.Base()
++				var rootSectionPages contentNode
++				rootSectionPages, _, err = transformPages(sectionKey, &pageMetaSource{
++					pathInfo:        rootSectionPath,
++					sitesMatrixBase: n2.(contentNodeForSites).siteVectors(),
++					pageConfigSource: &pagemeta.PageConfigEarly{
++						Kind: kinds.KindSection,
++					},
++				}, cascades)
++				if err != nil {
++					return true, err
++				}
++				treePages.InsertRaw(sectionKey, rootSectionPages)
++				// Pick up any other languages with content under this section.
++				setupMissingHomeOrRootSectionHandler(sectionKey, rootSectionPages, cascades, true)
++				return true, nil
++			})
++			if err != nil {
++				return nil, 0, err
++			}
++
++		}
++
++		if s == "" || isRootSection {
++			setupMissingHomeOrRootSectionHandler(s, n2, cascades, false)
++		}
++
+ 		if s != "" {
+ 			rw.WalkContext.SendEvent(&doctree.Event[contentNode]{Source: n2, Path: s, Name: eventNameSitesMatrix})
+ 		}

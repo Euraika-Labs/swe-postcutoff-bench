@@ -1,0 +1,77 @@
+Traceback (most recent call last):
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/llm/backend/generic.py", line 276, in complete
+    res_data, _ = await self._make_request(url, req.body, headers)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/utils/retry.py", line 48, in wrapper
+    raise e
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/utils/retry.py", line 39, in wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/llm/backend/generic.py", line 380, in _make_request
+    response.raise_for_status()
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/httpx/_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '400 Bad Request' for url 'https://api.regolo.ai/v1/chat/completions'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/agent_loop.py", line 1170, in _chat
+    result = await self.backend.complete(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/llm/backend/generic.py", line 280, in complete
+    raise BackendErrorBuilder.build_http_error(
+vibe.core.llm.exceptions.BackendError: LLM backend error [regolo]
+  status: 400 Bad Request
+  reason: Bad Request
+  request_id: N/A
+  endpoint: https://api.regolo.ai/v1/chat/completions
+  model: mistral-small-4-119b
+  provider_message: regolo.ContextWindowExceededError: regolo.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {"error":{"message":"This model's maximum context length is 262144 tokens. However, you requested 200000 output tokens and your prompt contains at least 62145 input tokens, for a total of at least 262145 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (parameter=input_tokens, value=62145)","type":"BadRequestError","param":"input_tokens","code":400}}
+model=qwen3.5-9b.
+  body_excerpt: {"error":{"message":"regolo.ContextWindowExceededError: regolo.BadRequestError: ContextWindowExceededError: Hosted_vllmException - {\"error\":{\"message\":\"This model's maximum context length is 262144 tokens. However, you requested 200000 output tokens and your prompt contains at least 62145 input tokens, for a total of at least 262145 tokens. Please reduce the length of the input prompt or the …
+  payload_summary: {"model":"mistral-small-4-119b","message_count":82,"approx_chars":158758,"temperature":0.2,"has_tools":true,"tool_choice":"auto"}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/bin/vibe", line 6, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/cli/entrypoint.py", line 177, in main
+    run_cli(args)
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/cli/cli.py", line 225, in run_cli
+    final_response = run_programmatic(
+                     ^^^^^^^^^^^^^^^^^
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/programmatic.py", line 96, in run_programmatic
+    return asyncio.run(_async_run())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/programmatic.py", line 84, in _async_run
+    async for event in events:
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/agent_loop.py", line 186, in gen_wrapper
+    sent = yield await agen.asend(sent)
+                 ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/agent_loop.py", line 554, in act
+    async for event in self._conversation_loop(
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/agent_loop.py", line 772, in _conversation_loop
+    async for event in self._perform_llm_turn():
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/agent_loop.py", line 812, in _perform_llm_turn
+    assistant_event = await self._get_assistant_event()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/agent_loop.py", line 881, in _get_assistant_event
+    llm_result = await self._chat()
+                 ^^^^^^^^^^^^^^^^^^
+  File "/opt/projects/research/papers/2026-04-coding-parity-small-tuned/experiments/tier2_smoke/.venv/lib/python3.12/site-packages/vibe/core/agent_loop.py", line 1201, in _chat
+    raise ContextTooLongError(provider.name, active_model.name) from e
+vibe.core.types.ContextTooLongError: The conversation context exceeds the model's maximum limit. Use /rewind to undo recent actions, then /compact to summarize the conversation.
+[done rc=1 elapsed=575s]

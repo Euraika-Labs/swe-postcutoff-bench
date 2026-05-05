@@ -1,0 +1,29 @@
+{
+  "instance_id": "gohugoio__hugo-14733",
+  "repo": "gohugoio/hugo",
+  "language": "go",
+  "base_commit": "58927aa14ae7e6679ca4533a15362fa99c61247a",
+  "merge_commit": "45e4596630b1372ab02634e4536d2b5a89452e0b",
+  "patch": "From 621d6cca2bf8c6da8407267f4d0ad0c30decbdf4 Mon Sep 17 00:00:00 2001\nFrom: =?UTF-8?q?Bj=C3=B8rn=20Erik=20Pedersen?=\n <bjorn.erik.pedersen@gmail.com>\nDate: Tue, 7 Apr 2026 15:59:07 +0200\nSubject: [PATCH] Strip nested page context markers from standalone\n RenderShortcodes\n\nFixes #14732\n\nCo-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>\n---\n hugolib/integrationtest_builder.go         | 21 ++++++++++-----\n hugolib/page__content.go                   |  4 +++\n hugolib/rendershortcodes_test.go           | 31 ++++++++++++++++++++++\n markup/goldmark/hugocontext/hugocontext.go |  8 ++++++\n 4 files changed, 57 insertions(+), 7 deletions(-)\n\ndiff --git a/hugolib/integrationtest_builder.go b/hugolib/integrationtest_builder.go\nindex d9f05990306..ee9919a75c4 100644\n--- a/hugolib/integrationtest_builder.go\n+++ b/hugolib/integrationtest_builder.go\n@@ -2,7 +2,6 @@ package hugolib\n \n import (\n \t\"bytes\"\n-\t\"context\"\n \t\"encoding/base64\"\n \t\"errors\"\n \t\"fmt\"\n@@ -39,8 +38,8 @@ import (\n \t\"github.com/gohugoio/hugo/hugofs/hglob\"\n \t\"github.com/gohugoio/hugo/hugolib/sitesmatrix\"\n \t\"github.com/gohugoio/hugo/identity\"\n+\t\"github.com/gohugoio/hugo/media\"\n \t\"github.com/spf13/afero\"\n-\t\"github.com/spf13/cast\"\n \t\"golang.org/x/text/unicode/norm\"\n \t\"golang.org/x/tools/txtar\"\n )\n@@ -462,12 +461,20 @@ func (s *IntegrationTestBuilder) AssertFileContentExact(filename string, matches\n \n func (s *IntegrationTestBuilder) AssertNoRenderShortcodesArtifacts() {\n \ts.Helper()\n-\tfor _, p := range s.H.Pages() {\n-\t\tcontent, err := p.Content(context.Background())\n+\tafero.Walk(s.fs.PublishDir, \"\", func(path string, info os.FileInfo, err error) error {\n+\t\tif err != nil || info.IsDir() {\n+\t\t\treturn err\n+\t\t}\n+\t\text := strings.TrimPrefix(filepath.Ext(path), \".\")\n+\t\tif !s.H.Conf.GetConfigSection(\"mediaTypes\").(media.Types).IsTextSuffix(ext) {\n+\t\t\treturn nil\n+\t\t}\n+\t\tcontent, err := afero.ReadFile(s.fs.PublishDir, path)\n \t\ts.Assert(err, qt.IsNil)\n-\t\tcomment := qt.Commentf(\"Page: %s\\n%s\", p.Path(), content)\n-\t\ts.Assert(strings.Contains(cast.ToString(content), \"__hugo_ctx\"), qt.IsFalse, comment)\n-\t}\n+\t\tcomment := qt.Commentf(\"File: %s\\n%s\", path, string(content))\n+\t\ts.Assert(strings.Contains(string(content), \"__hugo_ctx\"), qt.IsFalse, comment)\n+\t\treturn nil\n+\t})\n }\n \n type IntegrationTestImageHelper struct {\ndiff --git a/hugolib/page__content.go b/hugolib/page__content.go\nindex 7377936f309..be1f5f39671 100644\n--- a/hugolib/page__content.go\n+++ b/hugolib/page__content.go\n@@ -1109,6 +1109,10 @@ func (c *cachedContentScope) RenderShortcodes(ctx context.Context) (template.HTM\n \t\treturn template.HTML(hugocontext.Wrap(cc, pco.po.p.pid)), nil\n \t}\n \n+\t// Strip any Hugo context markers from nested RenderShortcodes calls\n+\t// that won't be processed by Goldmark.\n+\tcc = hugocontext.Strip(cc)\n+\n \treturn helpers.BytesToHTML(cc), nil\n }\n \ndiff --git a/markup/goldmark/hugocontext/hugocontext.go b/markup/goldmark/hugocontext/hugocontext.go\nindex 8afe64b7ff8..5f6b5eea521 100644\n--- a/markup/goldmark/hugocontext/hugocontext.go\n+++ b/markup/goldmark/hugocontext/hugocontext.go\n@@ -104,6 +104,14 @@ var (\n \thugoCtxRe           = regexp.MustCompile(`{{__hugo_ctx( pid=\\d+)?/?}}\\n?`)\n )\n \n+// Strip strips any Hugo context markers from b.\n+func Strip(b []byte) []byte {\n+\tif !bytes.Contains(b, hugoCtxPrefix) {\n+\t\treturn b\n+\t}\n+\treturn hugoCtxRe.ReplaceAll(b, nil)\n+}\n+\n var _ parser.InlineParser = (*hugoContextParser)(nil)\n \n type hugoContextParser struct{}\n",
+  "test_patch": "diff --git a/hugolib/rendershortcodes_test.go b/hugolib/rendershortcodes_test.go\nindex e952e258f4a..6ef7dfdeff9 100644\n--- a/hugolib/rendershortcodes_test.go\n+++ b/hugolib/rendershortcodes_test.go\n@@ -521,3 +521,34 @@ not emphasized\n \t\t\"<p>a</p>\\n<p><em>emphasized</em></p>\\n<p>not emphasized</p>\\n<p>b</p>\\n\",\n \t)\n }\n+\n+// Issue 14732.\n+func TestRenderShortcodesStandalone(t *testing.T) {\n+\tt.Parallel()\n+\n+\tfiles := `\n+-- hugo.toml --\n+disableKinds = ['section','rss','sitemap','taxonomy','term']\n+-- layouts/all.html --\n+RenderShortcodes: {{ .RenderShortcodes }}|\n+-- layouts/_shortcodes/headings.html --\n+## Heading 1\n+### Heading 2\n+{{ $p := site.GetPage \"includeme\" }}\n+RenderShortcodes2: {{ $p.RenderShortcodes }}|\n+-- content/p1.md --\n+---\n+title: \"p1\"\n+---\n+{{% headings \"headings\" %}}\n+-- content/includeme.md --\n+---\n+title: \"includeme\"\n+---\n+## Heading 2\n+`\n+\n+\tb := Test(t, files)\n+\n+\tb.AssertNoRenderShortcodesArtifacts()\n+}\n",
+  "problem_statement": "Fixes #14732\n\nCo-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>",
+  "title": "Strip nested page context markers from standalone RenderShortcodes",
+  "FAIL_TO_PASS": [
+    "hugolib/TestRenderShortcodesStandalone"
+  ],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-07T15:58:44Z",
+  "merged_at": "2026-04-07T17:27:40Z",
+  "pr_url": "https://github.com/gohugoio/hugo/pull/14733",
+  "labels": [],
+  "runner": {
+    "kind": "go",
+    "go_version": "1.23",
+    "install": "go mod download",
+    "test_cmd": "go test ./...",
+    "test_id_separator": "/"
+  },
+  "verified": false,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (1 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

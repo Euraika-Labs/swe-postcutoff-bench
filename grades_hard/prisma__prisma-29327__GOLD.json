@@ -1,0 +1,13 @@
+{
+  "instance_id": "prisma__prisma-29327",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/client/tests/functional/issues/29309-datetime-cursor/tests.ts > retrieves a cursor against a DATE column": false
+  },
+  "agent_seconds": 34.328330278396606,
+  "candidate_label": "GOLD"
+}

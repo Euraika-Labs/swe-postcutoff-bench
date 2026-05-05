@@ -1,0 +1,15 @@
+{
+  "instance_id": "gohugoio__hugo-14753",
+  "fail_to_pass_passed": 2,
+  "fail_to_pass_total": 3,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "hugolib/sitesmatrix/TestContentFilesMountSitesMatrixResourcesVersionsAndLanguages": false,
+    "hugolib/sitesmatrix/TestFileMountSitesMatrixResourcesRoles": true,
+    "hugolib/sitesmatrix/TestFileMountSitesMatrixResourcesRolesContentAdapter": true
+  },
+  "agent_seconds": 45.39969873428345,
+  "candidate_label": "GOLD"
+}

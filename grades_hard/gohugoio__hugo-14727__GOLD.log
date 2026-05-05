@@ -1,0 +1,29 @@
+[clone gohugoio/hugo@07558724 ok]
+
+Checking patch hugolib/language_content_dir_test.go...
+Checking patch hugolib/cascade_test.go...
+Checking patch hugolib/hugo_smoke_test.go...
+Checking patch hugolib/params_test.go...
+Checking patch hugolib/rebuild_test.go...
+Applied patch hugolib/language_content_dir_test.go cleanly.
+Applied patch hugolib/cascade_test.go cleanly.
+Applied patch hugolib/hugo_smoke_test.go cleanly.
+Applied patch hugolib/params_test.go cleanly.
+Applied patch hugolib/rebuild_test.go cleanly.
+
+
+Checking patch hugolib/content_map_page_assembler.go...
+Applied patch hugolib/content_map_page_assembler.go cleanly.
+
+
+[install rc=0]
+
+[hugolib/TestPublishMultilingualSectionCreation] rc=0
+=== RUN   TestPublishMultilingualSectionCreation
+=== PAUSE TestPublishMultilingualSectionCreation
+=== CONT  TestPublishMultilingualSectionCreation
+--- PASS: TestPublishMultilingualSectionCreation (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/hugolib	0.098s
+
+---

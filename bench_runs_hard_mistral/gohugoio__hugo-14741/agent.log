@@ -1,0 +1,10 @@
+Error: API error from regolo (model: mistral-small-4-119b): LLM backend error [regolo]
+  status: N/A
+  reason: ReadTimeout('')
+  request_id: N/A
+  endpoint: https://api.regolo.ai/v1/chat/completions
+  model: mistral-small-4-119b
+  provider_message: Network error
+  body_excerpt: 
+  payload_summary: {"model":"mistral-small-4-119b","message_count":70,"approx_chars":99135,"temperature":0.2,"has_tools":true,"tool_choice":"auto"}
+[done rc=1 elapsed=1177s]

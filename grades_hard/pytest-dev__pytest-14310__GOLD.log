@@ -1,0 +1,90 @@
+[clone pytest-dev/pytest@2ca0f8ad ok]
+
+Checking patch testing/test_recwarn.py...
+Applied patch testing/test_recwarn.py cleanly.
+
+
+Checking patch AUTHORS...
+Checking patch changelog/11225.improvement.rst...
+Checking patch doc/en/how-to/capture-warnings.rst...
+Checking patch src/_pytest/recwarn.py...
+Checking patch changelog/11225.improvement.rst...
+Checking patch changelog/11225.improvement.rst...
+error: while searching for:
+:func:`pytest.warns` showed "Regex pattern did not match" instead of "DID NOT WARN" when warnings were emitted but the ``match`` pattern did not match.
+error: patch failed: changelog/11225.improvement.rst:1
+Checking patch doc/en/how-to/capture-warnings.rst...
+Checking patch src/_pytest/recwarn.py...
+Applied patch AUTHORS cleanly.
+Applied patch changelog/11225.improvement.rst cleanly.
+Applied patch doc/en/how-to/capture-warnings.rst cleanly.
+Applied patch src/_pytest/recwarn.py cleanly.
+Applied patch changelog/11225.improvement.rst cleanly.
+Applying patch changelog/11225.improvement.rst with 1 reject...
+Rejected hunk #1.
+Applied patch doc/en/how-to/capture-warnings.rst cleanly.
+Applied patch src/_pytest/recwarn.py cleanly.
+
+[3way] error: AUTHORS: does not match index
+Performing three-way merge...
+error: changelog/11225.improvement.rst: does not exist in index
+error: cannot read the current contents of 'changelog/11225.improvement.rst'
+error: changelog/11225.improvement.rst: patch does not apply
+error: doc/en/how-to/capture-warnings.rst: does not match index
+error: src/_pytest/recwarn.py: does not match index
+error: changelog/11225.improvement.rst: does not exist in index
+error: changelog/11225.improvement.rst: does not exist in index
+error: doc/en/how-to/capture-warnings.rst: does not match index
+error: src/_pytest/recwarn.py: does not match index
+
+
+[GOLD apply failed; running tests anyway]
+
+[install rc=0]
+lling build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting iniconfig>=1.0.1 (from pytest==9.1.0.dev276+g2ca0f8ad7.d20260504)
+  Using cached iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Requirement already satisfied: packaging>=22 in ./.pcb_venv/lib/python3.14/site-packages (from pytest==9.1.0.dev276+g2ca0f8ad7.d20260504) (26.2)
+Collecting pluggy<2,>=1.5 (from pytest==9.1.0.dev276+g2ca0f8ad7.d20260504)
+  Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest==9.1.0.dev276+g2ca0f8ad7.d20260504)
+  Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+Building wheels for collected packages: pytest
+  Building editable for pytest (pyproject.toml): started
+  Building editable for pytest (pyproject.toml): finished with status 'done'
+  Created wheel for pytest: filename=pytest-9.1.0.dev276+g2ca0f8ad7.d20260504-0.editable-py3-none-any.whl size=5354 sha256=a680ef391ccbf0ccbe76fb58f4ce0a34bb2da68f128288829860213283676f0f
+  Stored in directory: /tmp/pip-ephem-wheel-cache-w8rn6gf9/wheels/70/9f/2f/d8a2cc10bcb096f943a5b905d5768d4fbdc640ddb6e3fc814c
+Successfully built pytest
+Installing collected packages: pygments, pluggy, iniconfig, pytest
+
+Successfully installed iniconfig-2.3.0 pluggy-1.6.0 pygments-2.20.0 pytest-9.1.0.dev276+g2ca0f8ad7.d20260504
+WARNING: pytest 9.1.0.dev276+g2ca0f8ad7.d20260504 does not provide the extra 'test'
+
+[test rc=4]
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.1.0.dev276+g2ca0f8ad7.d20260504, pluggy-1.6.0 -- /tmp/pcb_hard_workdirs/pytest-dev__pytest-14310/.pcb_venv/bin/python3.14
+rootdir: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14310
+configfile: pyproject.toml
+collecting ... collected 0 items
+
+============================ no tests ran in 0.03s =============================
+ERROR: not found: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14310/testing/test_recwarn.py::test_warns_match_failure_message_detail
+(no match in any of [<Module test_recwarn.py>])
+
+ERROR: not found: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14310/testing/test_recwarn.py::test_warns_match_re_escape_hint
+(no match in any of [<Module test_recwarn.py>])
+
+ERROR: not found: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14310/testing/test_recwarn.py::test_warns_match_re_escape_hint_no_false_positive
+(no match in any of [<Module test_recwarn.py>])
+
+

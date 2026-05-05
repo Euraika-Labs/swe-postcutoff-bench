@@ -1,0 +1,55 @@
+[clone django/django@82a2465f ok]
+
+Checking patch scripts/pr_quality/tests/__init__.py...
+Checking patch scripts/pr_quality/tests/test_check_pr.py...
+Applied patch scripts/pr_quality/tests/__init__.py cleanly.
+Applied patch scripts/pr_quality/tests/test_check_pr.py cleanly.
+
+
+Checking patch .github/workflows/check_pr_quality.yml...
+Checking patch .github/workflows/tests.yml...
+Checking patch scripts/pr_quality/__init__.py...
+Checking patch scripts/pr_quality/check_pr.py...
+Checking patch scripts/pr_quality/errors.py...
+Checking patch zizmor.yml...
+Applied patch .github/workflows/check_pr_quality.yml cleanly.
+Applied patch .github/workflows/tests.yml cleanly.
+Applied patch scripts/pr_quality/__init__.py cleanly.
+Applied patch scripts/pr_quality/check_pr.py cleanly.
+Applied patch scripts/pr_quality/errors.py cleanly.
+Applied patch zizmor.yml cleanly.
+
+
+[install rc=0]
+Obtaining file:///tmp/pcb_hard_workdirs/django__django-21077
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting asgiref>=3.9.1 (from Django==6.1.dev20260416092819)
+  Using cached asgiref-3.11.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting sqlparse>=0.5.0 (from Django==6.1.dev20260416092819)
+  Using cached sqlparse-0.5.5-py3-none-any.whl.metadata (4.7 kB)
+Using cached asgiref-3.11.1-py3-none-any.whl (24 kB)
+Using cached sqlparse-0.5.5-py3-none-any.whl (46 kB)
+Building wheels for collected packages: Django
+  Building editable for Django (pyproject.toml): started
+  Building editable for Django (pyproject.toml): finished with status 'done'
+  Created wheel for Django: filename=django-6.1.dev20260416092819-0.editable-py3-none-any.whl size=48025 sha256=524ce30ffef6ef6cb2f42519a568f8e5dc410c4aced7503fcd55de69ae626c8b
+  Stored in directory: /tmp/pip-ephem-wheel-cache-_fvislau/wheels/a1/ef/4c/adfa4a692345bd4a30cf11df18cf69f68bc1fa56c627205c7f
+Successfully built Django
+Installing collected packages: sqlparse, asgiref, Django
+
+Successfully installed Django-6.1.dev20260416092819 asgiref-3.11.1 sqlparse-0.5.5
+WARNING: django 6.1.dev20260416092819 does not provide the extra 'test'
+
+[test rc=1]
+Traceback (most recent call last):
+  File "/home/linuxbrew/.linuxbrew/bin/pytest", line 3, in <module>
+    from pytest import console_main
+ModuleNotFoundError: No module named 'pytest'
+

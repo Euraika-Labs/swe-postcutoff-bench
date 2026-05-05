@@ -1,0 +1,23 @@
+(node:586989) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+The implementation is complete. Here's a summary of the fix:
+
+## Summary
+
+I added the `WarnDeprecatedEdition()` function to `/tmp/swe-postcutoff-bench/bench_runs_hard_qwen/gohugoio__hugo-14728/workdir/common/hugo/hugo.go`.
+
+The function:
+- When `IsExtended=true` and `IsWithdeploy=false`: Logs a deprecation warning about "the extended edition" suggesting to use "the standard edition instead"
+- When `IsExtended=true` and `IsWithdeploy=true`: Logs a deprecation warning about "the extended_withdeploy edition" suggesting to use "the withdeploy edition instead"
+- When `IsExtended=false`: No output (no deprecation needed)
+
+The function uses the existing `Deprecate()` helper which logs at the appropriate level based on the version (`v0.161.0` in this case).
+
+All tests pass:
+```
+=== RUN   TestWarnDeprecatedEdition
+--- PASS: TestWarnDeprecatedEdition (0.00s)
+PASS
+ok      github.com/gohugoio/hugo/common/hugo    0.091s
+```
+[done rc=0 elapsed=247s]

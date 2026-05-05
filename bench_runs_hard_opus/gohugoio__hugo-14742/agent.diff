@@ -1,0 +1,64 @@
+diff --git a/markup/goldmark/toc.go b/markup/goldmark/toc.go
+index 3fb53f875..484018bde 100644
+--- a/markup/goldmark/toc.go
++++ b/markup/goldmark/toc.go
+@@ -24,6 +24,7 @@ import (
+ 	emojiAst "github.com/yuin/goldmark-emoji/ast"
+ 
+ 	"github.com/gohugoio/hugo-goldmark-extensions/extras"
++	"github.com/gohugoio/hugo-goldmark-extensions/passthrough"
+ 	"github.com/gohugoio/hugo/markup/tableofcontents"
+ 
+ 	"github.com/yuin/goldmark"
+@@ -105,7 +106,8 @@ func (t *tocTransformer) Transform(n *ast.Document, reader text.Reader, pc parse
+ 			extras.KindInsert,
+ 			extras.KindMark,
+ 			extras.KindSubscript,
+-			extras.KindSuperscript:
++			extras.KindSuperscript,
++			passthrough.KindPassthroughInline:
+ 			err := t.r.Render(&headingText, reader.Source(), n)
+ 			if err != nil {
+ 				return s, err
+@@ -142,6 +144,7 @@ func newTocExtension(options []renderer.Option) goldmark.Extender {
+ func (e *tocExtension) Extend(m goldmark.Markdown) {
+ 	r := goldmark.DefaultRenderer()
+ 	r.AddOptions(e.options...)
++	r.AddOptions(renderer.WithNodeRenderers(util.Prioritized(&tocPassthroughRenderer{}, 100)))
+ 	m.Parser().AddOptions(parser.WithASTTransformers(util.Prioritized(&tocTransformer{
+ 		r: r,
+ 	},
+@@ -149,6 +152,33 @@ func (e *tocExtension) Extend(m goldmark.Markdown) {
+ 		110)))
+ }
+ 
++// tocPassthroughRenderer renders passthrough nodes as their raw segment value
++// (including delimiters). It exists so the TOC renderer can safely walk into
++// passthrough nodes that appear inside headings.
++type tocPassthroughRenderer struct{}
++
++func (r *tocPassthroughRenderer) RegisterFuncs(reg renderer.NodeRendererFuncRegisterer) {
++	reg.Register(passthrough.KindPassthroughInline, r.render)
++	reg.Register(passthrough.KindPassthroughBlock, r.render)
++}
++
++func (r *tocPassthroughRenderer) render(w util.BufWriter, src []byte, node ast.Node, entering bool) (ast.WalkStatus, error) {
++	if !entering {
++		return ast.WalkContinue, nil
++	}
++	switch nn := node.(type) {
++	case *passthrough.PassthroughInline:
++		_, _ = w.Write(nn.Segment.Value(src))
++	case *passthrough.PassthroughBlock:
++		l := nn.Lines().Len()
++		for i := range l {
++			line := nn.Lines().At(i)
++			_, _ = w.Write(line.Value(src))
++		}
++	}
++	return ast.WalkContinue, nil
++}
++
+ var tocSanitizerPolicy = newTOCSanitizerPolicy()
+ 
+ // newTOCSanitizerPolicy returns a bluemonday policy for sanitizing TOC heading

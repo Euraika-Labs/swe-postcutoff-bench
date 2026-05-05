@@ -1,0 +1,148 @@
+diff --git a/hugolib/language_content_dir_test.go b/hugolib/language_content_dir_test.go
+index 53bd8de2cb0..888f592f5c9 100644
+--- a/hugolib/language_content_dir_test.go
++++ b/hugolib/language_content_dir_test.go
+@@ -171,6 +171,65 @@ title: "p4 theme (nl)"
+ 	b.AssertFileContent("public/en/index.html", `home (en): en: p1 (en)|p2 (en)|p3 (en)|:END`)
+ }
+ 
++// Issue 14681
++func TestPublishMultilingualSectionCreation(t *testing.T) {
++	t.Parallel()
++
++	files := `
++-- hugo.toml --
++capitalizeListTitles = false
++pluralizeListTitles = false
++disableKinds = ['rss','sitemap','taxonomy','term']
++
++defaultContentLanguage = "fr"
++defaultContentLanguageInSubdir = true
++
++[languages.fr]
++contentDir = "content/fr"
++weight = 1
++
++[languages.en]
++contentDir = "content/en"
++weight = 2
++
++[languages.de]
++contentDir = "content/de"
++weight = 3
++-- layouts/home.html --
++HOME {{ .Language.Name }}
++-- layouts/page.html --
++{{ .Title }} {{ .Language.Name }}
++-- layouts/section.html --
++{{ .Title }} {{ .Language.Name }}
++-- content/de/s1/p1.md --
++---
++title: p1
++---
++-- content/en/s1/p2.md --
++---
++title: p2
++---
++-- content/fr/s1/p3.md --
++---
++title: p3
++---
++`
++
++	b := Test(t, files)
++
++	b.AssertFileContent("public/de/index.html", "HOME de")
++	b.AssertFileContent("public/de/s1/index.html", "s1 de")
++	b.AssertFileContent("public/de/s1/p1/index.html", "p1 de")
++
++	b.AssertFileContent("public/en/index.html", "HOME en")
++	b.AssertFileContent("public/en/s1/index.html", "s1 en") // fail (file does not exist)
++	b.AssertFileContent("public/en/s1/p2/index.html", "p2 en")
++
++	b.AssertFileContent("public/fr/index.html", "HOME fr")
++	b.AssertFileContent("public/fr/s1/index.html", "s1 fr") // fail (file does not exist)
++	b.AssertFileContent("public/fr/s1/p3/index.html", "p3 fr")
++}
++
+ // Issue 13993
+ func TestIssue13993(t *testing.T) {
+ 	t.Parallel()
+
+From 59f25964a0ff15c000a6622f4f19ca7a9f7a18d5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bj=C3=B8rn=20Erik=20Pedersen?=
+ <bjorn.erik.pedersen@gmail.com>
+Date: Tue, 7 Apr 2026 11:22:49 +0200
+Subject: [PATCH 2/2] Rename deprecated cascade._target to cascade.target in
+ tests
+
+---
+ hugolib/cascade_test.go    | 4 ++--
+ hugolib/hugo_smoke_test.go | 4 ++--
+ hugolib/params_test.go     | 2 +-
+ hugolib/rebuild_test.go    | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/hugolib/cascade_test.go b/hugolib/cascade_test.go
+index da5e0f60688..50043c3eba9 100644
+--- a/hugolib/cascade_test.go
++++ b/hugolib/cascade_test.go
+@@ -185,11 +185,11 @@ disableKinds = ['rss','sitemap','taxonomy','term', 'home']
+ ---
+ title: Home
+ cascade:
+-- _target:
++- target:
+     path: "**"
+   params:
+     background: yosemite.jpg
+-- _target:
++- target:
+   params:
+     background: goldenbridge.jpg
+ ---
+diff --git a/hugolib/hugo_smoke_test.go b/hugolib/hugo_smoke_test.go
+index 284091db69f..2704257fef5 100644
+--- a/hugolib/hugo_smoke_test.go
++++ b/hugolib/hugo_smoke_test.go
+@@ -431,11 +431,11 @@ Home Content.
+ ---
+ title: Hjem
+ cascade:
+-  - _target:
++  - target:
+       kind: page
+       path: /posts/**
+     background: post.jpg
+-  - _target:
++  - target:
+       kind: term
+     background: term.jpg
+ ---
+diff --git a/hugolib/params_test.go b/hugolib/params_test.go
+index 344e862f213..c390924a804 100644
+--- a/hugolib/params_test.go
++++ b/hugolib/params_test.go
+@@ -33,7 +33,7 @@ background = 'yosemite.jpg'
+ [cascade.params]
+ a = "home-a"
+ b = "home-b"
+-[cascade._target]
++[cascade.target]
+ kind = 'page'
+ +++
+ -- content/p1.md --
+diff --git a/hugolib/rebuild_test.go b/hugolib/rebuild_test.go
+index d05ef753805..537c00cef78 100644
+--- a/hugolib/rebuild_test.go
++++ b/hugolib/rebuild_test.go
+@@ -926,7 +926,7 @@ P5 Content.
+ -- content/myothersect/_index.md --
+ ---
+ cascade:
+-- _target:
++- target:
+   cascadeparam: "cascadevalue"
+ ---
+ -- content/myothersect/sub/_index.md --
+

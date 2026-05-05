@@ -1,0 +1,13 @@
+{
+  "instance_id": "pytest-dev__pytest-14343",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "testing/test_tmpdir.py::test_tmp_path_factory_doesnt_follow_symlinks": true
+  },
+  "agent_seconds": 10.323803186416626,
+  "candidate_label": "agent.diff"
+}

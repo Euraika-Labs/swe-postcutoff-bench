@@ -1,0 +1,95 @@
+[clone vercel/next.js@65340b27 ok]
+
+Checking patch test/e2e/app-dir/cache-components/cache-components.draft-mode.test.ts...
+Applied patch test/e2e/app-dir/cache-components/cache-components.draft-mode.test.ts cleanly.
+
+
+Checking patch test/e2e/app-dir/cache-components/app/draftmode/streaming/layout.tsx...
+Checking patch test/e2e/app-dir/cache-components/app/draftmode/streaming/loading.tsx...
+Checking patch test/e2e/app-dir/cache-components/app/draftmode/streaming/page.tsx...
+Checking patch packages/next/src/build/templates/app-page.ts...
+Applied patch test/e2e/app-dir/cache-components/app/draftmode/streaming/layout.tsx cleanly.
+Applied patch test/e2e/app-dir/cache-components/app/draftmode/streaming/loading.tsx cleanly.
+Applied patch test/e2e/app-dir/cache-components/app/draftmode/streaming/page.tsx cleanly.
+Applied patch packages/next/src/build/templates/app-page.ts cleanly.
+
+
+[install rc=0]
+al-builtin <- react 0.0.0-experimental-da9325b5-20260417
++ react-is-builtin <- react-is 19.3.0-canary-da9325b5-20260417
++ react-server-dom-turbopack 19.3.0-canary-da9325b5-20260417
++ react-server-dom-turbopack-experimental <- react-server-dom-turbopack 0.0.0-experimental-da9325b5-20260417
++ react-server-dom-webpack 19.3.0-canary-da9325b5-20260417
++ react-server-dom-webpack-experimental <- react-server-dom-webpack 0.0.0-experimental-da9325b5-20260417
++ react-ssr-prepass 1.0.8
++ react-virtualized 9.22.3
++ relay-compiler 13.0.2
++ relay-runtime 13.0.2
++ release 6.3.1
++ request-promise-core 1.1.2
++ resolve-from 5.0.0
++ sass 1.54.0
++ satori 0.25.0
++ scheduler-builtin <- scheduler 0.28.0-canary-da9325b5-20260417
++ scheduler-experimental-builtin <- scheduler 0.0.0-experimental-da9325b5-20260417
++ seedrandom 3.0.5
++ semver 7.3.7
++ serve-handler 6.1.6
++ shell-quote 1.7.3
++ strip-ansi 6.0.0
++ styled-jsx 5.1.6
++ styled-jsx-plugin-postcss 3.0.2
++ swr 2.2.4
++ tailwindcss 3.2.7
++ taskr 1.1.0
++ tree-kill 1.2.2
++ tsec 0.2.1
++ tsx 4.19.2
++ turbo 2.9.4
++ typescript 6.0.2
++ typescript-eslint 8.46.0
++ unfetch 4.2.0
++ wait-port 0.2.2
++ webpack 5.98.0
++ webpack-bundle-analyzer 4.7.0
++ webpack-dev-server 5.2.0
++ whatwg-fetch 3.0.0
++ ws 8.2.3
++ yargs 16.2.0
+
+. postinstall$ node scripts/git-configure.mjs && node scripts/install-native.mjs
+. postinstall: Installed the following binary packages: [ 'swc-linux-x64-gnu' ]
+. postinstall: Done
+. prepare$ husky
+. prepare: Done
+Done in 18s using pnpm v10.33.0
+
+[test rc=1]
+ct.<anonymous> (/tmp/pcb_hard_workdirs/vercel__next.js-93417/packages/next/jest.js:1:18)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14)
+Error: Cannot find module './dist/build/jest/jest'
+Require stack:
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/packages/next/jest.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/jest.config.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/node_modules/.pnpm/jest-util@29.7.0/node_modules/jest-util/build/requireOrImportModule.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/node_modules/.pnpm/jest-util@29.7.0/node_modules/jest-util/build/index.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/node_modules/.pnpm/@jest+core@29.7.0_babel-plugin-macros@3.1.0/node_modules/@jest/core/build/FailedTestsInteractiveMode.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/node_modules/.pnpm/@jest+core@29.7.0_babel-plugin-macros@3.1.0/node_modules/@jest/core/build/plugins/FailedTestsInteractive.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/node_modules/.pnpm/@jest+core@29.7.0_babel-plugin-macros@3.1.0/node_modules/@jest/core/build/watch.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/node_modules/.pnpm/@jest+core@29.7.0_babel-plugin-macros@3.1.0/node_modules/@jest/core/build/cli/index.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/node_modules/.pnpm/@jest+core@29.7.0_babel-plugin-macros@3.1.0/node_modules/@jest/core/build/index.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/node_modules/.pnpm/jest-cli@29.7.0_@types+node@20.17.6_patch_hash=9c31d25336aea4076b3cb942c35e59fd160c5409_d94d24a5963e1f9cf4be9d3181466787/node_modules/jest-cli/build/run.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/node_modules/.pnpm/jest-cli@29.7.0_@types+node@20.17.6_patch_hash=9c31d25336aea4076b3cb942c35e59fd160c5409_d94d24a5963e1f9cf4be9d3181466787/node_modules/jest-cli/build/index.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/node_modules/.pnpm/jest-cli@29.7.0_@types+node@20.17.6_patch_hash=9c31d25336aea4076b3cb942c35e59fd160c5409_d94d24a5963e1f9cf4be9d3181466787/node_modules/jest-cli/bin/jest.js
+- /tmp/pcb_hard_workdirs/vercel__next.js-93417/node_modules/.pnpm/jest@29.7.0_@types+node@20.17.6_patch_hash=9c31d25336aea4076b3cb942c35e59fd160c540947f0_1b5708af2b361807ed6b35c947b822a2/node_modules/jest/bin/jest.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1475:15)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1048:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1072:10)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1093:12)
+    at Module._load (node:internal/modules/cjs/loader:1261:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1575:12)
+    at require (node:internal/modules/helpers:191:16)
+    at Object.<anonymous> (/tmp/pcb_hard_workdirs/vercel__next.js-93417/packages/next/jest.js:1:18)
+    at Module._compile (node:internal/modules/cjs/loader:1829:14)
+

@@ -1,0 +1,17 @@
+diff --git a/common/hugo/hugo.go b/common/hugo/hugo.go
+index fbb1e53a4..1e49e6935 100644
+--- a/common/hugo/hugo.go
++++ b/common/hugo/hugo.go
+@@ -410,3 +410,12 @@ func BuildVersionString() string {
+ 
+ 	return versionString
+ }
++
++// WarnDeprecatedEdition logs a deprecation warning if the extended or extended_withdeploy edition is used.
++func WarnDeprecatedEdition() {
++	if IsExtended && !IsWithdeploy {
++		Deprecate("the extended edition of the Hugo executable", "Use the standard edition instead.", "v0.161.0")
++	} else if IsExtended && IsWithdeploy {
++		Deprecate("the extended_withdeploy edition of the Hugo executable", "Use the withdeploy edition instead.", "v0.161.0")
++	}
++}

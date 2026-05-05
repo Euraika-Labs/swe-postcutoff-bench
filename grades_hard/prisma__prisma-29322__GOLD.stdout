@@ -1,0 +1,18 @@
+{
+  "instance_id": "prisma__prisma-29322",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 6,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/cli/src/__tests__/Studio.vitest.ts > Studio BFF": false,
+    "packages/cli/src/__tests__/Studio.vitest.ts > routes sql-lint requests to executor.lintSql": false,
+    "packages/cli/src/__tests__/Studio.vitest.ts > unwraps RPC-serialized sql-lint errors": false,
+    "packages/cli/src/__tests__/Studio.vitest.ts > passes through top-level serialized sql-lint errors": false,
+    "packages/cli/src/__tests__/Studio.vitest.ts > unwraps nested serialized sql-lint errors": false,
+    "packages/cli/src/__tests__/Studio.vitest.ts > falls back to serializeError for unknown sql-lint error shapes": false
+  },
+  "agent_seconds": 24.997421979904175,
+  "candidate_label": "GOLD"
+}

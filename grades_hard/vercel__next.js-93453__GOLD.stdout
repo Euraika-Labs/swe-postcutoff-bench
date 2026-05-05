@@ -1,0 +1,11 @@
+{
+  "instance_id": "vercel__next.js-93453",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {},
+  "agent_seconds": 176.32999992370605,
+  "candidate_label": "GOLD"
+}

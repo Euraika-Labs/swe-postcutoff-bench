@@ -1,0 +1,13 @@
+{
+  "instance_id": "vitejs__vite-22207",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "playground/assets/__tests__/assets.spec.ts > old file is removed when the content changes": false
+  },
+  "agent_seconds": 12.313344240188599,
+  "candidate_label": "GOLD"
+}

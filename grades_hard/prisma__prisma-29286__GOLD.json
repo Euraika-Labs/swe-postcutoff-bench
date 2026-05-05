@@ -1,0 +1,18 @@
+{
+  "instance_id": "prisma__prisma-29286",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 6,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/client/tests/e2e/browser-bundle/tests/main.test.ts > null types have duck-typing methods for cross-bundle detection": false,
+    "packages/client/src/runtime/core/jsonProtocol/serializeJsonQuery.test.ts > args - cross-bundle DbNull serializes correctly": false,
+    "packages/client/src/runtime/core/jsonProtocol/serializeJsonQuery.test.ts > args - cross-bundle JsonNull serializes correctly": false,
+    "packages/client/src/runtime/core/jsonProtocol/serializeJsonQuery.test.ts > args - cross-bundle AnyNull serializes correctly": false,
+    "packages/client/src/runtime/utils/deepCloneArgs.test.ts > preserves cross-bundle ObjectEnumValue through cloning": false,
+    "packages/client/tests/functional/json-null-types/tests.ts > custom instances are accepted for cross-bundle compatibility": false
+  },
+  "agent_seconds": 32.99181270599365,
+  "candidate_label": "GOLD"
+}

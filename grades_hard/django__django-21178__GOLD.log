@@ -1,0 +1,47 @@
+[clone django/django@a49be25e ok]
+
+Checking patch tests/deprecation/test_warn_about_external_use.py...
+Applied patch tests/deprecation/test_warn_about_external_use.py cleanly.
+
+
+Checking patch django/conf/__init__.py...
+Checking patch django/utils/deprecation.py...
+Checking patch tests/deprecation/internal.py...
+Applied patch django/conf/__init__.py cleanly.
+Applied patch django/utils/deprecation.py cleanly.
+Applied patch tests/deprecation/internal.py cleanly.
+
+
+[install rc=0]
+Obtaining file:///tmp/pcb_hard_workdirs/django__django-21178
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting asgiref>=3.9.1 (from Django==6.1.dev20260427194914)
+  Using cached asgiref-3.11.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting sqlparse>=0.5.0 (from Django==6.1.dev20260427194914)
+  Using cached sqlparse-0.5.5-py3-none-any.whl.metadata (4.7 kB)
+Using cached asgiref-3.11.1-py3-none-any.whl (24 kB)
+Using cached sqlparse-0.5.5-py3-none-any.whl (46 kB)
+Building wheels for collected packages: Django
+  Building editable for Django (pyproject.toml): started
+  Building editable for Django (pyproject.toml): finished with status 'done'
+  Created wheel for Django: filename=django-6.1.dev20260427194914-0.editable-py3-none-any.whl size=48045 sha256=f454fe540d6ced95af65bec1a5c8b179a77967c7aeff7de7665a5cc17f78a946
+  Stored in directory: /tmp/pip-ephem-wheel-cache-budh8fip/wheels/ed/69/2e/0c5dac513a1c3a3301f98befa8f13a509971e1f6d7de60071d
+Successfully built Django
+Installing collected packages: sqlparse, asgiref, Django
+
+Successfully installed Django-6.1.dev20260427194914 asgiref-3.11.1 sqlparse-0.5.5
+WARNING: django 6.1.dev20260427194914 does not provide the extra 'test'
+
+[test rc=1]
+Traceback (most recent call last):
+  File "/home/linuxbrew/.linuxbrew/bin/pytest", line 3, in <module>
+    from pytest import console_main
+ModuleNotFoundError: No module named 'pytest'
+

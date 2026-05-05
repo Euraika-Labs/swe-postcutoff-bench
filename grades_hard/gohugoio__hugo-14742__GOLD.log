@@ -1,0 +1,23 @@
+[clone gohugoio/hugo@c4855167 ok]
+
+Checking patch markup/goldmark/toc_integration_test.go...
+Applied patch markup/goldmark/toc_integration_test.go cleanly.
+
+
+Checking patch markup/goldmark/convert.go...
+Checking patch markup/goldmark/toc.go...
+Applied patch markup/goldmark/convert.go cleanly.
+Applied patch markup/goldmark/toc.go cleanly.
+
+
+[install rc=0]
+
+[markup/goldmark/TestTableOfContentsWithPassthrough] rc=0
+=== RUN   TestTableOfContentsWithPassthrough
+=== PAUSE TestTableOfContentsWithPassthrough
+=== CONT  TestTableOfContentsWithPassthrough
+--- PASS: TestTableOfContentsWithPassthrough (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/markup/goldmark	0.103s
+
+---

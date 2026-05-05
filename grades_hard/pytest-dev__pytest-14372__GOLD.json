@@ -1,0 +1,28 @@
+{
+  "instance_id": "pytest-dev__pytest-14372",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 18,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "testing/test_warnings.py::TestMaxWarnings::test_one": false,
+    "testing/test_warnings.py::TestMaxWarnings::test_two": false,
+    "testing/test_warnings.py::TestMaxWarnings::test_max_warnings_not_set": false,
+    "testing/test_warnings.py::TestMaxWarnings::test_max_warnings_not_exceeded": false,
+    "testing/test_warnings.py::TestMaxWarnings::test_max_warnings_exceeded": false,
+    "testing/test_warnings.py::TestMaxWarnings::test_max_warnings_equal_to_count": false,
+    "testing/test_warnings.py::TestMaxWarnings::test_max_warnings_zero": false,
+    "testing/test_warnings.py::TestMaxWarnings::test_max_warnings_exceeded_message": false,
+    "testing/test_warnings.py::TestMaxWarnings::test_max_warnings_ini_option": false,
+    "testing/test_warnings.py::TestMaxWarnings::test_max_warnings_with_test_failure": false,
+    "testing/test_warnings.py::TestMaxWarnings::test_fail": false,
+    "testing/test_warnings.py::test_max_warnings_with_filterwarnings_ignore": false,
+    "testing/test_warnings.py::test_one": false,
+    "testing/test_warnings.py::test_max_warnings_with_filterwarnings_error": false,
+    "testing/test_warnings.py::test_two": false,
+    "testing/test_warnings.py::test_max_warnings_with_filterwarnings_ini_ignore": false
+  },
+  "agent_seconds": 9.492798328399658,
+  "candidate_label": "GOLD"
+}

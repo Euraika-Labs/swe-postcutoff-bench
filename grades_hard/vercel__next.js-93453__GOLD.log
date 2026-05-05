@@ -1,0 +1,15 @@
+[clone vercel/next.js@8e4cb629 ok]
+
+Checking patch test/e2e/app-dir/use-cache-cross-deployment/use-cache-cross-deployment.test.ts...
+Checking patch test/e2e/app-dir/use-cache-cross-deployment/use-cache-cross-deployment.test.ts => test/production/app-dir/use-cache-cross-deployment/use-cache-cross-deployment.test.ts...
+error: test/e2e/app-dir/use-cache-cross-deployment/use-cache-cross-deployment.test.ts: No such file or directory
+Checking patch test/production/app-dir/use-cache-cross-deployment/use-cache-cross-deployment.test.ts...
+error: test/production/app-dir/use-cache-cross-deployment/use-cache-cross-deployment.test.ts: No such file or directory
+Applied patch test/e2e/app-dir/use-cache-cross-deployment/use-cache-cross-deployment.test.ts cleanly.
+
+[3way] Falling back to direct application...
+error: test/e2e/app-dir/use-cache-cross-deployment/use-cache-cross-deployment.test.ts: does not exist in index
+error: test/production/app-dir/use-cache-cross-deployment/use-cache-cross-deployment.test.ts: does not exist in index
+
+
+[ERROR: test_patch did not apply at base_commit]

@@ -1,0 +1,17 @@
+{
+  "instance_id": "vuejs__core-14767",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 5,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/runtime-vapor/__tests__/dom/prop.spec.ts > should skip unchanged primitive dynamic props": false,
+    "packages/runtime-vapor/__tests__/if.spec.ts > should not set branch block key without Transition or KeepAlive": false,
+    "packages/runtime-vapor/__tests__/if.spec.ts > should not set branch block key outside Transition after Transition is used": false,
+    "packages/runtime-vapor/__tests__/if.spec.ts > should set branch block key inside Transition": false,
+    "packages/runtime-vapor/__tests__/componentProps.spec.ts > v-bind object should not update child when resolved values are unchanged": false
+  },
+  "agent_seconds": 240.22687888145447,
+  "candidate_label": "GOLD"
+}

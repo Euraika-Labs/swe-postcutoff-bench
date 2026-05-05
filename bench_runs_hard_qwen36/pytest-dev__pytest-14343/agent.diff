@@ -1,0 +1,16 @@
+diff --git a/src/_pytest/tmpdir.py b/src/_pytest/tmpdir.py
+index 855ad273e..53b306110 100644
+--- a/src/_pytest/tmpdir.py
++++ b/src/_pytest/tmpdir.py
+@@ -172,6 +172,11 @@ class TempPathFactory:
+             # just error out on this, at least for a while.
+             uid = get_user_id()
+             if uid is not None:
++                if rootdir.is_symlink():
++                    raise OSError(
++                        f"The temporary directory {rootdir} is a symbolic link. "
++                        "Fix this and try again."
++                    )
+                 rootdir_stat = rootdir.stat()
+                 if rootdir_stat.st_uid != uid:
+                     raise OSError(

@@ -1,0 +1,54 @@
+[clone gohugoio/hugo@a17bdbc5 ok]
+
+Checking patch hugolib/sitesmatrix/sitematrix_integration_test.go...
+Checking patch hugolib/sitesmatrix/sitematrix_integration_test.go...
+Applied patch hugolib/sitesmatrix/sitematrix_integration_test.go cleanly.
+Applied patch hugolib/sitesmatrix/sitematrix_integration_test.go cleanly.
+
+
+Checking patch hugofs/fileinfo.go...
+Checking patch hugolib/content_map.go...
+Checking patch hugolib/content_map_page.go...
+Checking patch hugolib/content_map_page_assembler.go...
+Checking patch hugolib/sitesmatrix/dimensions.go...
+Checking patch resources/page/pagemeta/page_frontmatter.go...
+Applied patch hugofs/fileinfo.go cleanly.
+Applied patch hugolib/content_map.go cleanly.
+Applied patch hugolib/content_map_page.go cleanly.
+Applied patch hugolib/content_map_page_assembler.go cleanly.
+Applied patch hugolib/sitesmatrix/dimensions.go cleanly.
+Applied patch resources/page/pagemeta/page_frontmatter.go cleanly.
+
+
+[install rc=0]
+
+[hugolib/sitesmatrix/TestContentFilesMountSitesMatrixResourcesVersionsAndLanguages] rc=0
+=== RUN   TestContentFilesMountSitesMatrixResourcesVersionsAndLanguages
+    sitematrix_integration_test.go:406: TODO
+--- SKIP: TestContentFilesMountSitesMatrixResourcesVersionsAndLanguages (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/hugolib/sitesmatrix	0.080s
+
+---
+[hugolib/sitesmatrix/TestFileMountSitesMatrixResourcesRoles] rc=0
+=== RUN   TestFileMountSitesMatrixResourcesRoles
+=== RUN   TestFileMountSitesMatrixResourcesRoles/Issue_1
+=== PAUSE TestFileMountSitesMatrixResourcesRoles/Issue_1
+=== RUN   TestFileMountSitesMatrixResourcesRoles/Issue_2
+=== PAUSE TestFileMountSitesMatrixResourcesRoles/Issue_2
+=== CONT  TestFileMountSitesMatrixResourcesRoles/Issue_1
+=== CONT  TestFileMountSitesMatrixResourcesRoles/Issue_2
+--- PASS: TestFileMountSitesMatrixResourcesRoles (0.00s)
+    --- PASS: TestFileMountSitesMatrixResourcesRoles/Issue_2 (0.01s)
+    --- PASS: TestFileMountSitesMatrixResourcesRoles/Issue_1 (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/hugolib/sitesmatrix	0.121s
+
+---
+[hugolib/sitesmatrix/TestFileMountSitesMatrixResourcesRolesContentAdapter] rc=0
+=== RUN   TestFileMountSitesMatrixResourcesRolesContentAdapter
+--- PASS: TestFileMountSitesMatrixResourcesRolesContentAdapter (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/hugolib/sitesmatrix	0.183s
+
+---

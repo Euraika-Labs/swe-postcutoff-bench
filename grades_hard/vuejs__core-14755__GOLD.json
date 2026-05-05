@@ -1,0 +1,30 @@
+{
+  "instance_id": "vuejs__core-14755",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 18,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > transition should hydrate empty v-if placeholder without fragment markers": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > transition-group": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > with tag should hydrate existing container for flattened v-for children": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > with tag should place v-for anchor before trailing sibling without SSR close marker": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > with tag should hydrate empty claimed container for flattened v-for children": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > with tag should place empty v-for anchor before trailing sibling": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > with tag should keep empty v-for anchor inside container when wrapped by parent fragment boundary": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > with tag should prefer local anchor over slot fallback boundary": false,
+    "packages/compiler-vapor/__tests__/transforms/transformElement.spec.ts > component vue vnode hooks": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > trigger @vue:mounted for VDOM async component mounted after hydration": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > stripped static template can be cloned after hydration": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > with tag should keep nested v-for anchor inside container": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > v-for should use transition-group container marker after cursor leaves container": false,
+    "packages/runtime-vapor/__tests__/components/KeepAlive.spec.ts > should not use wrapper key as child cache key": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > v-if KeepAlive with dynamic component should preserve cached branches": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > with tag should remove stale SSR v-for children when client list is shorter": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > with tag should preserve trailing sibling when removing stale SSR v-for children": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > with tag should keep v-for anchor before replaced trailing sibling": false
+  },
+  "agent_seconds": 238.25567317008972,
+  "candidate_label": "GOLD"
+}

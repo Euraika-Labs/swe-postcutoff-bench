@@ -1,0 +1,13 @@
+diff --git a/hugolib/content_map_page_assembler.go b/hugolib/content_map_page_assembler.go
+index 5a61795c7..9b9737b79 100644
+--- a/hugolib/content_map_page_assembler.go
++++ b/hugolib/content_map_page_assembler.go
+@@ -507,7 +507,7 @@ func (a *allPagesAssembler) doCreatePages(prefix string, depth int) error {
+ 			_, err := a.seenRootSections.GetOrCreate(rootSection, func() (bool, error) {
+ 				// Try to preserve the original casing if possible.
+ 				sectionUnnormalized := p.Unnormalized().Section()
+-				rootSectionPath := a.h.Conf.PathParser().Parse(files.ComponentFolderContent, "/"+sectionUnnormalized+"/_index.md")
++				rootSectionPath := p.PathParser().Parse(files.ComponentFolderContent, "/"+sectionUnnormalized+"/_index.md")
+ 				var rootSectionPages contentNode
+ 				rootSectionPages, _, err = transformPages(rootSectionPath.Base(), &pageMetaSource{
+ 					pathInfo:        rootSectionPath,

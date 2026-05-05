@@ -1,0 +1,40 @@
+{
+  "instance_id": "gohugoio__hugo-14754",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 2,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "common/paths/TestPrefixIdentifiersContent": false,
+    "common/paths/TestPrefixIdentifiersLayouts": false
+  },
+  "agent_seconds": 6.249074697494507,
+  "candidate_label": "agent.diff"
+}
+mon/paths/pathparser.go cleanly.
+Applied patch hugolib/sitesmatrix/vectorstores.go cleanly.
+
+
+[install rc=0]
+
+[common/paths/TestPrefixIdentifiersContent] rc=1
+FAIL	github.com/gohugoio/hugo/common/paths [build failed]
+FAIL
+# github.com/gohugoio/hugo/common/paths [github.com/gohugoio/hugo/common/paths.test]
+common/paths/pathparser.go:245:7: undefined: langFound
+common/paths/pathparser.go:247:8: undefined: langFound
+common/paths/pathparser.go:251:6: undefined: langFound
+common/paths/pathparser.go:254:7: undefined: langFound
+
+---
+[common/paths/TestPrefixIdentifiersLayouts] rc=1
+FAIL	github.com/gohugoio/hugo/common/paths [build failed]
+FAIL
+# github.com/gohugoio/hugo/common/paths [github.com/gohugoio/hugo/common/paths.test]
+common/paths/pathparser.go:245:7: undefined: langFound
+common/paths/pathparser.go:247:8: undefined: langFound
+common/paths/pathparser.go:251:6: undefined: langFound
+common/paths/pathparser.go:254:7: undefined: langFound
+
+---

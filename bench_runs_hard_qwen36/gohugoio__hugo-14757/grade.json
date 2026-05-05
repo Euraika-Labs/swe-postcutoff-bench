@@ -1,0 +1,13 @@
+{
+  "instance_id": "gohugoio__hugo-14757",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "hugolib/sitesmatrix/TestFilenameIdentifierShouldReplaceMountDimension": false
+  },
+  "agent_seconds": 13.160550355911255,
+  "candidate_label": "agent.diff"
+}

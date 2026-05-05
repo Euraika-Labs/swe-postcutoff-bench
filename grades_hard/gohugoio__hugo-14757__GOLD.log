@@ -1,0 +1,25 @@
+[clone gohugoio/hugo@ce2a156a ok]
+
+Checking patch hugolib/sitesmatrix/sitematrix_integration_test.go...
+Applied patch hugolib/sitesmatrix/sitematrix_integration_test.go cleanly.
+
+
+Checking patch hugofs/component_fs.go...
+Checking patch hugolib/sitesmatrix/dimensions.go...
+Checking patch hugolib/sitesmatrix/vectorstores.go...
+Applied patch hugofs/component_fs.go cleanly.
+Applied patch hugolib/sitesmatrix/dimensions.go cleanly.
+Applied patch hugolib/sitesmatrix/vectorstores.go cleanly.
+
+
+[install rc=0]
+
+[hugolib/sitesmatrix/TestFilenameIdentifierShouldReplaceMountDimension] rc=0
+=== RUN   TestFilenameIdentifierShouldReplaceMountDimension
+=== PAUSE TestFilenameIdentifierShouldReplaceMountDimension
+=== CONT  TestFilenameIdentifierShouldReplaceMountDimension
+--- PASS: TestFilenameIdentifierShouldReplaceMountDimension (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/hugolib/sitesmatrix	0.185s
+
+---

@@ -1,0 +1,255 @@
+diff --git a/common/paths/pathparser.go b/common/paths/pathparser.go
+index 5d828df14..32a9ed01c 100644
+--- a/common/paths/pathparser.go
++++ b/common/paths/pathparser.go
+@@ -32,8 +32,11 @@ import (
+ const (
+ 	identifierBaseof        = "baseof"
+ 	identifierCustomWrapper = "_"
++	newRole          = "role"
++	newVersion       = "version"
+ )
+ 
++
+ // isCustomWrapperIdentifier tells whether a supplied path is of the form _xyz_.
+ // must have non-empty content between the identifierCustomWrapper's to pass.
+ func isCustomWrapperIdentifier(s string) bool {
+@@ -175,16 +178,12 @@ func (pp *PathParser) parseIdentifier(component, s string, p *Path, i, lastDot,
+ 	if p.posContainerHigh != -1 {
+ 		return
+ 	}
+-	mayHaveLang := numDots > 1 && p.posIdentifierLanguage == -1 && pp.LanguageIndex != nil
+-	mayHaveLang = mayHaveLang && (component == files.ComponentFolderContent || component == files.ComponentFolderLayouts)
+-	mayHaveOutputFormat := component == files.ComponentFolderLayouts
+-	mayHaveKind := p.posIdentifierKind == -1 && mayHaveOutputFormat
+-	var mayHaveLayout bool
+-	if p.pathType == TypeShortcode {
+-		mayHaveLayout = !isLast && component == files.ComponentFolderLayouts
+-	} else {
+-		mayHaveLayout = component == files.ComponentFolderLayouts
+-	}
++	const newRoleStr = "role"
++	const newVersionStr = "version"
++	const newLanguageStr = "language"
++
++	const wrapper = prefix + "_"
++	const cleanPrefix = prefix
+ 
+ 	var found bool
+ 	var high int
+@@ -196,7 +195,36 @@ func (pp *PathParser) parseIdentifier(component, s string, p *Path, i, lastDot,
+ 	id := types.LowHigh[string]{Low: i + 1, High: high}
+ 	sid := p.s[id.Low:id.High]
+ 
+-	if isCustomWrapperIdentifier(sid) {
++	mayHaveLang := numDots > 1 && p.posIdentifierLanguage == -1 && pp.LanguageIndex != nil
++	mayHaveLang = mayHaveLang && (component == files.ComponentFolderContent || component == files.ComponentFolderLayouts)
++	mayHaveOutputFormat := component == files.ComponentFolderLayouts
++	mayHaveKind := p.posIdentifierKind == -1 && mayHaveOutputFormat
++	var mayHaveLayout bool
++	if p.pathType == TypeShortcode {
++		mayHaveLayout = !isLast && component == files.ComponentFolderLayouts
++	} else {
++		mayHaveLayout = component == files.ComponentFolderLayouts
++	}
++
++	// Check for prefixed identifiers (role, version, language) before generic custom.
++	// Format: _role_name_
++	if strings.HasPrefix(sid, newRoleStr+"_") && strings.HasSuffix(sid, "_") && len(sid) > len(newRoleStr)+2 {
++		content := strings.TrimPrefix(strings.TrimSuffix(sid, "_"), newRoleStr+"_")
++		p.identifiersKnown = append(p.identifiersKnown, id)
++		p.posIdentifierRole = len(p.identifiersKnown) - 1
++		found = true
++	} else if strings.HasPrefix(sid, newVersionStr+"_") && strings.HasSuffix(sid, "_") && len(sid) > len(newVersionStr)+2 {
++		content := strings.TrimPrefix(strings.TrimSuffix(sid, "_"), newVersionStr+"_")
++		p.identifiersKnown = append(p.identifiersKnown, id)
++		p.posIdentifierVersion = len(p.identifiersKnown) - 1
++		found = true
++	} else if strings.HasPrefix(sid, newLanguageStr+"_") && strings.HasSuffix(sid, "_") && len(sid) > len(newLanguageStr)+2 {
++		content := strings.TrimPrefix(strings.TrimSuffix(sid, "_"), newLanguageStr+"_")
++		p.identifiersKnown = append(p.identifiersKnown, id)
++		p.posIdentifierLanguage = len(p.identifiersKnown) - 1
++		found = true
++	} else if isCustomWrapperIdentifier(sid) {
++		// Plain wrapped identifier (custom)
+ 		p.identifiersKnown = append(p.identifiersKnown, id)
+ 		p.posIdentifierCustom = len(p.identifiersKnown) - 1
+ 		found = true
+@@ -204,78 +232,77 @@ func (pp *PathParser) parseIdentifier(component, s string, p *Path, i, lastDot,
+ 
+ 	if len(p.identifiersKnown) == 0 {
+ 		// The first is always the extension.
+-		p.identifiersKnown = append(p.identifiersKnown, id)
+-		found = true
+-
+ 		// May also be the output format.
+-		if mayHaveOutputFormat && pp.IsOutputFormat(sid, "") {
+-			p.posIdentifierOutputFormat = 0
++		p.identifiersKnown = append(p.identifiersKnown, id)
++		// Find the position of this first identifier.
++		if pp.IsOutputFormat(sid, "") {
++			found = true
++		} else {
++			found = false
+ 		}
+ 	} else {
+ 		var langFound bool
+-
+ 		if mayHaveLang {
+-			var disabled bool
+-			_, langFound = pp.LanguageIndex[sid]
++			if _, ok := pp.LanguageIndex[sid]; ok {
++				langFound = true
++			}
+ 
+-			if !langFound {
+-				disabled = pp.IsLangDisabled != nil && pp.IsLangDisabled(sid)
+-				if disabled {
++			if !langFound && pp.IsLangDisabled != nil {
++				if pp.IsLangDisabled(sid) {
+ 					p.disabled = true
+ 					langFound = true
+ 				}
+ 			}
+-			found = langFound
+-			if langFound {
+-				p.identifiersKnown = append(p.identifiersKnown, id)
+-				p.posIdentifierLanguage = len(p.identifiersKnown) - 1
+-			}
+-
+ 		}
+-
+-		if !found && mayHaveOutputFormat {
+-			// At this point we may already have resolved an output format,
+-			// but we need to keep looking for a more specific one, e.g. amp before html.
+-			// Use both name and extension to prevent
+-			// false positives on the form css.html.
+-			if pp.IsOutputFormat(sid, p.Ext()) {
+-				found = true
+-				p.identifiersKnown = append(p.identifiersKnown, id)
+-				p.posIdentifierOutputFormat = len(p.identifiersKnown) - 1
+-			}
+-		}
+-
+-		if !found && mayHaveKind {
+-			if kinds.GetKindMain(sid) != "" {
+-				found = true
+-				p.identifiersKnown = append(p.identifiersKnown, id)
+-				p.posIdentifierKind = len(p.identifiersKnown) - 1
+-			}
++		found = langFound
++		if langFound {
++			p.identifiersKnown = append(p.identifiersKnown, id)
++			p.posIdentifierLanguage = len(p.identifiersKnown) - 1
+ 		}
++	}
+ 
+-		if !found && sid == identifierBaseof {
++	if !found && mayHaveOutputFormat {
++		// At this point we may already have resolved an output format,
++		// but we need to keep looking for a more specific one, e.g. amp before html.
++		// Use both name and extension to prevent
++		// false positives on the form css.html.
++		if pp.IsOutputFormat(sid, p.Ext()) {
+ 			found = true
+ 			p.identifiersKnown = append(p.identifiersKnown, id)
+-			p.posIdentifierBaseof = len(p.identifiersKnown) - 1
++			p.posIdentifierOutputFormat = len(p.identifiersKnown) - 1
+ 		}
++	}
+ 
+-		if !found && mayHaveLayout {
+-			if p.posIdentifierLayout != -1 {
+-				// Move it to identifiersUnknown.
+-				p.identifiersUnknown = append(p.identifiersUnknown, p.identifiersKnown[p.posIdentifierLayout])
+-				p.identifiersKnown[p.posIdentifierLayout] = id
+-			} else {
+-				p.identifiersKnown = append(p.identifiersKnown, id)
+-				p.posIdentifierLayout = len(p.identifiersKnown) - 1
+-			}
++	if !found && mayHaveKind {
++		if kinds.GetKindMain(sid) != "" {
+ 			found = true
++			p.identifiersKnown = append(p.identifiersKnown, id)
++			p.posIdentifierKind = len(p.identifiersKnown) - 1
+ 		}
++	}
++
++	if !found && sid == identifierBaseof {
++		found = true
++		p.identifiersKnown = append(p.identifiersKnown, id)
++		p.posIdentifierBaseof = len(p.identifiersKnown) - 1
++	}
+ 
+-		if !found {
+-			p.identifiersUnknown = append(p.identifiersUnknown, id)
++	if !found && mayHaveLayout {
++		if p.posIdentifierLayout != -1 {
++			// Move it to identifiersUnknown.
++			p.identifiersUnknown = append(p.identifiersUnknown, p.identifiersKnown[p.posIdentifierLayout])
++			p.identifiersKnown[p.posIdentifierLayout] = id
++		} else {
++			p.identifiersKnown = append(p.identifiersKnown, id)
++			p.posIdentifierLayout = len(p.identifiersKnown) - 1
+ 		}
++		found = true
++	}
+ 
++	if !found {
++		p.identifiersUnknown = append(p.identifiersUnknown, id)
+ 	}
++
+ }
+ 
+ func (pp *PathParser) doParse(component, s string, p *Path) (*Path, error) {
+@@ -444,6 +471,8 @@ type Path struct {
+ 	posIdentifierKind         int
+ 	posIdentifierLayout       int
+ 	posIdentifierBaseof       int
++	posIdentifierVersion      int
++	posIdentifierRole         int
+ 	posIdentifierCustom       int
+ 	disabled                  bool
+ 
+@@ -482,6 +511,8 @@ func (p *Path) reset() {
+ 	p.posIdentifierKind = -1
+ 	p.posIdentifierLayout = -1
+ 	p.posIdentifierBaseof = -1
++	p.posIdentifierVersion = -1
++	p.posIdentifierRole = -1
+ 	p.posIdentifierCustom = -1
+ 	p.disabled = false
+ 	p.trimLeadingSlash = false
+@@ -786,6 +817,32 @@ func (p *Path) Custom() string {
+ 	return strings.TrimSuffix(strings.TrimPrefix(p.identifierAsString(p.posIdentifierCustom), identifierCustomWrapper), identifierCustomWrapper)
+ }
+ 
++func (p *Path) Version() string {
++	if len(p.identifiersKnown) > 0 && p.posIdentifierVersion >= 0 && p.posIdentifierVersion < len(p.identifiersKnown) {
++		return p.identifierAsString(p.posIdentifierVersion)
++	}
++	return ""
++}
++
++func (p *Path) Role() string {
++	if len(p.identifiersKnown) > 0 && p.posIdentifierRole >= 0 && p.posIdentifierRole < len(p.identifiersKnown) {
++		return p.identifierAsString(p.posIdentifierRole)
++	}
++	return ""
++}
++
++func (p *Path) Langs() []string {
++	return []string{p.Lang()}
++}
++
++func (p *Path) Roles() []string {
++	return []string{p.Role()}
++}
++
++func (p *Path) Versions() []string {
++	return []string{p.Version()}
++}
++
+ func (p *Path) Identifier(i int) string {
+ 	return p.identifierAsString(i)
+ }

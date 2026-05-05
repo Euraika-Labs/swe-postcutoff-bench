@@ -1,0 +1,30 @@
+(node:586946) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+The fix is complete. Let me summarize the changes:
+
+## Summary
+
+The fix addresses issue #14681 "Fix auto-creation of root sections in multilingual sites".
+
+### Problem
+In multilingual sites with separate content directories, when content exists in a section for multiple languages, the section page was only being created for the first language that had content, not for all languages.
+
+### Solution
+The fix restructures the section creation logic in `hugolib/content_map_page_assembler.go`:
+
+1. **Unified handling**: Instead of having separate paths for root sections (`isRootSection`) and other sections (`else if !isTaxonomy`), now all non-taxonomy sections go through the same path.
+
+2. **Early return for root sections**: For actual root sections (branch nodes at level 1), we just return early since they already have an `_index.md` file and don't need auto-creation.
+
+3. **Event listener for collecting vectors**: For non-root sections (pages in sections without `_index.md`), we add an event listener that collects all vectors (languages) from descendant pages. This ensures that section pages are created for ALL languages that have content in the section, not just the first one.
+
+4. **Post-walk hook**: After the walk completes, we create section pages for any missing vectors that were collected by the event listener.
+
+### Key Changes
+- Changed condition from `isRootSection` / `else if !isTaxonomy` to just `if !isTaxonomy`
+- Added early return for `isRootSection` to skip section creation for sections that already have `_index.md`
+- Added event listener to collect vectors from descendant pages
+- Added post-walk hook to create section pages for missing languages
+
+The fix ensures that in multilingual sites, section pages are properly created for all languages that have content in a section, while still respecting the expected behavior where sections are NOT created for languages that have no content.
+[done rc=0 elapsed=1177s]

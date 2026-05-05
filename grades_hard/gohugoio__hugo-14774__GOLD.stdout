@@ -1,0 +1,19 @@
+{
+  "instance_id": "gohugoio__hugo-14774",
+  "fail_to_pass_passed": 6,
+  "fail_to_pass_total": 7,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "common/hexec/TestNPMGlobalInstalls": false,
+    "common/hexec/TestNodePermissionArgs": true,
+    "common/hexec/TestNodeScriptReadPath": true,
+    "common/hexec/TestResolveNodeBin": true,
+    "common/hexec/TestExtractNodeEntryPointRegex": true,
+    "common/hexec/TestResolveNodeBinWindows": true,
+    "config/security/TestDecodeConfigNodePermissions": true
+  },
+  "agent_seconds": 34.381224393844604,
+  "candidate_label": "GOLD"
+}

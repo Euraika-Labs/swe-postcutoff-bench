@@ -1,0 +1,47 @@
+[clone django/django@25043486 ok]
+
+Checking patch scripts/pr_quality/tests/test_check_pr.py...
+Applied patch scripts/pr_quality/tests/test_check_pr.py cleanly.
+
+
+Checking patch scripts/pr_quality/check_pr.py...
+Checking patch scripts/pr_quality/errors.py...
+Applied patch scripts/pr_quality/check_pr.py cleanly.
+Applied patch scripts/pr_quality/errors.py cleanly.
+
+
+[install rc=0]
+Obtaining file:///tmp/pcb_hard_workdirs/django__django-21129
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting asgiref>=3.9.1 (from Django==6.1.dev20260419084853)
+  Using cached asgiref-3.11.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting sqlparse>=0.5.0 (from Django==6.1.dev20260419084853)
+  Using cached sqlparse-0.5.5-py3-none-any.whl.metadata (4.7 kB)
+Using cached asgiref-3.11.1-py3-none-any.whl (24 kB)
+Using cached sqlparse-0.5.5-py3-none-any.whl (46 kB)
+Building wheels for collected packages: Django
+  Building editable for Django (pyproject.toml): started
+  Building editable for Django (pyproject.toml): finished with status 'done'
+  Created wheel for Django: filename=django-6.1.dev20260419084853-0.editable-py3-none-any.whl size=48045 sha256=a192a51654e1487eee0844c00e1e3d1ae05bfec5f7af98bed87256caf009405f
+  Stored in directory: /tmp/pip-ephem-wheel-cache-gev5os9t/wheels/92/a7/3f/1953c2dbf40534c537bb30452120338dd4367967dadbd94a03
+Successfully built Django
+Installing collected packages: sqlparse, asgiref, Django
+
+Successfully installed Django-6.1.dev20260419084853 asgiref-3.11.1 sqlparse-0.5.5
+WARNING: Cache entry deserialization failed, entry ignored
+WARNING: Cache entry deserialization failed, entry ignored
+WARNING: django 6.1.dev20260419084853 does not provide the extra 'test'
+
+[test rc=1]
+Traceback (most recent call last):
+  File "/home/linuxbrew/.linuxbrew/bin/pytest", line 3, in <module>
+    from pytest import console_main
+ModuleNotFoundError: No module named 'pytest'
+

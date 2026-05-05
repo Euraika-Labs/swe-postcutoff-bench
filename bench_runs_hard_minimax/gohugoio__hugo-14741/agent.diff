@@ -1,0 +1,16 @@
+diff --git a/tpl/tplimpl/templatestore.go b/tpl/tplimpl/templatestore.go
+index 57a0c4f69..accdb1195 100644
+--- a/tpl/tplimpl/templatestore.go
++++ b/tpl/tplimpl/templatestore.go
+@@ -1563,6 +1563,11 @@ func (s *TemplateStore) insertTemplates(include func(fi hugofs.FileMetaInfo) boo
+ 		desc.MediaType = mediaType.Type
+ 		desc.SitesHash = fi.Meta().SitesMatrix.MustHash()
+ 
++		// Skip insertion if there's a template with the same targetPath already.
++		if s.HasTemplate(targetPath) {
++			continue
++		}
++
+ 		ti, err := s.insertTemplate2(pi, fi, targetPath, category, SubCategoryMain, desc, fi.Meta().SitesMatrix, true, true, s.treeMain)
+ 		if err != nil {
+ 			return err

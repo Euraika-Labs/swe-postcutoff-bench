@@ -1,0 +1,14 @@
+{
+  "instance_id": "vitejs__vite-22196",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 2,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "playground/glob-import/__tests__/glob-import.spec.ts > follow symlinks": false,
+    "playground/glob-import/__tests__/glob-import.spec.ts > follow symlinks same reference": false
+  },
+  "agent_seconds": 12.9207444190979,
+  "candidate_label": "GOLD"
+}

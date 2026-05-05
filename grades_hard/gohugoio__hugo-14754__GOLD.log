@@ -1,0 +1,36 @@
+[clone gohugoio/hugo@97477242 ok]
+
+Checking patch common/paths/pathparser_test.go...
+Checking patch common/paths/paths_integration_test.go...
+Applied patch common/paths/pathparser_test.go cleanly.
+Applied patch common/paths/paths_integration_test.go cleanly.
+
+
+Checking patch common/paths/pathparser.go...
+Checking patch common/paths/testdata/fuzz/FuzzParsePathContent/62fadd5d4f836c18...
+Checking patch hugolib/sitesmatrix/vectorstores.go...
+Applied patch common/paths/pathparser.go cleanly.
+Applied patch common/paths/testdata/fuzz/FuzzParsePathContent/62fadd5d4f836c18 cleanly.
+Applied patch hugolib/sitesmatrix/vectorstores.go cleanly.
+
+
+[install rc=0]
+
+[common/paths/TestPrefixIdentifiersContent] rc=0
+=== RUN   TestPrefixIdentifiersContent
+=== PAUSE TestPrefixIdentifiersContent
+=== CONT  TestPrefixIdentifiersContent
+--- PASS: TestPrefixIdentifiersContent (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/common/paths	0.095s
+
+---
+[common/paths/TestPrefixIdentifiersLayouts] rc=0
+=== RUN   TestPrefixIdentifiersLayouts
+=== PAUSE TestPrefixIdentifiersLayouts
+=== CONT  TestPrefixIdentifiersLayouts
+--- PASS: TestPrefixIdentifiersLayouts (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/common/paths	0.091s
+
+---

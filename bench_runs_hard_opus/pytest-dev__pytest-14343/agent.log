@@ -1,0 +1,6 @@
+All 39 tests in `test_tmpdir.py` pass, including the new symlink-rejection test.
+
+Summary of fix in `src/_pytest/tmpdir.py`:
+- Added `import stat`.
+- In `getbasetemp()`, replaced `rootdir.stat()` (which follows symlinks) with `os.stat(rootdir, follow_symlinks=False)`, and added a check that raises `OSError` with message `"The temporary directory {rootdir} is a symbolic link. Fix this and try again."` when the rootdir is a symlink. This prevents the CVE-2025-71176 attack where an attacker creates a symlink at the predictable `/tmp/pytest-of-USER` path pointing to a directory they control.
+[done rc=0 elapsed=240s]

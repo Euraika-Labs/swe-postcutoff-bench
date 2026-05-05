@@ -1,0 +1,70 @@
+diff --git a/src/_pytest/tmpdir.py b/src/_pytest/tmpdir.py
+index 855ad273e..fc599d14a 100644
+--- a/src/_pytest/tmpdir.py
++++ b/src/_pytest/tmpdir.py
+@@ -143,26 +143,62 @@ class TempPathFactory:
+             The base temporary directory.
+         """
+         if self._basetemp is not None:
+-            return self._basetemp
++            # Check if cached path still exists and isn't a symlink
++            # (CVE-2025-71176: symlink attack where directory is replaced)
++            base = self._basetemp
++            if not base.exists():
++                self._basetemp = None
++                return self.getbasetemp()
++            if base.is_symlink():
++                self._basetemp = None
++                return self.getbasetemp()
++            return base
+ 
+         if self._given_basetemp is not None:
+             basetemp = self._given_basetemp
++            # Reject if given basetemp is a symbolic link.
++            if basetemp.is_symlink():
++                raise OSError(
++                    f"The temporary directory {basetemp} is a symbolic link. "
++                    "Fix this and try again."
++                )
+             if basetemp.exists():
+                 rm_rf(basetemp)
+             basetemp.mkdir(mode=0o700)
+-            basetemp = basetemp.resolve()
++            return basetemp.resolve()
+         else:
+             from_env = os.environ.get("PYTEST_DEBUG_TEMPROOT")
+-            temproot = Path(from_env or tempfile.gettempdir()).resolve()
++            temproot = Path(from_env or tempfile.gettempdir())
++            # Reject if temproot resolves through symlinks (CVE-2025-71176).
++            if temproot.is_symlink():
++                raise OSError(
++                    f"The temporary directory {temproot.resolve()} is a symbolic link. "
++                    "Fix this and try again."
++                )
++            temproot = temproot.resolve()
+             user = get_user() or "unknown"
+             # use a sub-directory in the temproot to speed-up
+             # make_numbered_dir() call
+             rootdir = temproot.joinpath(f"pytest-of-{user}")
++            # Reject if rootdir is a symbolic link - we should not follow symlinks.
++            # Note: mkdir(exist_ok=True) will overwrite symlinks if they don't exist!
++            # So we must check BEFORE mkdir.
++            if rootdir.is_symlink():
++                raise OSError(
++                    f"The temporary directory {rootdir} is a symbolic link. "
++                    "Fix this and try again."
++                )
+             try:
+                 rootdir.mkdir(mode=0o700, exist_ok=True)
+             except OSError:
+                 # getuser() likely returned illegal characters for the platform, use unknown back off mechanism
+                 rootdir = temproot.joinpath("pytest-of-unknown")
++                # Reject if rootdir is a symbolic link - we should not follow symlinks.
++                if rootdir.is_symlink():
++                    raise OSError(
++                        f"The temporary directory {rootdir} is a symbolic link. "
++                        "Fix this and try again."
++                    )
+                 rootdir.mkdir(mode=0o700, exist_ok=True)
+             # Because we use exist_ok=True with a predictable name, make sure
+             # we are the owners, to prevent any funny business (on unix, where

@@ -1,0 +1,13 @@
+{
+  "instance_id": "prisma__prisma-29285",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/client/tests/functional/issues/29160-mysql-precision-loss/tests.ts > preserves precision for large decimal values": false
+  },
+  "agent_seconds": 34.95167517662048,
+  "candidate_label": "GOLD"
+}

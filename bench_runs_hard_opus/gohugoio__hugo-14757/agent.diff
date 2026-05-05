@@ -1,0 +1,101 @@
+diff --git a/hugofs/component_fs.go b/hugofs/component_fs.go
+index ec7f06a07..4a4a9ba59 100644
+--- a/hugofs/component_fs.go
++++ b/hugofs/component_fs.go
+@@ -320,8 +320,9 @@ func (fs *componentFs) applyMeta(fi FileNameIsDir, name string) (FileMetaInfo, b
+ 
+ 	meta.PathInfo = pi
+ 	if !fim.IsDir() {
++		pp := fs.opts.Cfg.PathParser()
+ 		if fileLang := meta.PathInfo.Lang(); fileLang != "" {
+-			if idx, ok := fs.opts.Cfg.PathParser().LanguageIndex[fileLang]; ok {
++			if idx, ok := pp.LanguageIndex[fileLang]; ok {
+ 				// A valid lang set in filename.
+ 				// Give priority to myfile.sv.txt inside the sv filesystem.
+ 				meta.Weight++
+@@ -333,6 +334,18 @@ func (fs *componentFs) applyMeta(fi FileNameIsDir, name string) (FileMetaInfo, b
+ 
+ 			}
+ 		}
++		if pp.ConfiguredDimensions != nil {
++			if fileVersion := meta.PathInfo.Version(); fileVersion != "" {
++				if idx := pp.ConfiguredDimensions.ConfiguredVersions.ResolveIndex(fileVersion); idx >= 0 {
++					meta.SitesMatrix = meta.SitesMatrix.WithVersionIndices(idx)
++				}
++			}
++			if fileRole := meta.PathInfo.Role(); fileRole != "" {
++				if idx := pp.ConfiguredDimensions.ConfiguredRoles.ResolveIndex(fileRole); idx >= 0 {
++					meta.SitesMatrix = meta.SitesMatrix.WithRoleIndices(idx)
++				}
++			}
++		}
+ 		switch meta.Component {
+ 		case files.ComponentFolderLayouts:
+ 			// Eg. index.fr.html when French isn't defined,
+diff --git a/hugolib/sitesmatrix/dimensions.go b/hugolib/sitesmatrix/dimensions.go
+index d7a96a038..a30c71202 100644
+--- a/hugolib/sitesmatrix/dimensions.go
++++ b/hugolib/sitesmatrix/dimensions.go
+@@ -215,6 +215,8 @@ type VectorStore interface {
+ 	VectorProvider
+ 	Complement(...VectorProvider) VectorStore
+ 	WithLanguageIndices(i int) VectorStore
++	WithVersionIndices(i int) VectorStore
++	WithRoleIndices(i int) VectorStore
+ 	HasLanguage(lang int) bool
+ 	HasVersion(version int) bool
+ 	HasRole(role int) bool
+diff --git a/hugolib/sitesmatrix/vectorstores.go b/hugolib/sitesmatrix/vectorstores.go
+index 174dd6ea9..f8264bdfc 100644
+--- a/hugolib/sitesmatrix/vectorstores.go
++++ b/hugolib/sitesmatrix/vectorstores.go
+@@ -220,6 +220,28 @@ func (s *vectorStoreMap) WithLanguageIndices(i int) VectorStore {
+ 	return c
+ }
+ 
++func (s *vectorStoreMap) WithVersionIndices(i int) VectorStore {
++	c := s.clone()
++
++	for v := range c.sets {
++		v[Version] = i
++		c.sets[v] = struct{}{}
++	}
++
++	return c
++}
++
++func (s *vectorStoreMap) WithRoleIndices(i int) VectorStore {
++	c := s.clone()
++
++	for v := range c.sets {
++		v[Role] = i
++		c.sets[v] = struct{}{}
++	}
++
++	return c
++}
++
+ func (s *vectorStoreMap) HasLanguage(i int) bool {
+ 	for v := range s.sets {
+ 		if v.Language() == i {
+@@ -596,6 +618,20 @@ func (s *IntSets) WithLanguageIndices(i int) VectorStore {
+ 	return c.init()
+ }
+ 
++// WithVersionIndices replaces the current version set with a single version index.
++func (s *IntSets) WithVersionIndices(i int) VectorStore {
++	c := s.shallowClone()
++	c.versions = hmaps.NewOrderedIntSet(i)
++	return c.init()
++}
++
++// WithRoleIndices replaces the current role set with a single role index.
++func (s *IntSets) WithRoleIndices(i int) VectorStore {
++	c := s.shallowClone()
++	c.roles = hmaps.NewOrderedIntSet(i)
++	return c.init()
++}
++
+ func (s *IntSets) Hash() (uint64, error) {
+ 	s.initHash()
+ 	return s.h.hash, nil

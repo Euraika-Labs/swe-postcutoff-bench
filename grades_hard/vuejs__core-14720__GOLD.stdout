@@ -1,0 +1,13 @@
+{
+  "instance_id": "vuejs__core-14720",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/runtime-vapor/__tests__/components/Teleport.spec.ts > should unmount teleport nested under vdom components when toggled off": false
+  },
+  "agent_seconds": 248.67643976211548,
+  "candidate_label": "GOLD"
+}

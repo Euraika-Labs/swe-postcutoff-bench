@@ -1,0 +1,19 @@
+{
+  "instance_id": "prisma__prisma-29424",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 7,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/cli/src/bootstrap/__tests__/Bootstrap.vitest.ts > prompts to install missing deps and continues when accepted": false,
+    "packages/cli/src/bootstrap/__tests__/Bootstrap.vitest.ts > stops with install instructions when user declines deps install": false,
+    "packages/cli/src/bootstrap/__tests__/Bootstrap.vitest.ts > shows user-friendly message on template download timeout": false,
+    "packages/cli/src/bootstrap/__tests__/template-scaffold.vitest.ts > detects pnpm from packageManager field": false,
+    "packages/cli/src/bootstrap/__tests__/template-scaffold.vitest.ts > detects yarn from packageManager field": false,
+    "packages/cli/src/bootstrap/__tests__/template-scaffold.vitest.ts > detects bun from packageManager field": false,
+    "packages/cli/src/bootstrap/__tests__/template-scaffold.vitest.ts > lockfile takes priority over packageManager field": false
+  },
+  "agent_seconds": 30.245611906051636,
+  "candidate_label": "GOLD"
+}

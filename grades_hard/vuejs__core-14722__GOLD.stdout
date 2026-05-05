@@ -1,0 +1,13 @@
+{
+  "instance_id": "vuejs__core-14722",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/compiler-sfc/__tests__/compileTemplate.spec.ts > template-only vapor compile keeps built-in render args for $slots": false
+  },
+  "agent_seconds": 250.76059913635254,
+  "candidate_label": "GOLD"
+}

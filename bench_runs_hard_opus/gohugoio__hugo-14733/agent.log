@@ -1,0 +1,11 @@
+Fix complete. Summary:
+
+**Root cause**: When `.RenderShortcodes` is called outside of Goldmark (e.g. directly from a layout), nested calls to `$p.RenderShortcodes` inside shortcode templates (which run with `IsInGoldmark=true`) wrap their output with `{{__hugo_ctx pid=N}}` markers. Those markers leaked through to the rendered output because the standalone path returned `cc` as-is.
+
+**Fix**:
+1. `markup/goldmark/hugocontext/hugocontext.go` — exported a `Strip(b []byte) []byte` helper that removes `__hugo_ctx` markers (reusing the existing regex).
+2. `hugolib/page__content.go` — call `hugocontext.Strip(cc)` in `cachedContentScope.RenderShortcodes` on the non-Goldmark return path.
+3. `hugolib/integrationtest_builder.go` (a non-test source helper) — `AssertNoRenderShortcodesArtifacts` now walks `PublishDir` text files instead of only `p.Content()`, so it actually catches markers leaking into rendered output.
+
+Verified: `TestRenderShortcodesStandalone` fails with only the assertion change (no fix) and passes with the full fix; full `./hugolib/` and `./markup/goldmark/...` suites pass.
+[done rc=0 elapsed=531s]

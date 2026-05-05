@@ -1,0 +1,51 @@
+{
+  "instance_id": "pytest-dev__pytest-14363",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "testing/test_tmpdir.py::test_tmp_path_factory_doesnt_follow_symlinks": true
+  },
+  "agent_seconds": 9.420596599578857,
+  "candidate_label": "agent.diff"
+}
+d backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting iniconfig>=1.0.1 (from pytest==9.0.3.dev42+g74eac6916.d20260504)
+  Using cached iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Requirement already satisfied: packaging>=22 in ./.pcb_venv/lib/python3.14/site-packages (from pytest==9.0.3.dev42+g74eac6916.d20260504) (26.2)
+Collecting pluggy<2,>=1.5 (from pytest==9.0.3.dev42+g74eac6916.d20260504)
+  Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest==9.0.3.dev42+g74eac6916.d20260504)
+  Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+Building wheels for collected packages: pytest
+  Building editable for pytest (pyproject.toml): started
+  Building editable for pytest (pyproject.toml): finished with status 'done'
+  Created wheel for pytest: filename=pytest-9.0.3.dev42+g74eac6916.d20260504-0.editable-py3-none-any.whl size=5349 sha256=edb57e99d81952a3bc75a4e97333b6cccf8092d503ae35d83becc7714a83dbe3
+  Stored in directory: /tmp/pip-ephem-wheel-cache-bra_0fy8/wheels/c5/69/e7/e79e8739093308b46028b3dc6409060cd0e15d6e47b9edc13b
+Successfully built pytest
+Installing collected packages: pygments, pluggy, iniconfig, pytest
+
+Successfully installed iniconfig-2.3.0 pluggy-1.6.0 pygments-2.20.0 pytest-9.0.3.dev42+g74eac6916.d20260504
+WARNING: pytest 9.0.3.dev42+g74eac6916.d20260504 does not provide the extra 'test'
+
+[test rc=0]
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.0.3.dev42+g74eac6916.d20260504, pluggy-1.6.0 -- /tmp/pcb_grade_workdirs_hard_qwen/pytest-dev__pytest-14363/.pcb_venv/bin/python3.14
+rootdir: /tmp/pcb_grade_workdirs_hard_qwen/pytest-dev__pytest-14363
+configfile: pyproject.toml
+collecting ... collected 1 item
+
+testing/test_tmpdir.py::test_tmp_path_factory_doesnt_follow_symlinks PASSED [100%]
+
+============================== 1 passed in 0.03s ===============================
+

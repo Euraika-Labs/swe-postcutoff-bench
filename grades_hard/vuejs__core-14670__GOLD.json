@@ -1,0 +1,20 @@
+{
+  "instance_id": "vuejs__core-14670",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 8,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/runtime-vapor/__tests__/componentSlots.spec.ts > render fallback with invalid v-for branch": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > slot fallback from empty v-if branch": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > slot fallback from empty v-for branch": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > slot fallback from invalid v-for branch": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > slot content from empty v-for branch with trailing sibling": false,
+    "packages/runtime-vapor/__tests__/componentSlots.spec.ts > should not render fallback for a single empty item in v-for": false,
+    "packages/compiler-vapor/__tests__/transforms/vIf.spec.ts > v-if in template v-for forces MULTI_ROOT shape": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > slot content from multi-item invalid v-for branch keeps list order": false
+  },
+  "agent_seconds": 263.8083050251007,
+  "candidate_label": "GOLD"
+}

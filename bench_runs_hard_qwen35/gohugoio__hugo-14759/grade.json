@@ -1,0 +1,19 @@
+{
+  "instance_id": "gohugoio__hugo-14759",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 7,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "resources/page/TestPermalinksNewSliceFormat": false,
+    "resources/page/TestPermalinksNewSliceFormatEnvironment": false,
+    "resources/page/TestPermalinksNewSliceFormatSitesMatrix": false,
+    "resources/page/TestPermalinksNewSliceFormatAsteriskKind": false,
+    "resources/page/TestPermalinksHomeKind": false,
+    "resources/page/TestPermalinksHomeKindLegacyMap": false,
+    "resources/page/TestPermalinksNewSliceFormatRootSection": false
+  },
+  "agent_seconds": 9.712628364562988,
+  "candidate_label": "agent.diff"
+}

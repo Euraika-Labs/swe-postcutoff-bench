@@ -1,0 +1,13 @@
+{
+  "instance_id": "django__django-21129",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "scripts/pr_quality/tests/test_check_pr.py::test_ready_for_checkin_assigned_unresolved_passes": false
+  },
+  "agent_seconds": 36.55011820793152,
+  "candidate_label": "GOLD"
+}

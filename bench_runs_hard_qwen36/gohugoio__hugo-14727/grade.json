@@ -1,0 +1,11 @@
+{
+  "instance_id": "gohugoio__hugo-14727",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {},
+  "agent_seconds": 16.44441270828247,
+  "candidate_label": "agent.diff"
+}

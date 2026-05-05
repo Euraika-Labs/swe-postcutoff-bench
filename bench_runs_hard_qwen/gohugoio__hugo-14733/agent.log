@@ -1,0 +1,10 @@
+(node:587193) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Done. I've applied the fix for issue #14732 (Strip nested page context markers from standalone RenderShortcodes). The changes are:
+
+1. **`markup/goldmark/hugocontext/hugocontext.go`**: Added a public `Strip(b []byte) []byte` function that removes Hugo context markers from byte slices.
+
+2. **`hugolib/page__content.go`**: Added `cc = hugocontext.Strip(cc)` before returning in `cachedContentScope.RenderShortcodes()` to strip any context markers from nested RenderShortcodes calls.
+
+3. **`hugolib/integrationtest_builder.go`**: Updated `AssertNoRenderShortcodesArtifacts()` to walk the publish directory directly (using `afero.Walk`), check file extensions using media types, and read files directly instead of using the page.Content API. This correctly detects context markers in rendered files.
+[done rc=0 elapsed=440s]

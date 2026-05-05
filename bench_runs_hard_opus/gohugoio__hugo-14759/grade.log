@@ -1,0 +1,92 @@
+{
+  "instance_id": "gohugoio__hugo-14759",
+  "fail_to_pass_passed": 7,
+  "fail_to_pass_total": 7,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "resources/page/TestPermalinksNewSliceFormat": true,
+    "resources/page/TestPermalinksNewSliceFormatEnvironment": true,
+    "resources/page/TestPermalinksNewSliceFormatSitesMatrix": true,
+    "resources/page/TestPermalinksNewSliceFormatAsteriskKind": true,
+    "resources/page/TestPermalinksHomeKind": true,
+    "resources/page/TestPermalinksHomeKindLegacyMap": true,
+    "resources/page/TestPermalinksNewSliceFormatRootSection": true
+  },
+  "agent_seconds": 21.939993143081665,
+  "candidate_label": "agent.diff"
+}
+nfig/alldecoders.go cleanly.
+Applied patch hugolib/page__paths.go cleanly.
+Applied patch resources/page/page_matcher.go cleanly.
+Applied patch resources/page/permalinks.go cleanly.
+
+
+[install rc=0]
+
+[resources/page/TestPermalinksNewSliceFormat] rc=0
+=== RUN   TestPermalinksNewSliceFormat
+=== PAUSE TestPermalinksNewSliceFormat
+=== CONT  TestPermalinksNewSliceFormat
+--- PASS: TestPermalinksNewSliceFormat (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/resources/page	0.082s
+
+---
+[resources/page/TestPermalinksNewSliceFormatEnvironment] rc=0
+=== RUN   TestPermalinksNewSliceFormatEnvironment
+=== PAUSE TestPermalinksNewSliceFormatEnvironment
+=== CONT  TestPermalinksNewSliceFormatEnvironment
+--- PASS: TestPermalinksNewSliceFormatEnvironment (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/resources/page	0.081s
+
+---
+[resources/page/TestPermalinksNewSliceFormatSitesMatrix] rc=0
+=== RUN   TestPermalinksNewSliceFormatSitesMatrix
+=== PAUSE TestPermalinksNewSliceFormatSitesMatrix
+=== CONT  TestPermalinksNewSliceFormatSitesMatrix
+--- PASS: TestPermalinksNewSliceFormatSitesMatrix (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/resources/page	0.077s
+
+---
+[resources/page/TestPermalinksNewSliceFormatAsteriskKind] rc=0
+=== RUN   TestPermalinksNewSliceFormatAsteriskKind
+=== PAUSE TestPermalinksNewSliceFormatAsteriskKind
+=== CONT  TestPermalinksNewSliceFormatAsteriskKind
+--- PASS: TestPermalinksNewSliceFormatAsteriskKind (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/resources/page	0.077s
+
+---
+[resources/page/TestPermalinksHomeKind] rc=0
+=== RUN   TestPermalinksHomeKind
+=== PAUSE TestPermalinksHomeKind
+=== CONT  TestPermalinksHomeKind
+    permalinks_integration_test.go:715: 
+--- PASS: TestPermalinksHomeKind (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/resources/page	0.080s
+
+---
+[resources/page/TestPermalinksHomeKindLegacyMap] rc=0
+=== RUN   TestPermalinksHomeKindLegacyMap
+=== PAUSE TestPermalinksHomeKindLegacyMap
+=== CONT  TestPermalinksHomeKindLegacyMap
+    permalinks_integration_test.go:734: 
+--- PASS: TestPermalinksHomeKindLegacyMap (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/resources/page	0.076s
+
+---
+[resources/page/TestPermalinksNewSliceFormatRootSection] rc=0
+=== RUN   TestPermalinksNewSliceFormatRootSection
+=== PAUSE TestPermalinksNewSliceFormatRootSection
+=== CONT  TestPermalinksNewSliceFormatRootSection
+--- PASS: TestPermalinksNewSliceFormatRootSection (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/resources/page	0.078s
+
+---

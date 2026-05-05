@@ -1,0 +1,66 @@
+diff --git a/markup/goldmark/toc.go b/markup/goldmark/toc.go
+index 3fb53f875..ca04b022a 100644
+--- a/markup/goldmark/toc.go
++++ b/markup/goldmark/toc.go
+@@ -24,6 +24,7 @@ import (
+ 	emojiAst "github.com/yuin/goldmark-emoji/ast"
+ 
+ 	"github.com/gohugoio/hugo-goldmark-extensions/extras"
++	"github.com/gohugoio/hugo-goldmark-extensions/passthrough"
+ 	"github.com/gohugoio/hugo/markup/tableofcontents"
+ 
+ 	"github.com/yuin/goldmark"
+@@ -111,6 +112,10 @@ func (t *tocTransformer) Transform(n *ast.Document, reader text.Reader, pc parse
+ 				return s, err
+ 			}
+ 
++			return ast.WalkSkipChildren, nil
++		case passthrough.KindPassthroughInline:
++			pn := n.(*passthrough.PassthroughInline)
++			headingText.WriteString(string(pn.Text(reader.Source())))
+ 			return ast.WalkSkipChildren, nil
+ 		case
+ 			ast.KindAutoLink,
+@@ -140,7 +145,7 @@ func newTocExtension(options []renderer.Option) goldmark.Extender {
+ }
+ 
+ func (e *tocExtension) Extend(m goldmark.Markdown) {
+-	r := goldmark.DefaultRenderer()
++	r := m.Renderer()
+ 	r.AddOptions(e.options...)
+ 	m.Parser().AddOptions(parser.WithASTTransformers(util.Prioritized(&tocTransformer{
+ 		r: r,
+diff --git a/markup/goldmark/toc_passthrough_test.go b/markup/goldmark/toc_passthrough_test.go
+new file mode 100644
+index 000000000..279e46207
+--- /dev/null
++++ b/markup/goldmark/toc_passthrough_test.go
+@@ -0,0 +1,28 @@
++package goldmark_test
++
++import (
++	"testing"
++
++	"github.com/gohugoio/hugo/hugolib"
++)
++
++func TestPassthroughInTocDebug(t *testing.T) {
++	files := `
++-- hugo.toml --
++disableKinds = ['page','rss','section','sitemap','taxonomy','term']
++[markup.goldmark.extensions.passthrough]
++  enable = true
++[markup.goldmark.extensions.passthrough.delimiters]
++  inline = [['$', '$']]
++-- content/_index.md --
++---
++title: home
++---
++## Heading with $a$
++-- layouts/home.html --
++{{ .TableOfContents }}
++`
++
++	b := hugolib.Test(t, files)
++	b.AssertFileContent("public/index.html", `<li><a href="#heading-with-a">Heading with $a$</a></li>`)
++}

@@ -1,0 +1,82 @@
+diff --git a/hugolib/integrationtest_builder.go b/hugolib/integrationtest_builder.go
+index d9f059903..ee9919a75 100644
+--- a/hugolib/integrationtest_builder.go
++++ b/hugolib/integrationtest_builder.go
+@@ -2,7 +2,6 @@ package hugolib
+ 
+ import (
+ 	"bytes"
+-	"context"
+ 	"encoding/base64"
+ 	"errors"
+ 	"fmt"
+@@ -39,8 +38,8 @@ import (
+ 	"github.com/gohugoio/hugo/hugofs/hglob"
+ 	"github.com/gohugoio/hugo/hugolib/sitesmatrix"
+ 	"github.com/gohugoio/hugo/identity"
++	"github.com/gohugoio/hugo/media"
+ 	"github.com/spf13/afero"
+-	"github.com/spf13/cast"
+ 	"golang.org/x/text/unicode/norm"
+ 	"golang.org/x/tools/txtar"
+ )
+@@ -462,12 +461,20 @@ func (s *IntegrationTestBuilder) AssertFileContentExact(filename string, matches
+ 
+ func (s *IntegrationTestBuilder) AssertNoRenderShortcodesArtifacts() {
+ 	s.Helper()
+-	for _, p := range s.H.Pages() {
+-		content, err := p.Content(context.Background())
++	afero.Walk(s.fs.PublishDir, "", func(path string, info os.FileInfo, err error) error {
++		if err != nil || info.IsDir() {
++			return err
++		}
++		ext := strings.TrimPrefix(filepath.Ext(path), ".")
++		if !s.H.Conf.GetConfigSection("mediaTypes").(media.Types).IsTextSuffix(ext) {
++			return nil
++		}
++		content, err := afero.ReadFile(s.fs.PublishDir, path)
+ 		s.Assert(err, qt.IsNil)
+-		comment := qt.Commentf("Page: %s\n%s", p.Path(), content)
+-		s.Assert(strings.Contains(cast.ToString(content), "__hugo_ctx"), qt.IsFalse, comment)
+-	}
++		comment := qt.Commentf("File: %s\n%s", path, string(content))
++		s.Assert(strings.Contains(string(content), "__hugo_ctx"), qt.IsFalse, comment)
++		return nil
++	})
+ }
+ 
+ type IntegrationTestImageHelper struct {
+diff --git a/hugolib/page__content.go b/hugolib/page__content.go
+index 7377936f3..be1f5f396 100644
+--- a/hugolib/page__content.go
++++ b/hugolib/page__content.go
+@@ -1109,6 +1109,10 @@ func (c *cachedContentScope) RenderShortcodes(ctx context.Context) (template.HTM
+ 		return template.HTML(hugocontext.Wrap(cc, pco.po.p.pid)), nil
+ 	}
+ 
++	// Strip any Hugo context markers from nested RenderShortcodes calls
++	// that won't be processed by Goldmark.
++	cc = hugocontext.Strip(cc)
++
+ 	return helpers.BytesToHTML(cc), nil
+ }
+ 
+diff --git a/markup/goldmark/hugocontext/hugocontext.go b/markup/goldmark/hugocontext/hugocontext.go
+index 8afe64b7f..5f6b5eea5 100644
+--- a/markup/goldmark/hugocontext/hugocontext.go
++++ b/markup/goldmark/hugocontext/hugocontext.go
+@@ -104,6 +104,14 @@ var (
+ 	hugoCtxRe           = regexp.MustCompile(`{{__hugo_ctx( pid=\d+)?/?}}\n?`)
+ )
+ 
++// Strip strips any Hugo context markers from b.
++func Strip(b []byte) []byte {
++	if !bytes.Contains(b, hugoCtxPrefix) {
++		return b
++	}
++	return hugoCtxRe.ReplaceAll(b, nil)
++}
++
+ var _ parser.InlineParser = (*hugoContextParser)(nil)
+ 
+ type hugoContextParser struct{}

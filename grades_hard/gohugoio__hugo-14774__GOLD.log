@@ -1,0 +1,139 @@
+[clone gohugoio/hugo@f5fce935 ok]
+
+Checking patch common/hexec/exec_integration_test.go...
+Checking patch common/hexec/exec_test.go...
+Checking patch config/security/securityConfig_test.go...
+Checking patch markup/asciidocext/asciidoc_integration_test.go...
+Checking patch resources/resource_transformers/babel/babel_integration_test.go...
+Checking patch resources/resource_transformers/cssjs/postcss_integration_test.go...
+Applied patch common/hexec/exec_integration_test.go cleanly.
+Applied patch common/hexec/exec_test.go cleanly.
+Applied patch config/security/securityConfig_test.go cleanly.
+Applied patch markup/asciidocext/asciidoc_integration_test.go cleanly.
+Applied patch resources/resource_transformers/babel/babel_integration_test.go cleanly.
+Applied patch resources/resource_transformers/cssjs/postcss_integration_test.go cleanly.
+
+
+Checking patch .github/workflows/test.yml...
+Checking patch common/hexec/exec.go...
+Checking patch common/hugo/hugo.go...
+Checking patch config/security/securityConfig.go...
+Checking patch deps/deps.go...
+Checking patch hugolib/filesystems/basefs.go...
+Checking patch hugolib/integrationtest_builder.go...
+Checking patch resources/resource_transformers/babel/babel.go...
+Checking patch resources/resource_transformers/cssjs/postcss.go...
+Checking patch resources/resource_transformers/cssjs/tailwindcss.go...
+Applied patch .github/workflows/test.yml cleanly.
+Applied patch common/hexec/exec.go cleanly.
+Applied patch common/hugo/hugo.go cleanly.
+Applied patch config/security/securityConfig.go cleanly.
+Applied patch deps/deps.go cleanly.
+Applied patch hugolib/filesystems/basefs.go cleanly.
+Applied patch hugolib/integrationtest_builder.go cleanly.
+Applied patch resources/resource_transformers/babel/babel.go cleanly.
+Applied patch resources/resource_transformers/cssjs/postcss.go cleanly.
+Applied patch resources/resource_transformers/cssjs/tailwindcss.go cleanly.
+
+
+[install rc=0]
+
+[common/hexec/TestNPMGlobalInstalls] rc=0
+=== RUN   TestNPMGlobalInstalls
+    exec_integration_test.go:25: We only ever want to run this in CI.
+--- SKIP: TestNPMGlobalInstalls (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/common/hexec	0.150s
+
+---
+[common/hexec/TestNodePermissionArgs] rc=0
+ssionArgs/Read_only
+=== RUN   TestNodePermissionArgs/With_additional_read_paths
+=== RUN   TestNodePermissionArgs/Global_install_script_path
+--- PASS: TestNodePermissionArgs (0.00s)
+    --- PASS: TestNodePermissionArgs/Default_config_tailwindcss (0.00s)
+    --- PASS: TestNodePermissionArgs/Default_config_postcss (0.00s)
+    --- PASS: TestNodePermissionArgs/Multiple_paths (0.00s)
+    --- PASS: TestNodePermissionArgs/Wildcard (0.00s)
+    --- PASS: TestNodePermissionArgs/Disabled (0.00s)
+    --- PASS: TestNodePermissionArgs/No_fs_flags (0.00s)
+    --- PASS: TestNodePermissionArgs/Read_only (0.00s)
+    --- PASS: TestNodePermissionArgs/With_additional_read_paths (0.00s)
+    --- PASS: TestNodePermissionArgs/Global_install_script_path (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/common/hexec	0.170s
+
+---
+[common/hexec/TestNodeScriptReadPath] rc=0
+=== RUN   TestNodeScriptReadPath
+--- PASS: TestNodeScriptReadPath (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/common/hexec	0.156s
+
+---
+[common/hexec/TestResolveNodeBin] rc=0
+NAME  TestResolveNodeBin
+    exec_test.go:294: Missing target: wrapper="/tmp/TestResolveNodeBin2413683646/001/node_modules/.bin/missing-target", resolved=""
+--- PASS: TestResolveNodeBin (0.00s)
+    --- PASS: TestResolveNodeBin/Symlink_to_JS_file (0.00s)
+    --- PASS: TestResolveNodeBin/Symlink_to_scoped_package (0.00s)
+    --- PASS: TestResolveNodeBin/Shell_wrapper (0.00s)
+    --- PASS: TestResolveNodeBin/Cmd_wrapper (0.00s)
+    --- PASS: TestResolveNodeBin/Cmd_wrapper_scoped_package (0.00s)
+    --- PASS: TestResolveNodeBin/Node_script_with_shebang (0.00s)
+    --- PASS: TestResolveNodeBin/Native_binary (0.00s)
+    --- PASS: TestResolveNodeBin/Nonexistent_file (0.00s)
+    --- PASS: TestResolveNodeBin/Wrapper_with_missing_target (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/common/hexec	0.120s
+
+---
+[common/hexec/TestExtractNodeEntryPointRegex] rc=0
+S: TestExtractNodeEntryPointRegex/shell_postcss (0.00s)
+    --- PASS: TestExtractNodeEntryPointRegex/shell_babel (0.00s)
+    --- PASS: TestExtractNodeEntryPointRegex/shell_tailwind_mjs (0.00s)
+    --- PASS: TestExtractNodeEntryPointRegex/cmd_postcss (0.00s)
+    --- PASS: TestExtractNodeEntryPointRegex/cmd_babel (0.00s)
+    --- PASS: TestExtractNodeEntryPointRegex/cmd_postcss_no_ext (0.00s)
+    --- PASS: TestExtractNodeEntryPointRegex/shell_postcss_no_ext (0.00s)
+    --- PASS: TestExtractNodeEntryPointRegex/cmd_postcss_global (0.00s)
+    --- PASS: TestExtractNodeEntryPointRegex/cmd_babel_global (0.00s)
+    --- PASS: TestExtractNodeEntryPointRegex/shell_postcss_global (0.00s)
+    --- PASS: TestExtractNodeEntryPointRegex/No_match (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/common/hexec	0.123s
+
+---
+[common/hexec/TestResolveNodeBinWindows] rc=0
+84273/001/global/babel.cmd") = "/tmp/TestResolveNodeBinWindows1170584273/001/global/node_modules/@babel/cli/bin/babel.js"
+--- PASS: TestResolveNodeBinWindows (0.00s)
+    --- PASS: TestResolveNodeBinWindows/cmd_wrapper_resolves_to_JS (0.00s)
+    --- PASS: TestResolveNodeBinWindows/sh_wrapper_resolves_to_JS (0.00s)
+    --- PASS: TestResolveNodeBinWindows/cmd_wrapper_resolves_to_extensionless_script (0.00s)
+    --- PASS: TestResolveNodeBinWindows/sh_wrapper_resolves_to_extensionless_script (0.00s)
+    --- PASS: TestResolveNodeBinWindows/global_cmd_wrapper_resolves_to_JS (0.00s)
+    --- PASS: TestResolveNodeBinWindows/global_sh_wrapper_resolves_to_JS (0.00s)
+    --- PASS: TestResolveNodeBinWindows/global_cmd_wrapper_scoped_package (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/common/hexec	0.093s
+
+---
+[config/security/TestDecodeConfigNodePermissions] rc=0
+DecodeConfigNodePermissions
+=== RUN   TestDecodeConfigNodePermissions/Custom_paths
+=== PAUSE TestDecodeConfigNodePermissions/Custom_paths
+=== RUN   TestDecodeConfigNodePermissions/Disabled
+=== PAUSE TestDecodeConfigNodePermissions/Disabled
+=== RUN   TestDecodeConfigNodePermissions/Wildcard
+=== PAUSE TestDecodeConfigNodePermissions/Wildcard
+=== CONT  TestDecodeConfigNodePermissions/Custom_paths
+=== CONT  TestDecodeConfigNodePermissions/Wildcard
+=== CONT  TestDecodeConfigNodePermissions/Disabled
+--- PASS: TestDecodeConfigNodePermissions (0.00s)
+    --- PASS: TestDecodeConfigNodePermissions/Custom_paths (0.00s)
+    --- PASS: TestDecodeConfigNodePermissions/Wildcard (0.00s)
+    --- PASS: TestDecodeConfigNodePermissions/Disabled (0.00s)
+PASS
+ok  	github.com/gohugoio/hugo/config/security	0.004s
+
+---

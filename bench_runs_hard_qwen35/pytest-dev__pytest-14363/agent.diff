@@ -1,0 +1,22 @@
+diff --git a/src/_pytest/tmpdir.py b/src/_pytest/tmpdir.py
+index 855ad273e..8d95cbdd3 100644
+--- a/src/_pytest/tmpdir.py
++++ b/src/_pytest/tmpdir.py
+@@ -170,6 +170,17 @@ class TempPathFactory:
+             # Also, to keep things private, fixup any world-readable temp
+             # rootdir's permissions. Historically 0o755 was used, so we can't
+             # just error out on this, at least for a while.
++            # Check that rootdir is not a symlink (CVE-2025-71176).
++            try:
++                rootdir_stat = os.stat(rootdir, follow_symlinks=False)
++            except OSError:
++                pass
++            else:
++                if rootdir_stat.st_mode & 0o170000 == 0o120000:
++                    raise OSError(
++                        f"The temporary directory {rootdir} is a symbolic link. "
++                        "Fix this and try again."
++                    )
+             uid = get_user_id()
+             if uid is not None:
+                 rootdir_stat = rootdir.stat()

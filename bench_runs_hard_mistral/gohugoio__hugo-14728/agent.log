@@ -1,0 +1,8 @@
+
+
+Looking at the test, I need to:
+1. Add a `WarnDeprecatedEdition()` function that warns about deprecated editions
+2. The function should check `IsExtended` and `IsWithdeploy` and log appropriate messages
+
+
+[done rc=0 elapsed=430s]

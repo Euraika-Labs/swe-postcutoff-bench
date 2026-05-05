@@ -1,0 +1,13 @@
+{
+  "instance_id": "django__django-21199",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "tests/utils_tests/test_crypto.py::test_salted_hmac_default_algorithm_deprecation": false
+  },
+  "agent_seconds": 58.429911375045776,
+  "candidate_label": "GOLD"
+}

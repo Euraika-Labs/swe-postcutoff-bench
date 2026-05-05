@@ -1,0 +1,29 @@
+{
+  "instance_id": "gohugoio__hugo-14728",
+  "repo": "gohugoio/hugo",
+  "language": "go",
+  "base_commit": "0755872424182a99520ab27f54df29ba2bcccddc",
+  "merge_commit": "a17bdbc5face02ed2470895bcbfe67db7749dc73",
+  "patch": "From 43970a7b47c836e932136b0dcc03c8bd3e576a43 Mon Sep 17 00:00:00 2001\nFrom: Joe Mooring <joe.mooring@veriphor.com>\nDate: Mon, 6 Apr 2026 13:07:32 -0700\nSubject: [PATCH] common/hugo: Deprecate extended and extended_withdeploy\n editions\n\nCloses #14696\n---\n commands/commandeer.go                        |  2 +\n common/hugo/hugo.go                           | 12 ++++++\n common/hugo/hugo_test.go                      | 37 +++++++++++++++++++\n .../commands/hugo__minify_issue13988.txt      |  2 +-\n 4 files changed, 52 insertions(+), 1 deletion(-)\n\ndiff --git a/commands/commandeer.go b/commands/commandeer.go\nindex 21a8f24fc1c..44ecda9fcb1 100644\n--- a/commands/commandeer.go\n+++ b/commands/commandeer.go\n@@ -39,6 +39,7 @@ import (\n \n \t\"github.com/gohugoio/hugo/common/hstrings\"\n \t\"github.com/gohugoio/hugo/common/htime\"\n+\t\"github.com/gohugoio/hugo/common/hugo\"\n \t\"github.com/gohugoio/hugo/common/loggers\"\n \t\"github.com/gohugoio/hugo/common/paths\"\n \t\"github.com/gohugoio/hugo/common/types\"\n@@ -454,6 +455,7 @@ func (r *rootCommand) PreRun(cd, runner *simplecobra.Commandeer) error {\n \t}\n \t// Set up the global logger early to allow info deprecations during config load.\n \tloggers.SetGlobalLogger(r.logger)\n+\thugo.WarnDeprecatedEdition()\n \n \tr.changesFromBuild = make(chan []identity.Identity, 10)\n \ndiff --git a/common/hugo/hugo.go b/common/hugo/hugo.go\nindex fbb1e53a447..2c42b2b3f92 100644\n--- a/common/hugo/hugo.go\n+++ b/common/hugo/hugo.go\n@@ -304,6 +304,18 @@ func IsDartSassGeV2() bool {\n \treturn !strings.Contains(DartSassBinaryName, \"embedded\")\n }\n \n+// WarnDeprecatedEdition emits a deprecation warning if the running binary is\n+// the extended or extended_withdeploy edition.\n+func WarnDeprecatedEdition() {\n+\tif IsExtended {\n+\t\tif IsWithdeploy {\n+\t\t\tDeprecate(\"the extended_withdeploy edition of the Hugo executable\", \"Use the withdeploy edition instead.\", \"v0.161.0\")\n+\t\t} else {\n+\t\t\tDeprecate(\"the extended edition of the Hugo executable\", \"Use the standard edition instead.\", \"v0.161.0\")\n+\t\t}\n+\t}\n+}\n+\n // Deprecate informs about a deprecation starting at the given version.\n //\n // A deprecation typically needs a simple change in the template, but doing so will make the template incompatible with older versions.\ndiff --git a/testscripts/commands/hugo__minify_issue13988.txt b/testscripts/commands/hugo__minify_issue13988.txt\nindex 122494ce3c6..d20e746af93 100644\n--- a/testscripts/commands/hugo__minify_issue13988.txt\n+++ b/testscripts/commands/hugo__minify_issue13988.txt\n@@ -1,6 +1,6 @@\n hugo --minify --logLevel=info\n \n-! stderr 'deprecated'\n+! stderr 'deprecated.*minifyOutput'\n grep '<p>one</p><p>two</p>'  public/index.html\n \n -- hugo.toml --\n",
+  "test_patch": "diff --git a/common/hugo/hugo_test.go b/common/hugo/hugo_test.go\nindex a572f74d458..934a846dd4d 100644\n--- a/common/hugo/hugo_test.go\n+++ b/common/hugo/hugo_test.go\n@@ -14,11 +14,13 @@\n package hugo\n \n import (\n+\t\"bytes\"\n \t\"context\"\n \t\"testing\"\n \n \t\"github.com/bep/logg\"\n \tqt \"github.com/frankban/quicktest\"\n+\t\"github.com/gohugoio/hugo/common/loggers\"\n )\n \n func TestDeprecationLogLevelFromVersion(t *testing.T) {\n@@ -59,3 +61,38 @@ func TestGetBuildInfo(t *testing.T) {\n \t\tc.Assert(bi.GoVersion, qt.Not(qt.Equals), \"\")\n \t}\n }\n+\n+func TestWarnDeprecatedEdition(t *testing.T) {\n+\tc := qt.New(t)\n+\n+\torigExtended, origWithdeploy := IsExtended, IsWithdeploy\n+\tt.Cleanup(func() {\n+\t\tIsExtended = origExtended\n+\t\tIsWithdeploy = origWithdeploy\n+\t\tloggers.SetGlobalLogger(nil)\n+\t})\n+\n+\tvar buf bytes.Buffer\n+\tloggers.SetGlobalLogger(loggers.New(loggers.Options{Level: logg.LevelInfo, StdErr: &buf}))\n+\n+\tIsExtended = true\n+\tIsWithdeploy = false\n+\tWarnDeprecatedEdition()\n+\tc.Assert(buf.String(), qt.Contains, \"the extended edition of the Hugo executable\")\n+\tc.Assert(buf.String(), qt.Contains, \"Use the standard edition instead\")\n+\n+\tbuf.Reset()\n+\n+\tIsExtended = true\n+\tIsWithdeploy = true\n+\tWarnDeprecatedEdition()\n+\tc.Assert(buf.String(), qt.Contains, \"the extended_withdeploy edition of the Hugo executable\")\n+\tc.Assert(buf.String(), qt.Contains, \"Use the withdeploy edition instead\")\n+\n+\tbuf.Reset()\n+\n+\tIsExtended = false\n+\tIsWithdeploy = false\n+\tWarnDeprecatedEdition()\n+\tc.Assert(buf.String(), qt.Equals, \"\")\n+}\n",
+  "problem_statement": "Closes #14696",
+  "title": "common/hugo: Deprecate extended and extended_withdeploy editions",
+  "FAIL_TO_PASS": [
+    "common/hugo/TestWarnDeprecatedEdition"
+  ],
+  "PASS_TO_PASS": [],
+  "created_at": "2026-04-06T20:08:38Z",
+  "merged_at": "2026-04-13T21:18:23Z",
+  "pr_url": "https://github.com/gohugoio/hugo/pull/14728",
+  "labels": [],
+  "runner": {
+    "kind": "go",
+    "go_version": "1.23",
+    "install": "go mod download",
+    "test_cmd": "go test ./...",
+    "test_id_separator": "/"
+  },
+  "verified": false,
+  "_curator_notes": "auto-curated; FAIL_TO_PASS/PASS_TO_PASS need verifier population.",
+  "_verifier_notes": "FAIL_TO_PASS extracted heuristically from test_patch (1 tests). PASS_TO_PASS left empty \u2014 populate from a representative sample of pre-existing tests in the touched modules. verified=False until --run round-trip succeeds."
+}

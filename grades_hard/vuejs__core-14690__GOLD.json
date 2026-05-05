@@ -1,0 +1,16 @@
+{
+  "instance_id": "vuejs__core-14690",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 4,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > suspense": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > VDOM suspense": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > hydrate VDOM Suspense vapor async setup should not enter mount hooks twice": false,
+    "packages/runtime-vapor/__tests__/hydration.spec.ts > root component should not enter beforeMount twice during hydration": false
+  },
+  "agent_seconds": 154.94248461723328,
+  "candidate_label": "GOLD"
+}

@@ -1,0 +1,13 @@
+{
+  "instance_id": "django__django-21092",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "tests/postgres_tests/test_aggregates.py::test_bit_agg_deprecation": false
+  },
+  "agent_seconds": 39.55711627006531,
+  "candidate_label": "GOLD"
+}

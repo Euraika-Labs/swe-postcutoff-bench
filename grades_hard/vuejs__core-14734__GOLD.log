@@ -1,0 +1,109 @@
+[clone vuejs/core@7df0edd4 ok]
+
+Checking patch packages/reactivity/__tests__/effectScope.spec.ts...
+Checking patch packages/server-renderer/__tests__/ssrWatch.spec.ts...
+Applied patch packages/reactivity/__tests__/effectScope.spec.ts cleanly.
+Applied patch packages/server-renderer/__tests__/ssrWatch.spec.ts cleanly.
+
+
+Checking patch packages/reactivity/src/effectScope.ts...
+Checking patch vitest.config.ts...
+Applied patch packages/reactivity/src/effectScope.ts cleanly.
+Applied patch vitest.config.ts cleanly.
+
+
+[install rc=0]
+endencies:
++ @babel/parser 7.29.2
++ @babel/types 7.29.0
++ @rollup/plugin-alias 6.0.0
++ @rollup/plugin-commonjs 29.0.2
++ @rollup/plugin-json 6.1.0
++ @rollup/plugin-node-resolve 16.0.3
++ @rollup/plugin-replace 5.0.4
++ @swc/core 1.15.24
++ @types/hash-sum 1.0.2
++ @types/node 24.12.2
++ @types/semver 7.7.1
++ @types/serve-handler 6.1.4
++ @vitest/coverage-v8 4.1.3
++ @vitest/eslint-plugin 1.6.15
++ @vue/consolidate 1.0.0
++ conventional-changelog 7.2.0
++ conventional-changelog-angular 8.3.1
++ enquirer 2.4.1
++ esbuild 0.28.0
++ esbuild-plugin-polyfill-node 0.3.0
++ eslint 10.2.0
++ eslint-plugin-import-x 4.16.2
++ estree-walker 2.0.2
++ jsdom 29.0.2
++ lint-staged 16.4.0
++ lodash 4.18.1
++ magic-string 0.30.21
++ markdown-table 3.0.4
++ marked 13.0.3
++ npm-run-all2 8.0.4
++ picocolors 1.1.1
++ prettier 3.8.1
++ pretty-bytes 7.1.0
++ pug 3.0.4
++ puppeteer 24.40.0
++ rimraf 6.1.3
++ rollup 4.60.1
++ rollup-plugin-dts 6.4.1
++ rollup-plugin-esbuild 6.2.1
++ rollup-plugin-polyfill-node 0.13.0
++ semver 7.7.4
++ serve 14.2.6
++ serve-handler 6.1.7
++ simple-git-hooks 2.13.1
++ todomvc-app-css 2.4.3
++ tslib 2.8.1
++ typescript 5.6.3
++ typescript-eslint 8.58.1
++ vite 8.0.7
++ vitest 4.1.3
+
+. postinstall$ simple-git-hooks
+. postinstall: [INFO] Successfully set the pre-commit with command: pnpm lint-staged && pnpm check
+. postinstall: [INFO] Successfully set the commit-msg with command: node scripts/verify-commit.js
+. postinstall: [INFO] Successfully set all git hooks
+. postinstall: Done
+Done in 6.4s using pnpm v10.33.0
+
+[test rc=1]
+⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+TypeError: Cannot read properties of undefined (reading 'remoteObject')
+ ❯ packages/vue/__tests__/e2e/e2eUtils.ts:80:66
+ ❯ node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/third_party/mitt/mitt.js:36:7
+ ❯ Object.emit node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/third_party/mitt/mitt.js:35:20
+ ❯ CdpPage.emit node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/puppeteer/common/EventEmitter.js:77:23
+ ❯ CdpPage.#onLogEntryAdded node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/Page.js:434:18
+ ❯ node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/third_party/mitt/mitt.js:36:7
+ ❯ Object.emit node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/third_party/mitt/mitt.js:35:20
+ ❯ CdpCDPSession.emit node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/puppeteer/common/EventEmitter.js:77:23
+
+This error originated in "packages/vue/__tests__/e2e/hydrationStrategies.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "custom". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+TypeError: Cannot read properties of undefined (reading 'remoteObject')
+ ❯ packages/vue/__tests__/e2e/e2eUtils.ts:80:66
+ ❯ node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/third_party/mitt/mitt.js:36:7
+ ❯ Object.emit node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/third_party/mitt/mitt.js:35:20
+ ❯ CdpPage.emit node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/puppeteer/common/EventEmitter.js:77:23
+ ❯ CdpPage.#onLogEntryAdded node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/puppeteer/cdp/Page.js:434:18
+ ❯ node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/third_party/mitt/mitt.js:36:7
+ ❯ Object.emit node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/third_party/mitt/mitt.js:35:20
+ ❯ CdpCDPSession.emit node_modules/.pnpm/puppeteer-core@24.40.0/node_modules/puppeteer-core/lib/esm/puppeteer/common/EventEmitter.js:77:23
+
+This error originated in "packages/vue/__tests__/e2e/hydrationStrategies.spec.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "custom teardown". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+

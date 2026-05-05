@@ -1,0 +1,21 @@
+{
+  "instance_id": "gohugoio__hugo-14742",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "markup/goldmark/TestTableOfContentsWithPassthrough": true
+  },
+  "agent_seconds": 15.16909384727478,
+  "candidate_label": "agent.diff"
+}
+   TestTableOfContentsWithPassthrough
+=== PAUSE TestTableOfContentsWithPassthrough
+=== CONT  TestTableOfContentsWithPassthrough
+--- PASS: TestTableOfContentsWithPassthrough (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/markup/goldmark	0.227s
+
+---

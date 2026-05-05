@@ -1,0 +1,17 @@
+{
+  "instance_id": "prisma__prisma-29512",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 5,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/client-engine-runtime/src/user-facing-error.test.ts > rethrowAsUserFacing wraps unmapped Postgres errors as P2039 UserFacingError": false,
+    "packages/client-engine-runtime/src/user-facing-error.test.ts > rethrowAsUserFacing falls back to N/A when originalCode/originalMessage are missing": false,
+    "packages/client-engine-runtime/src/user-facing-error.test.ts > rethrowAsUserFacingRawError uses P2010 with the original DB error details": false,
+    "packages/client-engine-runtime/src/user-facing-error.test.ts > rethrowAsUserFacing still wraps specifically-mapped kinds with their dedicated code": false,
+    "packages/client/tests/functional/issues/unmapped-driver-error-user-facing/test.ts > returns P2039 with the original DB code and message for unmapped Postgres errors": false
+  },
+  "agent_seconds": 28.212278127670288,
+  "candidate_label": "GOLD"
+}

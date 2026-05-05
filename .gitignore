@@ -6,3 +6,5 @@ node_modules/
 bench_runs/*/workdir/
 /tmp/pcb_workdirs/
 /tmp/pcb_grade_workdirs/
+tasks_hard/
+tasks_hard_pending/

@@ -1,0 +1,14 @@
+{
+  "instance_id": "vuejs__core-14734",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 2,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/reactivity/__tests__/effectScope.spec.ts > calling .off() out of order should unlink the scope from the active chain": false,
+    "packages/server-renderer/__tests__/ssrWatch.spec.ts > should not retain apps when a watcher stop handle is registered with onScopeDispose after async context restore": false
+  },
+  "agent_seconds": 144.20604705810547,
+  "candidate_label": "GOLD"
+}

@@ -1,0 +1,25 @@
+(node:834714) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+The fix is complete. Here's a summary of what I did:
+
+## Summary
+
+I fixed the insecure temporary directory vulnerability (CVE-2025-71176) in `/tmp/swe-postcutoff-bench/bench_runs_hard_qwen/pytest-dev__pytest-14343/workdir/src/_pytest/tmpdir.py`.
+
+### Changes Made
+
+1. **Added `import stat`** to the imports section.
+
+2. **Modified the `getbasetemp` method** to prevent following symlinks when checking the `pytest-of-<user>` directory:
+   - Added check for symlink using `stat.S_ISLNK()` before any operations on the directory
+   - Used `follow_symlinks=False` when calling `os.stat()` to avoid TOCTOU vulnerabilities
+   - Used `follow_symlinks=False` when calling `path.chmod()` for permission fixes
+   - Added fallback logic for platforms that don't support the `follow_symlinks` parameter
+   - Raised an `OSError` with message "The temporary directory {rootdir} is a symbolic link. Fix this and try again." if a symlink is detected
+
+3. **Added comments** explaining the security implications and DoS considerations.
+
+### Test Results
+
+All 39 tests in `testing/test_tmpdir.py` pass (1 skipped for Windows), including the new test `test_tmp_path_factory_doesnt_follow_symlinks` which specifically tests for the symlink rejection behavior.
+[done rc=0 elapsed=474s]

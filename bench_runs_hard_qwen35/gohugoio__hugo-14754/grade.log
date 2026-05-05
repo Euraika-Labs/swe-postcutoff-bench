@@ -1,0 +1,37 @@
+{
+  "instance_id": "gohugoio__hugo-14754",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 2,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "common/paths/TestPrefixIdentifiersContent": false,
+    "common/paths/TestPrefixIdentifiersLayouts": false
+  },
+  "agent_seconds": 7.225696325302124,
+  "candidate_label": "agent.diff"
+}
+ield or method Role)
+common/paths/pathparser_test.go:437:16: p.Role undefined (type *Path has no field or method Role)
+common/paths/pathparser_test.go:438:16: p.Version undefined (type *Path has no field or method Version)
+common/paths/pathparser_test.go:447:16: p.Version undefined (type *Path has no field or method Version)
+common/paths/pathparser_test.go:448:16: p.Role undefined (type *Path has no field or method Role)
+common/paths/pathparser_test.go:457:16: p.Version undefined (type *Path has no field or method Version)
+common/paths/pathparser_test.go:467:16: p.Version undefined (type *Path has no field or method Version)
+common/paths/pathparser_test.go:477:16: p.Role undefined (type *Path has no field or method Role)
+common/paths/pathparser_test.go:477:16: too many errors
+
+---
+[common/paths/TestPrefixIdentifiersLayouts] rc=1
+Path has no field or method Role)
+common/paths/pathparser_test.go:437:16: p.Role undefined (type *Path has no field or method Role)
+common/paths/pathparser_test.go:438:16: p.Version undefined (type *Path has no field or method Version)
+common/paths/pathparser_test.go:447:16: p.Version undefined (type *Path has no field or method Version)
+common/paths/pathparser_test.go:448:16: p.Role undefined (type *Path has no field or method Role)
+common/paths/pathparser_test.go:457:16: p.Version undefined (type *Path has no field or method Version)
+common/paths/pathparser_test.go:467:16: p.Version undefined (type *Path has no field or method Version)
+common/paths/pathparser_test.go:477:16: p.Role undefined (type *Path has no field or method Role)
+common/paths/pathparser_test.go:477:16: too many errors
+
+---

@@ -1,0 +1,6 @@
+(node:991059) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+All 39 tests pass (1 skipped, Windows-only). The fix is a single targeted addition: before calling `rootdir.stat()` (which follows symlinks), we now check `rootdir.is_symlink()` and raise an `OSError` if it is one. This prevents an attacker from creating a symlink at the predictable `pytest-of-<user>` path to redirect pytest's temporary directory to an attacker-controlled location.
+[done rc=0 elapsed=707s]

@@ -1,0 +1,4 @@
+All tests pass and the project builds. 
+
+Summary: I added a `WarnDeprecatedEdition` function in `common/hugo/hugo.go` that uses the existing `Deprecate` helper to emit deprecation messages for the `extended` and `extended_withdeploy` editions, recommending the `standard` and `withdeploy` editions respectively. When neither `IsExtended` nor `IsWithdeploy` are true, the function is a no-op.
+[done rc=0 elapsed=221s]

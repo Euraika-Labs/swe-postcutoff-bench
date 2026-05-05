@@ -1,0 +1,4 @@
+The fix is already complete from my previous response. The failing test `TestTableOfContentsWithPassthrough` now passes and all 151 tests across `./markup/...` pass.
+
+The background `find` command finishing is unrelated to the fix — I already located the passthrough source via a different command earlier. No further action needed.
+[done rc=0 elapsed=1090s]

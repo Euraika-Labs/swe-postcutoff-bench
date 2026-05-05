@@ -1,0 +1,25 @@
+[clone gohugoio/hugo@58927aa1 ok]
+
+Checking patch hugolib/rendershortcodes_test.go...
+Applied patch hugolib/rendershortcodes_test.go cleanly.
+
+
+Checking patch hugolib/integrationtest_builder.go...
+Checking patch hugolib/page__content.go...
+Checking patch markup/goldmark/hugocontext/hugocontext.go...
+Applied patch hugolib/integrationtest_builder.go cleanly.
+Applied patch hugolib/page__content.go cleanly.
+Applied patch markup/goldmark/hugocontext/hugocontext.go cleanly.
+
+
+[install rc=0]
+
+[hugolib/TestRenderShortcodesStandalone] rc=0
+=== RUN   TestRenderShortcodesStandalone
+=== PAUSE TestRenderShortcodesStandalone
+=== CONT  TestRenderShortcodesStandalone
+--- PASS: TestRenderShortcodesStandalone (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/hugolib	0.097s
+
+---

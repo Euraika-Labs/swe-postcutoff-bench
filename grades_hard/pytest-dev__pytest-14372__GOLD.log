@@ -1,0 +1,117 @@
+[clone pytest-dev/pytest@8ecf49ec ok]
+
+Checking patch testing/test_warnings.py...
+Checking patch testing/test_warnings.py...
+Checking patch testing/test_warnings.py...
+Applied patch testing/test_warnings.py cleanly.
+Applied patch testing/test_warnings.py cleanly.
+Applied patch testing/test_warnings.py cleanly.
+
+
+Checking patch AUTHORS...
+Checking patch changelog/14371.feature.rst...
+Checking patch doc/en/how-to/capture-warnings.rst...
+Checking patch doc/en/reference/exit-codes.rst...
+Checking patch doc/en/reference/reference.rst...
+Checking patch src/_pytest/config/__init__.py...
+Checking patch src/_pytest/main.py...
+Checking patch src/_pytest/terminal.py...
+Checking patch changelog/14371.feature.rst...
+Checking patch doc/en/how-to/capture-warnings.rst...
+Checking patch doc/en/reference/reference.rst...
+Checking patch src/_pytest/config/__init__.py...
+Checking patch src/_pytest/main.py...
+Checking patch src/_pytest/terminal.py...
+Checking patch doc/en/how-to/capture-warnings.rst...
+Checking patch doc/en/reference/reference.rst...
+Checking patch doc/en/reference/reference.rst...
+Checking patch doc/en/how-to/capture-warnings.rst...
+Checking patch doc/en/reference/reference.rst...
+Checking patch src/_pytest/config/__init__.py...
+Checking patch src/_pytest/terminal.py...
+Applied patch AUTHORS cleanly.
+Applied patch changelog/14371.feature.rst cleanly.
+Applied patch doc/en/how-to/capture-warnings.rst cleanly.
+Applied patch doc/en/reference/exit-codes.rst cleanly.
+Applied patch doc/en/reference/reference.rst cleanly.
+Applied patch src/_pytest/config/__init__.py cleanly.
+Applied patch src/_pytest/main.py cleanly.
+Applied patch src/_pytest/terminal.py cleanly.
+Applied patch changelog/14371.feature.rst cleanly.
+Applied patch doc/en/how-to/capture-warnings.rst cleanly.
+Applied patch doc/en/reference/reference.rst cleanly.
+Applied patch src/_pytest/config/__init__.py cleanly.
+Applied patch src/_pytest/main.py cleanly.
+Applied patch src/_pytest/terminal.py cleanly.
+Applied patch doc/en/how-to/capture-warnings.rst cleanly.
+Applied patch doc/en/reference/reference.rst cleanly.
+Applied patch doc/en/reference/reference.rst cleanly.
+Applied patch doc/en/how-to/capture-warnings.rst cleanly.
+Applied patch doc/en/reference/reference.rst cleanly.
+Applied patch src/_pytest/config/__init__.py cleanly.
+Applied patch src/_pytest/terminal.py cleanly.
+
+
+[install rc=0]
+lling build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting iniconfig>=1.0.1 (from pytest==9.1.0.dev312+g8ecf49ec2.d20260504)
+  Using cached iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Requirement already satisfied: packaging>=22 in ./.pcb_venv/lib/python3.14/site-packages (from pytest==9.1.0.dev312+g8ecf49ec2.d20260504) (26.2)
+Collecting pluggy<2,>=1.5 (from pytest==9.1.0.dev312+g8ecf49ec2.d20260504)
+  Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest==9.1.0.dev312+g8ecf49ec2.d20260504)
+  Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+Building wheels for collected packages: pytest
+  Building editable for pytest (pyproject.toml): started
+  Building editable for pytest (pyproject.toml): finished with status 'done'
+  Created wheel for pytest: filename=pytest-9.1.0.dev312+g8ecf49ec2.d20260504-0.editable-py3-none-any.whl size=5353 sha256=b3ed4b602e71f653ea364e228a7377d8db34bf8c21de03f5d209502bffe89a7e
+  Stored in directory: /tmp/pip-ephem-wheel-cache-22vrv45k/wheels/42/e7/75/b89d00996766e3a13e35a9e77cc16e4a06b2829347fb78c112
+Successfully built pytest
+Installing collected packages: pygments, pluggy, iniconfig, pytest
+
+Successfully installed iniconfig-2.3.0 pluggy-1.6.0 pygments-2.20.0 pytest-9.1.0.dev312+g8ecf49ec2.d20260504
+WARNING: pytest 9.1.0.dev312+g8ecf49ec2.d20260504 does not provide the extra 'test'
+
+[test rc=4]
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.1.0.dev312+g8ecf49ec2.d20260504, pluggy-1.6.0 -- /tmp/pcb_hard_workdirs/pytest-dev__pytest-14372/.pcb_venv/bin/python3.14
+rootdir: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14372
+configfile: pyproject.toml
+collecting ... collected 8 items
+
+============================ no tests ran in 0.03s =============================
+ERROR: not found: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14372/testing/test_warnings.py::TestMaxWarnings::test_one
+(no match in any of [<Class TestMaxWarnings>])
+
+ERROR: not found: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14372/testing/test_warnings.py::TestMaxWarnings::test_two
+(no match in any of [<Class TestMaxWarnings>])
+
+ERROR: not found: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14372/testing/test_warnings.py::TestMaxWarnings::test_fail
+(no match in any of [<Class TestMaxWarnings>])
+
+ERROR: not found: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14372/testing/test_warnings.py::test_max_warnings_with_filterwarnings_ignore
+(no match in any of [<Module test_warnings.py>])
+
+ERROR: not found: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14372/testing/test_warnings.py::test_one
+(no match in any of [<Module test_warnings.py>])
+
+ERROR: not found: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14372/testing/test_warnings.py::test_max_warnings_with_filterwarnings_error
+(no match in any of [<Module test_warnings.py>])
+
+ERROR: not found: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14372/testing/test_warnings.py::test_two
+(no match in any of [<Module test_warnings.py>])
+
+ERROR: not found: /tmp/pcb_hard_workdirs/pytest-dev__pytest-14372/testing/test_warnings.py::test_max_warnings_with_filterwarnings_ini_ignore
+(no match in any of [<Module test_warnings.py>])
+
+

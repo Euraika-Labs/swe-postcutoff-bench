@@ -1,0 +1,13 @@
+{
+  "instance_id": "prisma__prisma-29303",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/client/tests/functional/interactive-transactions/tests.ts > batching timeout override": false
+  },
+  "agent_seconds": 33.56707000732422,
+  "candidate_label": "GOLD"
+}

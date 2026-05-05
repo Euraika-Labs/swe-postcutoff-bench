@@ -1,0 +1,14 @@
+{
+  "instance_id": "vitejs__vite-22238",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 2,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/vite/src/node/server/__tests__/search-root.spec.ts > deno": false,
+    "packages/vite/src/node/server/__tests__/search-root.spec.ts > deno at root": false
+  },
+  "agent_seconds": 11.38466501235962,
+  "candidate_label": "GOLD"
+}

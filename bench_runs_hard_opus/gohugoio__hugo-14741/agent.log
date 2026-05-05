@@ -1,0 +1,7 @@
+All tests pass. The fix:
+
+1. **`tpl/tplimpl/templates.go`** — Removed the `replace bool` parameter from `parseTemplate` and `doParseTemplate`. The collision check `prototype.Lookup(name) != nil` now always renames on collision.
+2. **`tpl/tplimpl/templatestore.go`** — Removed the `replace bool` parameter from `parseTemplates` and updated all call sites.
+
+The bug: when refreshing templates after an edit (e.g. editing `layouts/tags/list.html`), `parseTemplates(true)` was called with `replace=true`, which skipped the name-collision rename. With the v0.146.0 legacy-mapped template aliases, an edited template's path could collide with an existing alias, causing a panic in the underlying `html/template` engine. The fix always applies the rename-on-collision logic, eliminating the unsafe replace path.
+[done rc=0 elapsed=586s]

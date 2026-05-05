@@ -1,0 +1,21 @@
+diff --git a/src/_pytest/tmpdir.py b/src/_pytest/tmpdir.py
+index 855ad273e..9c28fbe3b 100644
+--- a/src/_pytest/tmpdir.py
++++ b/src/_pytest/tmpdir.py
+@@ -170,6 +170,16 @@ class TempPathFactory:
+             # Also, to keep things private, fixup any world-readable temp
+             # rootdir's permissions. Historically 0o755 was used, so we can't
+             # just error out on this, at least for a while.
++            #
++            # CVE-2025-71176: Reject symlinks to prevent following attacker-controlled
++            # symlinks to arbitrary locations. Check rootdir is not a symlink
++            # (before stat which might also follow symlinks).
++            import os as _os
++            if _os.path.islink(str(rootdir)):
++                raise OSError(
++                    f"temporary directory {rootdir} is a symbolic link. "
++                    "This could be a security issue."
++                )
+             uid = get_user_id()
+             if uid is not None:
+                 rootdir_stat = rootdir.stat()

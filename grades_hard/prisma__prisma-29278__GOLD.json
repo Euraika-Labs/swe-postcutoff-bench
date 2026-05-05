@@ -1,0 +1,26 @@
+{
+  "instance_id": "prisma__prisma-29278",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 28,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/get-platform/src/__tests__/getPlatform.test.ts > repeated invocations are idempotent and memoized": false,
+    "packages/get-platform/src/__tests__/getPlatform.test.ts > debian (debian), amd64 (x86_64), openssl-1.1.x": false,
+    "packages/get-platform/src/__tests__/getPlatform.test.ts > opensuse (suse), amd64 (x86_64), openssl-1.1.x": false,
+    "packages/get-platform/src/__tests__/getPlatform.test.ts > alpine (alpine), amd64 (x86_64), openssl-3.0.x": false,
+    "packages/get-platform/src/__tests__/getPlatform.test.ts > alpine (alpine), arm64 (aarch64), openssl-3.0.x": false,
+    "packages/get-platform/src/__tests__/getPlatform.test.ts > alpine (alpine), arm (armv7l), openssl-3.0.x": false,
+    "packages/get-platform/src/__tests__/getPlatform.test.ts > ubuntu (debian), amd64 (x86_64), openssl-undefined": false,
+    "packages/get-platform/src/__tests__/getPlatform.test.ts > arch (arch), amd64 (x86_64), openssl-undefined": false,
+    "packages/get-platform/src/__tests__/getPlatform.test.ts > unknown (unknown), amd64 (x86_64), openssl-3.0.x": false,
+    "packages/get-platform/src/__tests__/getPlatform.test.ts > unknown (unknown), amd64 (x86_64), openssl-undefined": false,
+    "packages/get-platform/src/__tests__/getSSLVersion.test.ts > falls back with nss only": false,
+    "packages/get-platform/src/__tests__/getSSLVersion.test.ts > falls back with unknown versions only": false,
+    "packages/get-platform/src/__tests__/getSSLVersion.test.ts > selects the oldest libssl version, excluding libssl-0.x.x": false,
+    "packages/get-platform/src/__tests__/getSSLVersion.test.ts > skips libssl.so without version in filename": false
+  },
+  "agent_seconds": 28.766146898269653,
+  "candidate_label": "GOLD"
+}

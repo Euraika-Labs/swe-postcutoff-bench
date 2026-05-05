@@ -1,0 +1,65 @@
+[clone django/django@37848116 ok]
+
+Checking patch tests/postgres_tests/test_aggregates.py...
+Applied patch tests/postgres_tests/test_aggregates.py cleanly.
+
+
+Checking patch django/contrib/postgres/aggregates/general.py...
+Checking patch django/db/backends/base/features.py...
+Checking patch django/db/backends/mysql/features.py...
+Checking patch django/db/backends/oracle/features.py...
+Checking patch django/db/backends/sqlite3/_functions.py...
+Checking patch django/db/models/aggregates.py...
+Checking patch docs/internals/deprecation.txt...
+Checking patch docs/ref/contrib/postgres/aggregates.txt...
+Checking patch docs/ref/models/querysets.txt...
+Checking patch docs/releases/6.1.txt...
+Checking patch tests/aggregation/models.py...
+Checking patch tests/aggregation/tests.py...
+Applied patch django/contrib/postgres/aggregates/general.py cleanly.
+Applied patch django/db/backends/base/features.py cleanly.
+Applied patch django/db/backends/mysql/features.py cleanly.
+Applied patch django/db/backends/oracle/features.py cleanly.
+Applied patch django/db/backends/sqlite3/_functions.py cleanly.
+Applied patch django/db/models/aggregates.py cleanly.
+Applied patch docs/internals/deprecation.txt cleanly.
+Applied patch docs/ref/contrib/postgres/aggregates.txt cleanly.
+Applied patch docs/ref/models/querysets.txt cleanly.
+Applied patch docs/releases/6.1.txt cleanly.
+Applied patch tests/aggregation/models.py cleanly.
+Applied patch tests/aggregation/tests.py cleanly.
+
+
+[install rc=0]
+Obtaining file:///tmp/pcb_hard_workdirs/django__django-21092
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting asgiref>=3.9.1 (from Django==6.1.dev20260416183903)
+  Using cached asgiref-3.11.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting sqlparse>=0.5.0 (from Django==6.1.dev20260416183903)
+  Using cached sqlparse-0.5.5-py3-none-any.whl.metadata (4.7 kB)
+Using cached asgiref-3.11.1-py3-none-any.whl (24 kB)
+Using cached sqlparse-0.5.5-py3-none-any.whl (46 kB)
+Building wheels for collected packages: Django
+  Building editable for Django (pyproject.toml): started
+  Building editable for Django (pyproject.toml): finished with status 'done'
+  Created wheel for Django: filename=django-6.1.dev20260416183903-0.editable-py3-none-any.whl size=48024 sha256=7ffe2fe00318b518424b93b765cd7e038ce1c8e2f0b693f148a7ab9f8f593506
+  Stored in directory: /tmp/pip-ephem-wheel-cache-2b1lbe4u/wheels/33/8d/18/8a6dbf2600e06e46e0170e8eb0694cddc9b958f178c8531940
+Successfully built Django
+Installing collected packages: sqlparse, asgiref, Django
+
+Successfully installed Django-6.1.dev20260416183903 asgiref-3.11.1 sqlparse-0.5.5
+WARNING: django 6.1.dev20260416183903 does not provide the extra 'test'
+
+[test rc=1]
+Traceback (most recent call last):
+  File "/home/linuxbrew/.linuxbrew/bin/pytest", line 3, in <module>
+    from pytest import console_main
+ModuleNotFoundError: No module named 'pytest'
+

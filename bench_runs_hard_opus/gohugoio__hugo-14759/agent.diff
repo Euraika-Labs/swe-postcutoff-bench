@@ -1,0 +1,552 @@
+diff --git a/config/allconfig/allconfig.go b/config/allconfig/allconfig.go
+index e7598236a..f42de0b10 100644
+--- a/config/allconfig/allconfig.go
++++ b/config/allconfig/allconfig.go
+@@ -181,7 +181,7 @@ type Config struct {
+ 	Minify minifiers.MinifyConfig `mapstructure:"-"`
+ 
+ 	// Permalink configuration.
+-	Permalinks map[string]map[string]string `mapstructure:"-"`
++	Permalinks page.PermalinksConfig `mapstructure:"-"`
+ 
+ 	// Taxonomy configuration.
+ 	Taxonomies map[string]string `mapstructure:"-"`
+diff --git a/config/allconfig/alldecoders.go b/config/allconfig/alldecoders.go
+index 835ec19d1..dca8f14f9 100644
+--- a/config/allconfig/alldecoders.go
++++ b/config/allconfig/alldecoders.go
+@@ -307,9 +307,10 @@ var allDecoderSetups = map[string]decodeWeight{
+ 		key: "permalinks",
+ 		decode: func(d decodeWeight, p decodeConfig) error {
+ 			var err error
+-			p.c.Permalinks, err = page.DecodePermalinksConfig(p.p.GetStringMap(d.key))
++			p.c.Permalinks, err = page.DecodePermalinksConfig(p.p.Get(d.key))
+ 			return err
+ 		},
++		getInitializer: func(c *Config) configInitializer { return c.Permalinks },
+ 	},
+ 	"sitemap": {
+ 		key: "sitemap",
+diff --git a/hugolib/page__paths.go b/hugolib/page__paths.go
+index b669127fa..46a3a992a 100644
+--- a/hugolib/page__paths.go
++++ b/hugolib/page__paths.go
+@@ -187,7 +187,7 @@ func createTargetPathDescriptor(p *pageState) (page.TargetPathDescriptor, error)
+ 		}
+ 	}
+ 
+-	opath, err := d.ResourceSpec.Permalinks.Expand(p.Section(), p)
++	opath, err := d.ResourceSpec.Permalinks.Expand(p)
+ 	if err != nil {
+ 		return desc, err
+ 	}
+diff --git a/resources/page/page_matcher.go b/resources/page/page_matcher.go
+index 0216a7412..8eb4dc076 100644
+--- a/resources/page/page_matcher.go
++++ b/resources/page/page_matcher.go
+@@ -20,6 +20,7 @@ import (
+ 	"slices"
+ 	"strings"
+ 
++	"github.com/gobwas/glob"
+ 	"github.com/gohugoio/hugo/common/hashing"
+ 	"github.com/gohugoio/hugo/common/hmaps"
+ 	"github.com/gohugoio/hugo/common/hstrings"
+@@ -58,10 +59,97 @@ type PageMatcher struct {
+ 	// Compiled values.
+ 	// The site vectors to apply this to.
+ 	SitesMatrixCompiled sitesmatrix.VectorProvider `mapstructure:"-"`
++
++	pathGlob        glob.Glob
++	kindGlob        glob.Glob
++	environmentGlob glob.Glob
++}
++
++// Equal reports whether m and other have the same exported field values.
++// Compiled glob fields are intentionally ignored so that DeepEquals on
++// PageMatcher behaves predictably across compilation states.
++func (m PageMatcher) Equal(other PageMatcher) bool {
++	return m.Path == other.Path &&
++		m.Kind == other.Kind &&
++		m.Lang == other.Lang &&
++		m.Environment == other.Environment &&
++		m.Sites.Equal(other.Sites) &&
++		sitesMatrixEqual(m.SitesMatrixCompiled, other.SitesMatrixCompiled)
++}
++
++func sitesMatrixEqual(a, b sitesmatrix.VectorProvider) bool {
++	if a == nil || b == nil {
++		return a == nil && b == nil
++	}
++	return a == b
++}
++
++// compileGlobs compiles the Kind, Path and Environment glob patterns into the matcher.
++// This is a no-op for unset fields. Calling it multiple times is safe.
++func (m *PageMatcher) compileGlobs() error {
++	if m.Kind != "" && m.kindGlob == nil {
++		g, err := hglob.GetGlob(m.Kind)
++		if err != nil {
++			return err
++		}
++		m.kindGlob = g
++	}
++	if m.Path != "" && m.pathGlob == nil {
++		g, err := hglob.GetGlob(m.Path)
++		if err != nil {
++			return err
++		}
++		m.pathGlob = g
++	}
++	if m.Environment != "" && m.environmentGlob == nil {
++		g, err := hglob.GetGlob(m.Environment)
++		if err != nil {
++			return err
++		}
++		m.environmentGlob = g
++	}
++	return nil
+ }
+ 
+ func (m PageMatcher) Matches(p Page) bool {
+-	return m.Match(p.Kind(), p.Path(), p.Site().Hugo().Environment(), nil)
++	if m.Kind != "" {
++		g := m.kindGlob
++		if g == nil {
++			g, _ = hglob.GetGlob(m.Kind)
++		}
++		if g != nil && !g.Match(p.Kind()) {
++			return false
++		}
++	}
++	if m.Path != "" {
++		g := m.pathGlob
++		if g == nil {
++			g, _ = hglob.GetGlob(m.Path)
++		}
++		pp := strings.ToLower(filepath.ToSlash(p.Path()))
++		if !strings.HasPrefix(pp, "/") {
++			pp = "/" + pp
++		}
++		if g != nil && !g.Match(pp) {
++			return false
++		}
++	}
++	if m.Environment != "" {
++		g := m.environmentGlob
++		if g == nil {
++			g, _ = hglob.GetGlob(m.Environment)
++		}
++		if g != nil && !g.Match(p.Site().Hugo().Environment()) {
++			return false
++		}
++	}
++	if m.SitesMatrixCompiled != nil {
++		v := GetSiteVector(p)
++		if !m.SitesMatrixCompiled.HasVector(v) {
++			return false
++		}
++	}
++	return true
+ }
+ 
+ func (m PageMatcher) Match(kind, path, environment string, sitesMatrix sitesmatrix.VectorProvider) bool {
+@@ -71,27 +159,35 @@ func (m PageMatcher) Match(kind, path, environment string, sitesMatrix sitesmatr
+ 		}
+ 	}
+ 	if m.Kind != "" {
+-		g, err := hglob.GetGlob(m.Kind)
+-		if err == nil && !g.Match(kind) {
++		g := m.kindGlob
++		if g == nil {
++			g, _ = hglob.GetGlob(m.Kind)
++		}
++		if g != nil && !g.Match(kind) {
+ 			return false
+ 		}
+ 	}
+ 
+ 	if m.Path != "" {
+-		g, err := hglob.GetGlob(m.Path)
+-		// TODO(bep) Path() vs filepath vs leading slash.
++		g := m.pathGlob
++		if g == nil {
++			g, _ = hglob.GetGlob(m.Path)
++		}
+ 		p := strings.ToLower(filepath.ToSlash(path))
+-		if !(strings.HasPrefix(p, "/")) {
++		if !strings.HasPrefix(p, "/") {
+ 			p = "/" + p
+ 		}
+-		if err == nil && !g.Match(p) {
++		if g != nil && !g.Match(p) {
+ 			return false
+ 		}
+ 	}
+ 
+ 	if m.Environment != "" {
+-		g, err := hglob.GetGlob(m.Environment)
+-		if err == nil && !g.Match(environment) {
++		g := m.environmentGlob
++		if g == nil {
++			g, _ = hglob.GetGlob(m.Environment)
++		}
++		if g != nil && !g.Match(environment) {
+ 			return false
+ 		}
+ 	}
+diff --git a/resources/page/permalinks.go b/resources/page/permalinks.go
+index adaa9faee..060429740 100644
+--- a/resources/page/permalinks.go
++++ b/resources/page/permalinks.go
+@@ -26,24 +26,55 @@ import (
+ 
+ 	"github.com/gohugoio/hugo/common/hmaps"
+ 	"github.com/gohugoio/hugo/common/hstrings"
++	"github.com/gohugoio/hugo/common/loggers"
+ 	"github.com/gohugoio/hugo/helpers"
++	"github.com/gohugoio/hugo/hugolib/sitesmatrix"
+ 	"github.com/gohugoio/hugo/resources/kinds"
++	"github.com/mitchellh/mapstructure"
++	"github.com/spf13/cast"
+ )
+ 
+-// PermalinkExpander holds permalink mappings per section.
++// PermalinksConfig is an ordered list of permalink rules.
++// The first rule whose Target matches a given page wins.
++type PermalinksConfig []PermalinksConfigEntry
++
++// PermalinksConfigEntry is a single permalink rule.
++type PermalinksConfigEntry struct {
++	// Target is the PageMatcher this rule applies to.
++	Target PageMatcher
++	// Pattern is the permalink pattern, e.g. "/:slug/".
++	Pattern string
++}
++
++// InitConfig compiles the sites matrix on each entry's target.
++func (c PermalinksConfig) InitConfig(logger loggers.Logger, defaultSitesMatrix sitesmatrix.VectorStore, configuredDimensions *sitesmatrix.ConfiguredDimensions) error {
++	for i := range c {
++		if err := c[i].Target.compileSitesMatrix(defaultSitesMatrix, configuredDimensions); err != nil {
++			return fmt.Errorf("failed to compile permalinks target %d: %w", i, err)
++		}
++	}
++	return nil
++}
++
++// PermalinkExpander holds the compiled permalink rules.
+ type PermalinkExpander struct {
+ 	// knownPermalinkAttributes maps :tags in a permalink specification to a
+ 	// function which, given a page and the tag, returns the resulting string
+ 	// to be used to replace that tag.
+ 	knownPermalinkAttributes map[string]pageToPermaAttribute
+ 
+-	expanders map[string]map[string]func(Page) (string, error)
++	rules []permalinkRule
+ 
+ 	urlize func(uri string) string
+ 
+ 	patternCache *hmaps.Cache[string, func(Page) (string, error)]
+ }
+ 
++type permalinkRule struct {
++	matcher PageMatcher
++	expand  func(Page) (string, error)
++}
++
+ // Time for checking date formats. Every field is different than the
+ // Go reference time for date formatting. This ensures that formatting this date
+ // with a Go time format always has a different output than the format itself.
+@@ -78,9 +109,8 @@ func (p PermalinkExpander) callback(attr string) (pageToPermaAttribute, bool) {
+ 	return nil, false
+ }
+ 
+-// NewPermalinkExpander creates a new PermalinkExpander configured by the given
+-// urlize func.
+-func NewPermalinkExpander(urlize func(uri string) string, patterns map[string]map[string]string) (PermalinkExpander, error) {
++// NewPermalinkExpander creates a new PermalinkExpander from the given configs.
++func NewPermalinkExpander(urlize func(uri string) string, configs PermalinksConfig) (PermalinkExpander, error) {
+ 	p := PermalinkExpander{
+ 		urlize:       urlize,
+ 		patternCache: hmaps.NewCache[string, func(Page) (string, error)](),
+@@ -106,14 +136,16 @@ func NewPermalinkExpander(urlize func(uri string) string, patterns map[string]ma
+ 		"slugorcontentbasename": p.pageToPermalinkSlugOrContentBaseName,
+ 	}
+ 
+-	p.expanders = make(map[string]map[string]func(Page) (string, error))
+-
+-	for kind, patterns := range patterns {
+-		e, err := p.parse(patterns)
++	for _, cfg := range configs {
++		m := cfg.Target
++		if err := m.compileGlobs(); err != nil {
++			return p, err
++		}
++		expand, err := p.getOrParsePattern(cfg.Pattern)
+ 		if err != nil {
+ 			return p, err
+ 		}
+-		p.expanders[kind] = e
++		p.rules = append(p.rules, permalinkRule{matcher: m, expand: expand})
+ 	}
+ 
+ 	return p, nil
+@@ -141,20 +173,32 @@ func (l PermalinkExpander) ExpandPattern(pattern string, p Page) (string, error)
+ 	return expand(p)
+ }
+ 
+-// Expand expands the path in p according to the rules defined for the given key.
+-// If no rules are found for the given key, an empty string is returned.
+-func (l PermalinkExpander) Expand(key string, p Page) (string, error) {
+-	expanders, found := l.expanders[p.Kind()]
+-	if !found {
+-		return "", nil
++// Expand returns the expanded permalink for the first rule matching p.
++// If no rule matches, an empty string is returned.
++func (l PermalinkExpander) Expand(p Page) (string, error) {
++	pkind := p.Kind()
++	for _, rule := range l.rules {
++		if !permalinkRuleAppliesToKind(rule.matcher, pkind) {
++			continue
++		}
++		if rule.matcher.Matches(p) {
++			return rule.expand(p)
++		}
+ 	}
++	return "", nil
++}
+ 
+-	expand, found := expanders[key]
+-	if !found {
+-		return "", nil
++// permalinkRuleAppliesToKind reports whether a permalink rule should be evaluated
++// against pages of the given kind. Home pages are only considered when the
++// matcher explicitly targets the home kind.
++func permalinkRuleAppliesToKind(m PageMatcher, kind string) bool {
++	switch kind {
++	case kinds.KindPage, kinds.KindSection, kinds.KindTaxonomy, kinds.KindTerm:
++		return true
++	case kinds.KindHome:
++		return strings.Contains(strings.ToLower(m.Kind), kinds.KindHome)
+ 	}
+-
+-	return expand(p)
++	return false
+ }
+ 
+ // Allow " " and / to represent the root section.
+@@ -220,23 +264,6 @@ func (l PermalinkExpander) getOrParsePattern(pattern string) (func(Page) (string
+ 	})
+ }
+ 
+-func (l PermalinkExpander) parse(patterns map[string]string) (map[string]func(Page) (string, error), error) {
+-	expanders := make(map[string]func(Page) (string, error))
+-
+-	for k, pattern := range patterns {
+-		k = strings.Trim(k, sectionCutSet)
+-
+-		expander, err := l.getOrParsePattern(pattern)
+-		if err != nil {
+-			return nil, err
+-		}
+-
+-		expanders[k] = expander
+-	}
+-
+-	return expanders, nil
+-}
+-
+ // pageToPermaAttribute is the type of a function which, given a page and a tag
+ // can return a string to go in that position in the page (or an error)
+ type pageToPermaAttribute func(Page, string) (string, error)
+@@ -483,50 +510,155 @@ func (l PermalinkExpander) toSliceFunc(cut string) func(s []string) []string {
+ 	}
+ }
+ 
+-var permalinksKindsSupport = []string{kinds.KindPage, kinds.KindSection, kinds.KindTaxonomy, kinds.KindTerm}
++var permalinksKindsSupport = []string{kinds.KindHome, kinds.KindPage, kinds.KindSection, kinds.KindTaxonomy, kinds.KindTerm}
++
++// DecodePermalinksConfig decodes the permalinks configuration. It accepts
++// both the legacy map-based formats and the new slice-based format with
++// PageMatcher targets.
++func DecodePermalinksConfig(in any) (PermalinksConfig, error) {
++	if in == nil {
++		return nil, nil
++	}
++
++	// New slice format: [[permalinks]] target/pattern.
++	switch v := in.(type) {
++	case []any:
++		return decodePermalinksSlice(v)
++	case []map[string]any:
++		s := make([]any, len(v))
++		for i, m := range v {
++			s[i] = m
++		}
++		return decodePermalinksSlice(s)
++	}
++
++	// Legacy map formats.
++	m, err := toStringMap(in)
++	if err != nil {
++		return nil, err
++	}
++	if m == nil {
++		return nil, nil
++	}
++	return decodePermalinksMap(m)
++}
++
++func toStringMap(in any) (map[string]any, error) {
++	switch v := in.(type) {
++	case nil:
++		return nil, nil
++	case map[string]any:
++		return v, nil
++	case hmaps.Params:
++		return v, nil
++	}
++	return hmaps.ToStringMap(in), nil
++}
+ 
+-// DecodePermalinksConfig decodes the permalinks configuration in the given map
+-func DecodePermalinksConfig(m map[string]any) (map[string]map[string]string, error) {
+-	permalinksConfig := make(map[string]map[string]string)
++func decodePermalinksSlice(items []any) (PermalinksConfig, error) {
++	var result PermalinksConfig
++	for i, item := range items {
++		m, ok := item.(map[string]any)
++		if !ok {
++			if mp, _ := item.(hmaps.Params); mp != nil {
++				m = mp
++			} else {
++				m = hmaps.ToStringMap(item)
++			}
++		}
++		if m == nil {
++			return nil, fmt.Errorf("invalid permalinks entry at index %d: %T", i, item)
++		}
++		m = hmaps.CleanConfigStringMap(m)
++
++		var entry PermalinksConfigEntry
++		for k, v := range m {
++			switch strings.ToLower(k) {
++			case "target":
++				if err := decodePermalinksTarget(v, &entry.Target); err != nil {
++					return nil, err
++				}
++			case "pattern":
++				entry.Pattern = cast.ToString(v)
++			default:
++				return nil, fmt.Errorf("invalid permalinks entry key %q", k)
++			}
++		}
++		result = append(result, entry)
++	}
++	return result, nil
++}
+ 
+-	permalinksConfig[kinds.KindPage] = make(map[string]string)
+-	permalinksConfig[kinds.KindSection] = make(map[string]string)
+-	permalinksConfig[kinds.KindTaxonomy] = make(map[string]string)
+-	permalinksConfig[kinds.KindTerm] = make(map[string]string)
++func decodePermalinksTarget(in any, target *PageMatcher) error {
++	if err := mapstructure.WeakDecode(in, target); err != nil {
++		return err
++	}
++	target.Kind = strings.ToLower(target.Kind)
++	target.Path = filepath.ToSlash(strings.ToLower(target.Path))
++	if target.Lang != "" {
++		target.Sites.Matrix.Languages = append(target.Sites.Matrix.Languages, target.Lang)
++		target.Sites.Matrix.Languages = hstrings.UniqueStringsReuse(target.Sites.Matrix.Languages)
++	}
++	return nil
++}
+ 
+-	config := hmaps.CleanConfigStringMap(m)
+-	for k, v := range config {
++func decodePermalinksMap(m map[string]any) (PermalinksConfig, error) {
++	cfg := hmaps.CleanConfigStringMap(m)
++	var result PermalinksConfig
++	for k, v := range cfg {
++		klc := strings.ToLower(k)
+ 		switch v := v.(type) {
+ 		case string:
+-			// [permalinks]
+-			//   key = '...'
+-
+-			// To successfully be backward compatible, "default" patterns need to be set for both page and term
+-			permalinksConfig[kinds.KindPage][k] = v
+-			permalinksConfig[kinds.KindTerm][k] = v
+-
+-		case hmaps.Params:
+-			// [permalinks.key]
+-			//   xyz = ???
+-
+-			if hstrings.InSlice(permalinksKindsSupport, k) {
+-				// TODO: warn if we overwrite an already set value
+-				for k2, v2 := range v {
+-					switch v2 := v2.(type) {
+-					case string:
+-						permalinksConfig[k][k2] = v2
+-
+-					default:
+-						return nil, fmt.Errorf("permalinks configuration invalid: unknown value %q for key %q for kind %q", v2, k2, k)
+-					}
+-				}
+-			} else {
++			// Flat form: [permalinks] key = pattern
++			// Maps to both page and term for backwards compatibility.
++			result = append(result,
++				PermalinksConfigEntry{
++					Target:  PageMatcher{Kind: kinds.KindPage, Path: legacyKeyToPath(k, kinds.KindPage)},
++					Pattern: v,
++				},
++				PermalinksConfigEntry{
++					Target:  PageMatcher{Kind: kinds.KindTerm, Path: legacyKeyToPath(k, kinds.KindTerm)},
++					Pattern: v,
++				},
++			)
++		case hmaps.Params, map[string]any:
++			mm, _ := v.(map[string]any)
++			if mm == nil {
++				mm = map[string]any(v.(hmaps.Params))
++			}
++			if !hstrings.InSlice(permalinksKindsSupport, klc) {
+ 				return nil, fmt.Errorf("permalinks configuration not supported for kind %q, supported kinds are %v", k, permalinksKindsSupport)
+ 			}
+-
++			for k2, v2 := range mm {
++				pattern, ok := v2.(string)
++				if !ok {
++					return nil, fmt.Errorf("permalinks configuration invalid: unknown value %q for key %q for kind %q", v2, k2, k)
++				}
++				result = append(result, PermalinksConfigEntry{
++					Target:  PageMatcher{Kind: klc, Path: legacyKeyToPath(k2, klc)},
++					Pattern: pattern,
++				})
++			}
+ 		default:
+ 			return nil, fmt.Errorf("permalinks configuration invalid: unknown value %q for key %q", v, k)
+ 		}
+ 	}
+-	return permalinksConfig, nil
++	return result, nil
++}
++
++// legacyKeyToPath translates an old-style section/taxonomy key into a path glob
++// that matches the same set of pages.
++func legacyKeyToPath(key, kind string) string {
++	key = strings.Trim(key, sectionCutSet)
++	if key == "" {
++		return ""
++	}
++	key = strings.ToLower(filepath.ToSlash(key))
++	switch kind {
++	case kinds.KindHome:
++		return "/" + key
++	case kinds.KindSection, kinds.KindTaxonomy:
++		return "/{" + key + "," + key + "/**}"
++	}
++	return "/" + key + "/**"
+ }

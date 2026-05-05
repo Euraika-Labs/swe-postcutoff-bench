@@ -1,0 +1,29 @@
+{
+  "instance_id": "vuejs__core-14744",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 17,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "packages/compiler-vapor/__tests__/transforms/transformElement.spec.ts > custom element with dynamic child": false,
+    "packages/compiler-vapor/__tests__/transforms/transformElement.spec.ts > plain template element": false,
+    "packages/compiler-vapor/__tests__/transforms/transformElement.spec.ts > plain template element with dynamic text child": false,
+    "packages/compiler-vapor/__tests__/transforms/vText.spec.ts > work with plain template createElement path": false,
+    "packages/runtime-vapor/__tests__/component.spec.ts > mounts plain template elements with dynamic descendants": false,
+    "packages/runtime-vapor/__tests__/component.spec.ts > mounts plain template elements with dynamic text children": false,
+    "packages/runtime-vapor/__tests__/component.spec.ts > mounts plain template literal interpolation as text": false,
+    "packages/runtime-vapor/__tests__/component.spec.ts > mounts plain template literal v-text as text": false,
+    "packages/runtime-vapor/__tests__/component.spec.ts > mounts plain template elements with v-text": false,
+    "packages/compiler-vapor/__tests__/transforms/transformElement.spec.ts > plain template element with static child": false,
+    "packages/compiler-vapor/__tests__/transforms/transformElement.spec.ts > plain template element with static text child": false,
+    "packages/runtime-vapor/__tests__/component.spec.ts > mounts plain template elements with slot content": false,
+    "packages/runtime-vapor/__tests__/component.spec.ts > mounts plain template elements with v-html": false,
+    "packages/compiler-vapor/__tests__/transforms/transformText.spec.ts > escapes raw static text for plain template createElement path": false,
+    "packages/compiler-vapor/__tests__/transforms/transformText.spec.ts > escapes raw static text for custom element createElement path": false,
+    "packages/compiler-vapor/__tests__/transforms/transformText.spec.ts > materializes literal interpolation text for mixed plain template children": false,
+    "packages/runtime-vapor/__tests__/component.spec.ts > mounts plain template escaped static text as text": false
+  },
+  "agent_seconds": 236.0336184501648,
+  "candidate_label": "GOLD"
+}

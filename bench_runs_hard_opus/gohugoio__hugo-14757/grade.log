@@ -1,0 +1,29 @@
+{
+  "instance_id": "gohugoio__hugo-14757",
+  "fail_to_pass_passed": 1,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": true,
+  "results": {
+    "hugolib/sitesmatrix/TestFilenameIdentifierShouldReplaceMountDimension": true
+  },
+  "agent_seconds": 14.735156059265137,
+  "candidate_label": "agent.diff"
+}
+component_fs.go cleanly.
+Applied patch hugolib/sitesmatrix/dimensions.go cleanly.
+Applied patch hugolib/sitesmatrix/vectorstores.go cleanly.
+
+
+[install rc=0]
+
+[hugolib/sitesmatrix/TestFilenameIdentifierShouldReplaceMountDimension] rc=0
+=== RUN   TestFilenameIdentifierShouldReplaceMountDimension
+=== PAUSE TestFilenameIdentifierShouldReplaceMountDimension
+=== CONT  TestFilenameIdentifierShouldReplaceMountDimension
+--- PASS: TestFilenameIdentifierShouldReplaceMountDimension (0.01s)
+PASS
+ok  	github.com/gohugoio/hugo/hugolib/sitesmatrix	0.129s
+
+---

@@ -1,0 +1,226 @@
+diff --git a/resources/page/page_matcher.go b/resources/page/page_matcher.go
+index 0216a7412..d69731325 100644
+--- a/resources/page/page_matcher.go
++++ b/resources/page/page_matcher.go
+@@ -32,6 +32,29 @@ import (
+ 	"github.com/mitchellh/mapstructure"
+ )
+ 
++// GlobPattern represents a compiled glob pattern.
++type GlobPattern struct {
++	pattern string
++	glob    hglob.Glob
++}
++
++func (gp *GlobPattern) compile(pattern string) error {
++	g, err := hglob.GetGlob(pattern)
++	if err != nil {
++		return err
++	}
++	gp.pattern = pattern
++	gp.glob = g
++	return nil
++}
++
++func (gp *GlobPattern) Match(s string) bool {
++	if gp.glob == nil {
++		return true
++	}
++	return gp.glob.Match(s)
++}
++
+ // A PageMatcher can be used to match a Page with Glob patterns.
+ // Note that the pattern matching is case insensitive.
+ type PageMatcher struct {
+@@ -55,6 +78,11 @@ type PageMatcher struct {
+ 	// A Glob pattern matching the Page's Environment, e.g. "{production,development}".
+ 	Environment string
+ 
++	// Compiled glob patterns (optional, lazily compiled).
++	KindCompiled    *GlobPattern `mapstructure:"-"`
++	PathCompiled    *GlobPattern `mapstructure:"-"`
++	EnvironmentCompiled *GlobPattern `mapstructure:"-"`
++
+ 	// Compiled values.
+ 	// The site vectors to apply this to.
+ 	SitesMatrixCompiled sitesmatrix.VectorProvider `mapstructure:"-"`
+@@ -70,26 +98,31 @@ func (m PageMatcher) Match(kind, path, environment string, sitesMatrix sitesmatr
+ 			return false
+ 		}
+ 	}
+-	if m.Kind != "" {
++	if m.KindCompiled != nil && m.KindCompiled.Match(kind) {
++		// Kind matched
++	} else if m.Kind != "" {
+ 		g, err := hglob.GetGlob(m.Kind)
+ 		if err == nil && !g.Match(kind) {
+ 			return false
+ 		}
+ 	}
+ 
+-	if m.Path != "" {
+-		g, err := hglob.GetGlob(m.Path)
+-		// TODO(bep) Path() vs filepath vs leading slash.
++	if m.PathCompiled != nil && m.PathCompiled.Match(path) {
++		// Path matched
++	} else if m.Path != "" {
+ 		p := strings.ToLower(filepath.ToSlash(path))
+ 		if !(strings.HasPrefix(p, "/")) {
+ 			p = "/" + p
+ 		}
++		g, err := hglob.GetGlob(m.Path)
+ 		if err == nil && !g.Match(p) {
+ 			return false
+ 		}
+ 	}
+ 
+-	if m.Environment != "" {
++	if m.EnvironmentCompiled != nil && m.EnvironmentCompiled.Match(environment) {
++		// Environment matched
++	} else if m.Environment != "" {
+ 		g, err := hglob.GetGlob(m.Environment)
+ 		if err == nil && !g.Match(environment) {
+ 			return false
+@@ -99,6 +132,36 @@ func (m PageMatcher) Match(kind, path, environment string, sitesMatrix sitesmatr
+ 	return true
+ }
+ 
++// compileGlobs compiles the glob patterns in the PageMatcher.
++// This should be called before Matches to avoid repeated glob compilation.
++func (m *PageMatcher) compileGlobs() error {
++	if m.Kind != "" {
++		g, err := hglob.GetGlob(m.Kind)
++		if err != nil {
++			return err
++		}
++		m.KindCompiled = &GlobPattern{pattern: m.Kind, glob: g}
++	}
++
++	if m.Path != "" {
++		g, err := hglob.GetGlob(m.Path)
++		if err != nil {
++			return err
++		}
++		m.PathCompiled = &GlobPattern{pattern: m.Path, glob: g}
++	}
++
++	if m.Environment != "" {
++		g, err := hglob.GetGlob(m.Environment)
++		if err != nil {
++			return err
++		}
++		m.EnvironmentCompiled = &GlobPattern{pattern: m.Environment, glob: g}
++	}
++
++	return nil
++}
++
+ var disallowedCascadeKeys = map[string]bool{
+ 	// These define the structure of the page tree and cannot
+ 	// currently be set in the cascade.
+diff --git a/resources/page/permalinks.go b/resources/page/permalinks.go
+index adaa9faee..8f8003546 100644
+--- a/resources/page/permalinks.go
++++ b/resources/page/permalinks.go
+@@ -37,8 +37,12 @@ type PermalinkExpander struct {
+ 	// to be used to replace that tag.
+ 	knownPermalinkAttributes map[string]pageToPermaAttribute
+ 
++	// expanders holds the map-based permalinks config (legacy format).
+ 	expanders map[string]map[string]func(Page) (string, error)
+ 
++	// sliceConfigs holds the slice-based permalinks config.
++	sliceConfigs []PermalinksConfigEntry
++
+ 	urlize func(uri string) string
+ 
+ 	patternCache *hmaps.Cache[string, func(Page) (string, error)]
+@@ -49,6 +53,17 @@ type PermalinkExpander struct {
+ // with a Go time format always has a different output than the format itself.
+ var referenceTime = time.Date(2019, time.November, 9, 23, 1, 42, 1, time.UTC)
+ 
++// PermalinksConfig represents the slice-based permalinks configuration.
++type PermalinksConfig []PermalinksConfigEntry
++
++// PermalinksConfigEntry represents a single permalinks configuration entry.
++type PermalinksConfigEntry struct {
++	// Target is the PageMatcher that this config applies to.
++	Target PageMatcher
++	// Pattern is the permalink pattern to expand.
++	Pattern string
++}
++
+ // Return the callback for the given permalink attribute and a boolean indicating if the attribute is valid or not.
+ func (p PermalinkExpander) callback(attr string) (pageToPermaAttribute, bool) {
+ 	if callback, ok := p.knownPermalinkAttributes[attr]; ok {
+@@ -79,10 +94,26 @@ func (p PermalinkExpander) callback(attr string) (pageToPermaAttribute, bool) {
+ }
+ 
+ // NewPermalinkExpander creates a new PermalinkExpander configured by the given
+-// urlize func.
+-func NewPermalinkExpander(urlize func(uri string) string, patterns map[string]map[string]string) (PermalinkExpander, error) {
++// urlize func. It accepts either a map-based config (legacy) or a slice-based config.
++func NewPermalinkExpander(urlize func(uri string) string, patterns any) (PermalinkExpander, error) {
++	switch v := patterns.(type) {
++	case map[string]map[string]string:
++		return newPermalinkExpander(urlize, nil, v)
++	case PermalinksConfig:
++		return newPermalinkExpander(urlize, v, nil)
++	case nil:
++		return newPermalinkExpander(urlize, nil, nil)
++	default:
++		return PermalinkExpander{}, fmt.Errorf("unsupported config type: %T", v)
++	}
++}
++
++// newPermalinkExpander is the internal constructor that supports both legacy map-based
++// and new slice-based configurations.
++func newPermalinkExpander(urlize func(uri string) string, sliceConfigs PermalinksConfig, mapConfigs map[string]map[string]string) (PermalinkExpander, error) {
+ 	p := PermalinkExpander{
+ 		urlize:       urlize,
++		sliceConfigs: sliceConfigs,
+ 		patternCache: hmaps.NewCache[string, func(Page) (string, error)](),
+ 	}
+ 
+@@ -108,7 +139,7 @@ func NewPermalinkExpander(urlize func(uri string) string, patterns map[string]ma
+ 
+ 	p.expanders = make(map[string]map[string]func(Page) (string, error))
+ 
+-	for kind, patterns := range patterns {
++	for kind, patterns := range mapConfigs {
+ 		e, err := p.parse(patterns)
+ 		if err != nil {
+ 			return p, err
+@@ -157,6 +188,32 @@ func (l PermalinkExpander) Expand(key string, p Page) (string, error) {
+ 	return expand(p)
+ }
+ 
++// ExpandSlice expands the path in p according to the slice-based permalinks config.
++// It matches the Page against all the slice configs and returns the first match.
++func (l PermalinkExpander) ExpandSlice(p Page) (string, error) {
++	// First try the slice-based configs
++	for _, entry := range l.sliceConfigs {
++		if entry.Target.Match(p.Kind(), p.Path(), p.Site().Hugo().Environment(), nil) {
++			return l.ExpandPattern(entry.Pattern, p)
++		}
++	}
++
++	// Fall back to legacy map-based configs if no slice match
++	expanders, found := l.expanders[p.Kind()]
++	if !found {
++		return "", nil
++	}
++
++	// For legacy format, use the section as the key
++	section := p.Section()
++	expand, found := expanders[section]
++	if !found {
++		return "", nil
++	}
++
++	return expand(p)
++}
++
+ // Allow " " and / to represent the root section.
+ var sectionCutSet = " /"
+ 
