@@ -1,0 +1,31 @@
+diff --git a/src/_pytest/tmpdir.py b/src/_pytest/tmpdir.py
+index 855ad273e..67a348069 100644
+--- a/src/_pytest/tmpdir.py
++++ b/src/_pytest/tmpdir.py
+@@ -148,6 +148,9 @@ class TempPathFactory:
+         if self._given_basetemp is not None:
+             basetemp = self._given_basetemp
+             if basetemp.exists():
++                # Check if the existing directory is a symlink before removing
++                if basetemp.is_symlink():
++                    raise OSError(f"temporary directory {basetemp} is a symbolic link")
+                 rm_rf(basetemp)
+             basetemp.mkdir(mode=0o700)
+             basetemp = basetemp.resolve()
+@@ -160,10 +163,16 @@ class TempPathFactory:
+             rootdir = temproot.joinpath(f"pytest-of-{user}")
+             try:
+                 rootdir.mkdir(mode=0o700, exist_ok=True)
++                # Check if the directory is a symlink
++                if rootdir.is_symlink():
++                    raise OSError(f"temporary directory {rootdir} is a symbolic link")
+             except OSError:
+                 # getuser() likely returned illegal characters for the platform, use unknown back off mechanism
+                 rootdir = temproot.joinpath("pytest-of-unknown")
+                 rootdir.mkdir(mode=0o700, exist_ok=True)
++                # Check if the directory is a symlink
++                if rootdir.is_symlink():
++                    raise OSError(f"temporary directory {rootdir} is a symbolic link")
+             # Because we use exist_ok=True with a predictable name, make sure
+             # we are the owners, to prevent any funny business (on unix, where
+             # temproot is usually shared).

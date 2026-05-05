@@ -1,0 +1,42 @@
+diff --git a/markup/goldmark/passthrough/passthrough.go b/markup/goldmark/passthrough/passthrough.go
+index c38f3eac0..2ca536c59 100644
+--- a/markup/goldmark/passthrough/passthrough.go
++++ b/markup/goldmark/passthrough/passthrough.go
+@@ -130,7 +130,13 @@ func (r *htmlRenderer) renderPassthroughBlock(w util.BufWriter, src []byte, node
+ 	ordinal := ctx.GetAndIncrementOrdinal(passthrough.KindPassthroughBlock)
+ 
+ 	// Trim the delimiters.
+-	s = s[len(delims.Open) : len(s)-len(delims.Close)]
++	if len(s) >= len(delims.Open)+len(delims.Close) {
++		s = s[len(delims.Open) : len(s)-len(delims.Close)]
++	} else {
++		// If the text is shorter than the delimiters, just use the raw text
++		// This can happen in certain edge cases like when rendering in TOC context
++		s = ""
++	}
+ 
+ 	pctx := passthroughContext{
+ 		BaseContext:      render.NewBaseContext(ctx, renderer, node, src, ordinal),
+diff --git a/markup/goldmark/toc.go b/markup/goldmark/toc.go
+index 3fb53f875..0aa7d8892 100644
+--- a/markup/goldmark/toc.go
++++ b/markup/goldmark/toc.go
+@@ -24,6 +24,7 @@ import (
+ 	emojiAst "github.com/yuin/goldmark-emoji/ast"
+ 
+ 	"github.com/gohugoio/hugo-goldmark-extensions/extras"
++	"github.com/gohugoio/hugo-goldmark-extensions/passthrough"
+ 	"github.com/gohugoio/hugo/markup/tableofcontents"
+ 
+ 	"github.com/yuin/goldmark"
+@@ -105,7 +106,9 @@ func (t *tocTransformer) Transform(n *ast.Document, reader text.Reader, pc parse
+ 			extras.KindInsert,
+ 			extras.KindMark,
+ 			extras.KindSubscript,
+-			extras.KindSuperscript:
++			extras.KindSuperscript,
++			passthrough.KindPassthroughInline,
++			passthrough.KindPassthroughBlock:
+ 			err := t.r.Render(&headingText, reader.Source(), n)
+ 			if err != nil {
+ 				return s, err

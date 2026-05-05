@@ -1,0 +1,33 @@
+{
+  "instance_id": "gohugoio__hugo-14757",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "hugolib/sitesmatrix/TestFilenameIdentifierShouldReplaceMountDimension": false
+  },
+  "agent_seconds": 16.436696767807007,
+  "candidate_label": "agent.diff"
+}
+    if match == "" || strings.HasPrefix(match, "#") {
+                    continue
+                }
+                var negate bool
+                match, negate = s.negate(match)
+                if negate {
+                    s.Assert(content, qt.Not(qt.Contains), match, cm)
+                    continue
+                }
+                s.Assert(content, qt.Contains, match, cm)
+            }
+          /tmp/pcb_grade_workdirs_nim_qwen480/gohugoio__hugo-14757/hugolib/sitesmatrix/sitematrix_integration_test.go:1952
+            b.AssertFileContent("public/guest/bundle/index.html", "Role: guest|guestimg.txt|$")
+        
+--- FAIL: TestFilenameIdentifierShouldReplaceMountDimension (0.01s)
+FAIL
+FAIL	github.com/gohugoio/hugo/hugolib/sitesmatrix	0.071s
+FAIL
+
+---

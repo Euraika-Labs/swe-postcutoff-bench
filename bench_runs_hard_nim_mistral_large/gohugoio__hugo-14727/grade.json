@@ -1,0 +1,13 @@
+{
+  "instance_id": "gohugoio__hugo-14727",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "hugolib/TestPublishMultilingualSectionCreation": false
+  },
+  "agent_seconds": 15.772228002548218,
+  "candidate_label": "agent.diff"
+}

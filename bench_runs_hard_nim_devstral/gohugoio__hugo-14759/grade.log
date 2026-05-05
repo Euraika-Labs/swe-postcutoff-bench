@@ -1,0 +1,134 @@
+{
+  "instance_id": "gohugoio__hugo-14759",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 7,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "resources/page/TestPermalinksNewSliceFormat": false,
+    "resources/page/TestPermalinksNewSliceFormatEnvironment": false,
+    "resources/page/TestPermalinksNewSliceFormatSitesMatrix": false,
+    "resources/page/TestPermalinksNewSliceFormatAsteriskKind": false,
+    "resources/page/TestPermalinksHomeKind": false,
+    "resources/page/TestPermalinksHomeKindLegacyMap": false,
+    "resources/page/TestPermalinksNewSliceFormatRootSection": false
+  },
+  "agent_seconds": 8.952537775039673,
+  "candidate_label": "agent.diff"
+}
+Page)
+	want (string, Page)
+resources/page/permalinks_test.go:185:13: undefined: PermalinksConfig
+resources/page/permalinks_test.go:186:3: missing type in composite literal
+resources/page/permalinks_test.go:187:3: missing type in composite literal
+resources/page/permalinks_test.go:188:3: missing type in composite literal
+resources/page/permalinks_test.go:189:3: missing type in composite literal
+resources/page/permalinks_test.go:194:35: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:194:35: too many errors
+
+---
+[resources/page/TestPermalinksNewSliceFormatEnvironment] rc=1
+go:150:15: undefined: PermalinksConfig
+resources/page/permalinks_test.go:151:5: missing type in composite literal
+resources/page/permalinks_test.go:155:37: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:185:13: undefined: PermalinksConfig
+resources/page/permalinks_test.go:186:3: missing type in composite literal
+resources/page/permalinks_test.go:187:3: missing type in composite literal
+resources/page/permalinks_test.go:188:3: missing type in composite literal
+resources/page/permalinks_test.go:189:3: missing type in composite literal
+resources/page/permalinks_test.go:194:35: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:194:35: too many errors
+
+---
+[resources/page/TestPermalinksNewSliceFormatSitesMatrix] rc=1
+go:150:15: undefined: PermalinksConfig
+resources/page/permalinks_test.go:151:5: missing type in composite literal
+resources/page/permalinks_test.go:155:37: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:185:13: undefined: PermalinksConfig
+resources/page/permalinks_test.go:186:3: missing type in composite literal
+resources/page/permalinks_test.go:187:3: missing type in composite literal
+resources/page/permalinks_test.go:188:3: missing type in composite literal
+resources/page/permalinks_test.go:189:3: missing type in composite literal
+resources/page/permalinks_test.go:194:35: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:194:35: too many errors
+
+---
+[resources/page/TestPermalinksNewSliceFormatAsteriskKind] rc=1
+go:150:15: undefined: PermalinksConfig
+resources/page/permalinks_test.go:151:5: missing type in composite literal
+resources/page/permalinks_test.go:155:37: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:185:13: undefined: PermalinksConfig
+resources/page/permalinks_test.go:186:3: missing type in composite literal
+resources/page/permalinks_test.go:187:3: missing type in composite literal
+resources/page/permalinks_test.go:188:3: missing type in composite literal
+resources/page/permalinks_test.go:189:3: missing type in composite literal
+resources/page/permalinks_test.go:194:35: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:194:35: too many errors
+
+---
+[resources/page/TestPermalinksHomeKind] rc=1
+go:150:15: undefined: PermalinksConfig
+resources/page/permalinks_test.go:151:5: missing type in composite literal
+resources/page/permalinks_test.go:155:37: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:185:13: undefined: PermalinksConfig
+resources/page/permalinks_test.go:186:3: missing type in composite literal
+resources/page/permalinks_test.go:187:3: missing type in composite literal
+resources/page/permalinks_test.go:188:3: missing type in composite literal
+resources/page/permalinks_test.go:189:3: missing type in composite literal
+resources/page/permalinks_test.go:194:35: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:194:35: too many errors
+
+---
+[resources/page/TestPermalinksHomeKindLegacyMap] rc=1
+go:150:15: undefined: PermalinksConfig
+resources/page/permalinks_test.go:151:5: missing type in composite literal
+resources/page/permalinks_test.go:155:37: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:185:13: undefined: PermalinksConfig
+resources/page/permalinks_test.go:186:3: missing type in composite literal
+resources/page/permalinks_test.go:187:3: missing type in composite literal
+resources/page/permalinks_test.go:188:3: missing type in composite literal
+resources/page/permalinks_test.go:189:3: missing type in composite literal
+resources/page/permalinks_test.go:194:35: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:194:35: too many errors
+
+---
+[resources/page/TestPermalinksNewSliceFormatRootSection] rc=1
+go:150:15: undefined: PermalinksConfig
+resources/page/permalinks_test.go:151:5: missing type in composite literal
+resources/page/permalinks_test.go:155:37: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:185:13: undefined: PermalinksConfig
+resources/page/permalinks_test.go:186:3: missing type in composite literal
+resources/page/permalinks_test.go:187:3: missing type in composite literal
+resources/page/permalinks_test.go:188:3: missing type in composite literal
+resources/page/permalinks_test.go:189:3: missing type in composite literal
+resources/page/permalinks_test.go:194:35: not enough arguments in call to expander.Expand
+	have (*testPage)
+	want (string, Page)
+resources/page/permalinks_test.go:194:35: too many errors
+
+---

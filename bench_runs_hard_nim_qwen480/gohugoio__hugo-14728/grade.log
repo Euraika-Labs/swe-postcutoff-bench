@@ -1,0 +1,19 @@
+{
+  "instance_id": "gohugoio__hugo-14728",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "common/hugo/TestWarnDeprecatedEdition": false
+  },
+  "agent_seconds": 8.746554136276245,
+  "candidate_label": "agent.diff"
+}
+ommon/hugo [github.com/gohugoio/hugo/common/hugo.test]
+common/hugo/hugo_test.go:80:2: undefined: WarnDeprecatedEdition
+common/hugo/hugo_test.go:88:2: undefined: WarnDeprecatedEdition
+common/hugo/hugo_test.go:96:2: undefined: WarnDeprecatedEdition
+
+---

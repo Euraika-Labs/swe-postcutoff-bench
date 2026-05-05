@@ -1,0 +1,4 @@
+(node:2452413) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Operation cancelled.
+odel=qwen/qwen3-coder-480b-a35b-instruct]

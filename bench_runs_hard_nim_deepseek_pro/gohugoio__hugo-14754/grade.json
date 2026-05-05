@@ -1,0 +1,12 @@
+{
+  "instance_id": "gohugoio__hugo-14754",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": -1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {},
+  "agent_seconds": 521,
+  "candidate_label": "NIM_TIMEOUT",
+  "note": "NIM deepseek-v4-pro times out at 520s before responding"
+}

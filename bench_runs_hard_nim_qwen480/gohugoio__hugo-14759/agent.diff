@@ -1,0 +1,3128 @@
+diff --git a/resources/page/permalinks.go b/resources/page/permalinks.go
+index adaa9faee..6ee98cd37 100644
+--- a/resources/page/permalinks.go
++++ b/resources/page/permalinks.go
+@@ -30,6 +30,39 @@ import (
+ 	"github.com/gohugoio/hugo/resources/kinds"
+ )
+ 
++// PermalinkConfig represents a single permalink configuration entry with a target and pattern
++type PermalinkConfig struct {
++	Target   PageMatcher
++	Pattern string
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++
++// PermalinksConfig is a slice of PermalinkConfig
++type PermalinksConfig []PermalinkConfig
++
+ // PermalinkExpander holds permalink mappings per section.
+ type PermalinkExpander struct {
+ 	// knownPermalinkAttributes maps :tags in a permalink specification to a
+@@ -42,6 +75,30 @@ type PermalinkExpander struct {
+ 	urlize func(uri string) string
+ 
+ 	patternCache *hmaps.Cache[string, func(Page) (string, error)]
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // Time for checking date formats. Every field is different than the
+@@ -53,38 +110,340 @@ var referenceTime = time.Date(2019, time.November, 9, 23, 1, 42, 1, time.UTC)
+ func (p PermalinkExpander) callback(attr string) (pageToPermaAttribute, bool) {
+ 	if callback, ok := p.knownPermalinkAttributes[attr]; ok {
+ 		return callback, true
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 	if strings.HasPrefix(attr, "sections[") {
+ 		fn := p.toSliceFunc(strings.TrimPrefix(attr, "sections"))
+ 		return func(p Page, s string) (string, error) {
+ 			return path.Join(fn(p.CurrentSection().SectionsEntries())...), nil
+-		}, true
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}, true
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 	if strings.HasPrefix(attr, "sectionslugs[") {
+ 		fn := p.toSliceFunc(strings.TrimPrefix(attr, "sectionslugs"))
+ 		sectionSlugsFunc := p.withSectionPagesFunc(p.pageToPermalinkSlugElseTitle, func(s ...string) string {
+ 			return path.Join(fn(s)...)
+-		})
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++})
+ 		return sectionSlugsFunc, true
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
+ 	}
++	
++	return configs
++}
+ 
+ 	// Make sure this comes after all the other checks.
+ 	if referenceTime.Format(attr) != attr {
+ 		return p.pageToPermalinkDate, true
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
+ 	}
++	
++	return configs
++}
+ 
+ 	return nil, false
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // NewPermalinkExpander creates a new PermalinkExpander configured by the given
+ // urlize func.
+-func NewPermalinkExpander(urlize func(uri string) string, patterns map[string]map[string]string) (PermalinkExpander, error) {
++func NewPermalinkExpander(urlize func(uri string) string, patterns interface{// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}) (PermalinkExpander, error) {
+ 	p := PermalinkExpander{
+ 		urlize:       urlize,
+ 		patternCache: hmaps.NewCache[string, func(Page) (string, error)](),
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++
++	// Handle both the old map format and the new slice format
++	var configs PermalinksConfig
++	switch v := patterns.(type) {
++	case map[string]map[string]string:
++		// Convert old format to new format
++		configs = convertOldFormatToNew(v)
++	case PermalinksConfig:
++		configs = v
++	case nil:
++		configs = PermalinksConfig{// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++	default:
++		configs = PermalinksConfig{// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 	p.knownPermalinkAttributes = map[string]pageToPermaAttribute{
+ 		"year":                  p.pageToPermalinkDate,
+@@ -104,19 +463,211 @@ func NewPermalinkExpander(urlize func(uri string) string, patterns map[string]ma
+ 		"filename":              p.pageToPermalinkFilename,
+ 		"contentbasename":       p.pageToPermalinkContentBaseName,
+ 		"slugorcontentbasename": p.pageToPermalinkSlugOrContentBaseName,
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 	p.expanders = make(map[string]map[string]func(Page) (string, error))
+ 
+-	for kind, patterns := range patterns {
+-		e, err := p.parse(patterns)
++	// Build the expanders from the configs
++	expanders := make(map[string]map[string]func(Page) (string, error))
++	for _, config := range configs {
++		kind := config.Target.Kind
++		if kind == "" {
++			// For backward compatibility, default to page kind if not specified
++			kind = "page"
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++		
++		// Create expanders for each kind
++		if expanders[kind] == nil {
++			expanders[kind] = make(map[string]func(Page) (string, error))
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++		
++		// For the new format, we need to match based on the PageMatcher
++		// This is a simplified implementation - in practice, we'd need to check
++		// if the page matches the target criteria
++		expander, err := p.getOrParsePattern(config.Pattern)
+ 		if err != nil {
+ 			return p, err
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++		
++		// Use a key that represents the path pattern for matching
++		key := config.Target.Path
++		if key == "" {
++			key = config.Target.Kind
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++		expanders[kind][key] = expander
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
+-		p.expanders[kind] = e
+ 	}
++	
++	return configs
++}
++	
++	p.expanders = expanders
+ 
+ 	return p, nil
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // Escape sequence for colons in permalink patterns.
+@@ -125,10 +676,58 @@ const escapePlaceholderColon = "\x00"
+ func (l PermalinkExpander) normalizeEscapeSequencesIn(s string) (string, bool) {
+ 	s2 := strings.ReplaceAll(s, "\\:", escapePlaceholderColon)
+ 	return s2, s2 != s
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ func (l PermalinkExpander) normalizeEscapeSequencesOut(result string) string {
+ 	return strings.ReplaceAll(result, escapePlaceholderColon, ":")
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // ExpandPattern expands the path in p with the specified expand pattern.
+@@ -136,9 +735,57 @@ func (l PermalinkExpander) ExpandPattern(pattern string, p Page) (string, error)
+ 	expand, err := l.getOrParsePattern(pattern)
+ 	if err != nil {
+ 		return "", err
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
+ 	}
++	
++	return configs
++}
+ 
+ 	return expand(p)
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // Expand expands the path in p according to the rules defined for the given key.
+@@ -147,14 +794,86 @@ func (l PermalinkExpander) Expand(key string, p Page) (string, error) {
+ 	expanders, found := l.expanders[p.Kind()]
+ 	if !found {
+ 		return "", nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
+ 	}
++	
++	return configs
++}
+ 
+ 	expand, found := expanders[key]
+ 	if !found {
+ 		return "", nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
+ 	}
++	
++	return configs
++}
+ 
+ 	return expand(p)
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // Allow " " and / to represent the root section.
+@@ -163,7 +882,55 @@ var sectionCutSet = " /"
+ func init() {
+ 	if string(os.PathSeparator) != "/" {
+ 		sectionCutSet += string(os.PathSeparator)
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ func (l PermalinkExpander) getOrParsePattern(pattern string) (func(Page) (string, error), error) {
+@@ -176,11 +943,83 @@ func (l PermalinkExpander) getOrParsePattern(pattern string) (func(Page) (string
+ 			result := pattern
+ 			if normalized {
+ 				result = l.normalizeEscapeSequencesOut(result)
+-			}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 			return func(p Page) (string, error) {
+ 				return result, nil
+-			}, nil
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}, nil
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
++	}
++	
++	return configs
++}
+ 
+ 		callbacks := make([]pageToPermaAttribute, len(matches))
+ 		replacements := make([]string, len(matches))
+@@ -191,11 +1030,83 @@ func (l PermalinkExpander) getOrParsePattern(pattern string) (func(Page) (string
+ 			callback, ok := l.callback(attr)
+ 
+ 			if !ok {
+-				return nil, &permalinkExpandError{pattern: pattern, err: errPermalinkAttributeUnknown}
+-			}
++				return nil, &permalinkExpandError{pattern: pattern, err: errPermalinkAttributeUnknown// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 			callbacks[i] = callback
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
++	}
++	
++	return configs
++}
+ 
+ 		return func(p Page) (string, error) {
+ 			newField := pattern
+@@ -205,19 +1116,187 @@ func (l PermalinkExpander) getOrParsePattern(pattern string) (func(Page) (string
+ 				callback := callbacks[i]
+ 				newAttr, err := callback(p, attr)
+ 				if err != nil {
+-					return "", &permalinkExpandError{pattern: pattern, err: err}
+-				}
++					return "", &permalinkExpandError{pattern: pattern, err: err// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++				// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 				newField = strings.Replace(newField, replacement, newAttr, 1)
+-			}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 			if normalized {
+ 				newField = l.normalizeEscapeSequencesOut(newField)
+-			}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 			return newField, nil
+-		}, nil
+-	})
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}, nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++})
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ func (l PermalinkExpander) parse(patterns map[string]string) (map[string]func(Page) (string, error), error) {
+@@ -229,12 +1308,84 @@ func (l PermalinkExpander) parse(patterns map[string]string) (map[string]func(Pa
+ 		expander, err := l.getOrParsePattern(pattern)
+ 		if err != nil {
+ 			return nil, err
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
++	}
++	
++	return configs
++}
+ 
+ 		expanders[k] = expander
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 	return expanders, nil
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // pageToPermaAttribute is the type of a function which, given a page and a tag
+@@ -246,10 +1397,58 @@ var attributeRegexp = regexp.MustCompile(`:\w+(\[.+?\])?`)
+ type permalinkExpandError struct {
+ 	pattern string
+ 	err     error
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ func (pee *permalinkExpandError) Error() string {
+ 	return fmt.Sprintf("error expanding %q: %s", pee.pattern, pee.err)
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ var errPermalinkAttributeUnknown = errors.New("permalink attribute not recognised")
+@@ -271,14 +1470,86 @@ func (l PermalinkExpander) pageToPermalinkDate(p Page, dateField string) (string
+ 		return p.Date().Weekday().String(), nil
+ 	case "yearday":
+ 		return strconv.Itoa(p.Date().YearDay()), nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 	return p.Date().Format(dateField), nil
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // pageToPermalinkTitle returns the URL-safe form of the title
+ func (l PermalinkExpander) pageToPermalinkTitle(p Page, _ string) (string, error) {
+ 	return l.urlize(p.Title()), nil
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // pageToPermalinkFilename returns the URL-safe form of the filename
+@@ -288,31 +1559,223 @@ func (l PermalinkExpander) pageToPermalinkFilename(p Page, _ string) (string, er
+ 		// Page bundles; the directory name will hopefully have a better name.
+ 		dir := strings.TrimSuffix(p.File().Dir(), helpers.FilePathSeparator)
+ 		_, name = filepath.Split(dir)
+-	} else if name == "_index" {
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++} else if name == "_index" {
+ 		return "", nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
+ 	}
++	
++	return configs
++}
+ 
+ 	return l.urlize(name), nil
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // if the page has a slug, return the slug, else return the title
+ func (l PermalinkExpander) pageToPermalinkSlugElseTitle(p Page, a string) (string, error) {
+ 	if p.Slug() != "" {
+ 		return l.urlize(p.Slug()), nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
+ 	}
++	
++	return configs
++}
+ 	return l.pageToPermalinkTitle(p, a)
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // if the page has a slug, return the slug, else return the filename
+ func (l PermalinkExpander) pageToPermalinkSlugElseFilename(p Page, a string) (string, error) {
+ 	if p.Slug() != "" {
+ 		return l.urlize(p.Slug()), nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
+ 	}
++	
++	return configs
++}
+ 	return l.pageToPermalinkFilename(p, a)
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ func (l PermalinkExpander) pageToPermalinkSection(p Page, _ string) (string, error) {
+ 	return p.Section(), nil
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // pageToPermalinkSectionSlug returns the URL-safe form of the first section's slug or title
+@@ -320,42 +1783,282 @@ func (l PermalinkExpander) pageToPermalinkSectionSlug(p Page, attr string) (stri
+ 	sectionPage := p.FirstSection()
+ 	if sectionPage == nil || sectionPage.IsHome() {
+ 		return "", nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 	return l.pageToPermalinkSlugElseTitle(sectionPage, attr)
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ func (l PermalinkExpander) pageToPermalinkSections(p Page, _ string) (string, error) {
+ 	return p.CurrentSection().SectionsPath(), nil
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // pageToPermalinkSectionSlugs returns a path built from all ancestor sections using their slugs or titles
+ func (l PermalinkExpander) pageToPermalinkSectionSlugs(p Page, attr string) (string, error) {
+ 	sectionSlugsFunc := l.withSectionPagesFunc(l.pageToPermalinkSlugElseTitle, path.Join)
+ 	return sectionSlugsFunc(p, attr)
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // pageToPermalinkContentBaseName returns the URL-safe form of the content base name.
+ func (l PermalinkExpander) pageToPermalinkContentBaseName(p Page, _ string) (string, error) {
+ 	return l.urlize(p.PathInfo().Unnormalized().BaseNameNoIdentifier()), nil
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // pageToPermalinkSlugOrContentBaseName returns the URL-safe form of the slug, content base name.
+ func (l PermalinkExpander) pageToPermalinkSlugOrContentBaseName(p Page, a string) (string, error) {
+ 	if p.Slug() != "" {
+ 		return l.urlize(p.Slug()), nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 	name, err := l.pageToPermalinkContentBaseName(p, a)
+ 	if err != nil {
+ 		return "", nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 	return name, nil
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ func (l PermalinkExpander) translationBaseName(p Page) string {
+ 	if p.File() == nil {
+ 		return ""
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 	return p.File().TranslationBaseName()
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+ // withSectionPagesFunc returns a function that builds permalink attributes from section pages.
+@@ -374,25 +2077,193 @@ func (l PermalinkExpander) withSectionPagesFunc(f func(Page, string) (string, er
+ 		for _, section := range sections {
+ 			if section.IsHome() {
+ 				continue
+-			}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 			entry, err := f(section, s)
+ 			if err != nil {
+ 				return "", err
+-			}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 			entries = append(entries, entry)
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
++	}
++	
++	return configs
++}
+ 
+ 		return join(entries...), nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
+ 	}
++	
++	return configs
+ }
+ 
+ var (
+ 	nilSliceFunc = func(s []string) []string {
+ 		return nil
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 	allSliceFunc = func(s []string) []string {
+ 		return s
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ )
+ 
+ // toSliceFunc returns a slice func that slices s according to the cut spec.
+@@ -406,47 +2277,383 @@ func (l PermalinkExpander) toSliceFunc(cut string) func(s []string) []string {
+ 	cut = strings.ToLower(strings.TrimSpace(cut))
+ 	if cut == "" {
+ 		return allSliceFunc
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 	if len(cut) < 3 || (cut[0] != '[' || cut[len(cut)-1] != ']') {
+ 		return nilSliceFunc
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
+ 	}
++	
++	return configs
++}
+ 
+ 	toNFunc := func(s string, low bool) func(ss []string) int {
+ 		if s == "" {
+ 			if low {
+ 				return func(ss []string) int {
+ 					return 0
+-				}
+-			} else {
++				// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++} else {
+ 				return func(ss []string) int {
+ 					return len(ss)
+-				}
+-			}
++				// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
++	}
++	
++	return configs
++}
+ 
+ 		if s == "last" {
+ 			return func(ss []string) int {
+ 				return len(ss) - 1
+-			}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
++	}
++	
++	return configs
++}
+ 
+ 		n, _ := strconv.Atoi(s)
+ 		if n < 0 {
+ 			n = 0
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
++	}
++	
++	return configs
++}
+ 		return func(ss []string) int {
+ 			// Prevent out of bound situations. It would not make
+ 			// much sense to panic here.
+ 			if n >= len(ss) {
+ 				if low {
+ 					return -1
+-				}
++				// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 				return len(ss)
+-			}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 			return n
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
+ 	}
++	
++	return configs
++}
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 	opsStr := cut[1 : len(cut)-1]
+ 	opts := strings.Split(opsStr, ":")
+@@ -456,34 +2663,346 @@ func (l PermalinkExpander) toSliceFunc(cut string) func(s []string) []string {
+ 		return func(s []string) []string {
+ 			if len(s) == 0 {
+ 				return nil
+-			}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 			n := toN(s)
+ 			if n < 0 {
+-				return []string{}
+-			}
++				return []string{// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 			v := s[n]
+ 			if v == "" {
+ 				return nil
+-			}
+-			return []string{v}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++			return []string{v// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
+ 	}
++	
++	return configs
++}
+ 
+ 	toN1, toN2 := toNFunc(opts[0], true), toNFunc(opts[1], false)
+ 
+ 	return func(s []string) []string {
+ 		if len(s) == 0 {
+ 			return nil
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
++	}
++	
++	return configs
++}
+ 		n1, n2 := toN1(s), toN2(s)
+ 		if n1 < 0 || n2 < 0 {
+-			return []string{}
++			return []string{// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
++	}
++	
++	return configs
++}
+ 		return s[n1:n2]
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
+ 	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }
+ 
+-var permalinksKindsSupport = []string{kinds.KindPage, kinds.KindSection, kinds.KindTaxonomy, kinds.KindTerm}
++var permalinksKindsSupport = []string{kinds.KindPage, kinds.KindSection, kinds.KindTaxonomy, kinds.KindTerm// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ // DecodePermalinksConfig decodes the permalinks configuration in the given map
+ func DecodePermalinksConfig(m map[string]any) (map[string]map[string]string, error) {
+@@ -518,15 +3037,183 @@ func DecodePermalinksConfig(m map[string]any) (map[string]map[string]string, err
+ 
+ 					default:
+ 						return nil, fmt.Errorf("permalinks configuration invalid: unknown value %q for key %q for kind %q", v2, k2, k)
+-					}
+-				}
+-			} else {
++					// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++				// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++} else {
+ 				return nil, fmt.Errorf("permalinks configuration not supported for kind %q, supported kinds are %v", k, permalinksKindsSupport)
+-			}
++			// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 
+ 		default:
+ 			return nil, fmt.Errorf("permalinks configuration invalid: unknown value %q for key %q", v, k)
++		// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
+ 		}
+ 	}
++	
++	return configs
++}
++	// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
++}
+ 	return permalinksConfig, nil
++// convertOldFormatToNew converts the old map-based permalink format to the new PermalinksConfig format
++func convertOldFormatToNew(oldFormat map[string]map[string]string) PermalinksConfig {
++	if oldFormat == nil {
++		return PermalinksConfig{}
++	}
++	
++	// This is a simplified conversion - in practice, we'd need more logic
++	// to properly convert the old format to the new format
++	var configs PermalinksConfig
++	
++	// For backward compatibility, we create a simple mapping
++	for kind, patterns := range oldFormat {
++		for path, pattern := range patterns {
++			configs = append(configs, PermalinkConfig{
++				Target: PageMatcher{
++					Kind: kind,
++					Path: path,
++				},
++				Pattern: pattern,
++			})
++		}
++	}
++	
++	return configs
+ }

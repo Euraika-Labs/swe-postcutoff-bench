@@ -1,0 +1,28 @@
+diff --git a/common/paths/pathparser.go b/common/paths/pathparser.go
+index 5d828df14..a045b1f13 100644
+--- a/common/paths/pathparser.go
++++ b/common/paths/pathparser.go
+@@ -483,6 +483,8 @@ func (p *Path) reset() {
+ 	p.posIdentifierLayout = -1
+ 	p.posIdentifierBaseof = -1
+ 	p.posIdentifierCustom = -1
++	p.posIdentifierRole = -1
++	p.posIdentifierVersion = -1
+ 	p.disabled = false
+ 	p.trimLeadingSlash = false
+ 	p.unnormalized = nil
+@@ -786,6 +788,14 @@ func (p *Path) Custom() string {
+ 	return strings.TrimSuffix(strings.TrimPrefix(p.identifierAsString(p.posIdentifierCustom), identifierCustomWrapper), identifierCustomWrapper)
+ }
+ 
++func (p *Path) Role() string {
++	return strings.TrimSuffix(strings.TrimPrefix(p.identifierAsString(p.posIdentifierRole), identifierCustomWrapper), identifierCustomWrapper)
++}
++
++func (p *Path) Version() string {
++	return strings.TrimSuffix(strings.TrimPrefix(p.identifierAsString(p.posIdentifierVersion), identifierCustomWrapper), identifierCustomWrapper)
++}
++
+ func (p *Path) Identifier(i int) string {
+ 	return p.identifierAsString(i)
+ }

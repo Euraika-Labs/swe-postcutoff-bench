@@ -1,0 +1,14 @@
+diff --git a/resources/page/page_matcher.go b/resources/page/page_matcher.go
+index 0216a7412..5baae72f2 100644
+--- a/resources/page/page_matcher.go
++++ b/resources/page/page_matcher.go
+@@ -56,6 +56,9 @@ type PageMatcher struct {
+ 	Environment string
+ 
+ 	// Compiled values.
++	pathGlob    hglob.Glob    `mapstructure:"-"`
++	kindGlob   hglob.Glob    `mapstructure:"-"`
++	environmentGlob hglob.Glob `mapstructure:"-"`
+ 	// The site vectors to apply this to.
+ 	SitesMatrixCompiled sitesmatrix.VectorProvider `mapstructure:"-"`
+ }

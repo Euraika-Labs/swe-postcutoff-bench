@@ -1,0 +1,31 @@
+(node:2795457) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[API Error: Request timeout after 520s. Try reducing input length or increasing timeout in config.
+
+Troubleshooting tips:
+- Reduce input length or complexity
+- Increase timeout in config: contentGenerator.timeout
+- Check network connectivity]
+[API Error: Request timeout after 520s. Try reducing input length or increasing timeout in config.
+
+Troubleshooting tips:
+- Reduce input length or complexity
+- Increase timeout in config: contentGenerator.timeout
+- Check network connectivity]
+[API Error: [API Error: Request timeout after 520s. Try reducing input length or increasing timeout in config.
+
+Troubleshooting tips:
+- Reduce input length or complexity
+- Increase timeout in config: contentGenerator.timeout
+- Check network connectivity]]
+An unexpected critical error occurred:
+Error: [API Error: Request timeout after 520s. Try reducing input length or increasing timeout in config.
+
+Troubleshooting tips:
+- Reduce input length or complexity
+- Increase timeout in config: contentGenerator.timeout
+- Check network connectivity]
+    at file:///home/linuxbrew/.linuxbrew/lib/node_modules/@qwen-code/qwen-code/cli.js:485539:19
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async main (file:///home/linuxbrew/.linuxbrew/lib/node_modules/@qwen-code/qwen-code/cli.js:549151:5)
+[done elapsed=523s model=deepseek-ai/deepseek-v4-pro]

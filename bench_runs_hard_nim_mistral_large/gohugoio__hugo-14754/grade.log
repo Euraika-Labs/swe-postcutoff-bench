@@ -1,0 +1,36 @@
+{
+  "instance_id": "gohugoio__hugo-14754",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 2,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "common/paths/TestPrefixIdentifiersContent": false,
+    "common/paths/TestPrefixIdentifiersLayouts": false
+  },
+  "agent_seconds": 7.383811712265015,
+  "candidate_label": "agent.diff"
+}
+mmon/paths/TestPrefixIdentifiersContent] rc=1
+s.test]
+common/paths/pathparser.go:486:4: p.posIdentifierRole undefined (type *Path has no field or method posIdentifierRole)
+common/paths/pathparser.go:487:4: p.posIdentifierVersion undefined (type *Path has no field or method posIdentifierVersion)
+common/paths/pathparser.go:792:70: p.posIdentifierRole undefined (type *Path has no field or method posIdentifierRole)
+common/paths/pathparser.go:796:70: p.posIdentifierVersion undefined (type *Path has no field or method posIdentifierVersion)
+common/paths/pathparser_test.go:499:16: p.Langs undefined (type *Path has no field or method Langs)
+common/paths/pathparser_test.go:509:16: p.Roles undefined (type *Path has no field or method Roles)
+common/paths/pathparser_test.go:519:16: p.Versions undefined (type *Path has no field or method Versions)
+
+---
+[common/paths/TestPrefixIdentifiersLayouts] rc=1
+s.test]
+common/paths/pathparser.go:486:4: p.posIdentifierRole undefined (type *Path has no field or method posIdentifierRole)
+common/paths/pathparser.go:487:4: p.posIdentifierVersion undefined (type *Path has no field or method posIdentifierVersion)
+common/paths/pathparser.go:792:70: p.posIdentifierRole undefined (type *Path has no field or method posIdentifierRole)
+common/paths/pathparser.go:796:70: p.posIdentifierVersion undefined (type *Path has no field or method posIdentifierVersion)
+common/paths/pathparser_test.go:499:16: p.Langs undefined (type *Path has no field or method Langs)
+common/paths/pathparser_test.go:509:16: p.Roles undefined (type *Path has no field or method Roles)
+common/paths/pathparser_test.go:519:16: p.Versions undefined (type *Path has no field or method Versions)
+
+---

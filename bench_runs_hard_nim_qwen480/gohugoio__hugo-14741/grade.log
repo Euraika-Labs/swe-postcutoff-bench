@@ -1,0 +1,26 @@
+{
+  "instance_id": "gohugoio__hugo-14741",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "hugolib/TestRebuildEditTagsListLayout": false
+  },
+  "agent_seconds": 13.02586317062378,
+  "candidate_label": "agent.diff"
+}
+ib/integrationtest_builder.go:700 +0xbc
+github.com/gohugoio/hugo/hugolib.(*IntegrationTestBuilder).Build(0x269657a5a000)
+	/tmp/pcb_grade_workdirs_nim_qwen480/gohugoio__hugo-14741/hugolib/integrationtest_builder.go:629 +0x45
+github.com/gohugoio/hugo/hugolib.TestRebuildEditTagsListLayout(0x269657a14248?)
+	/tmp/pcb_grade_workdirs_nim_qwen480/gohugoio__hugo-14741/hugolib/rebuild_test.go:2141 +0xc5
+testing.tRunner(0x269657a14248, 0x1ee61c8)
+	/home/linuxbrew/.linuxbrew/Cellar/go/1.26.2/libexec/src/testing/testing.go:2036 +0xea
+created by testing.(*T).Run in goroutine 1
+	/home/linuxbrew/.linuxbrew/Cellar/go/1.26.2/libexec/src/testing/testing.go:2101 +0x4c5
+FAIL	github.com/gohugoio/hugo/hugolib	0.074s
+FAIL
+
+---

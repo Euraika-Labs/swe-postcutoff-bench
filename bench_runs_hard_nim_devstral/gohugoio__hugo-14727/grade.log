@@ -1,0 +1,39 @@
+{
+  "instance_id": "gohugoio__hugo-14727",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "hugolib/TestPublishMultilingualSectionCreation": false
+  },
+  "agent_seconds": 13.814963340759277,
+  "candidate_label": "agent.diff"
+}
+ patch hugolib/cascade_test.go cleanly.
+Applied patch hugolib/hugo_smoke_test.go cleanly.
+Applied patch hugolib/params_test.go cleanly.
+Applied patch hugolib/rebuild_test.go cleanly.
+
+
+[agent.diff] empty patch — skipped
+
+[install rc=0]
+
+[hugolib/TestPublishMultilingualSectionCreation] rc=1
+_nim_devstral/gohugoio__hugo-14727/hugolib/integrationtest_builder.go:1097
+            return s.readFileFromFs(t, fs.WorkingDirReadOnly, filename)
+          /tmp/pcb_grade_workdirs_nim_devstral/gohugoio__hugo-14727/hugolib/integrationtest_builder.go:822
+            return s.readWorkingDir(s, s.fs, filepath.FromSlash(filename))
+          /tmp/pcb_grade_workdirs_nim_devstral/gohugoio__hugo-14727/hugolib/integrationtest_builder.go:427
+            content := strings.TrimSpace(s.FileContent(filename))
+          /tmp/pcb_grade_workdirs_nim_devstral/gohugoio__hugo-14727/hugolib/language_content_dir_test.go:225
+            b.AssertFileContent("public/en/s1/index.html", "s1 en")
+        
+--- FAIL: TestPublishMultilingualSectionCreation (0.01s)
+FAIL
+FAIL	github.com/gohugoio/hugo/hugolib	0.078s
+FAIL
+
+---

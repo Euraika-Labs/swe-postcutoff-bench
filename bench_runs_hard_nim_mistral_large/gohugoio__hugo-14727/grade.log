@@ -1,0 +1,35 @@
+{
+  "instance_id": "gohugoio__hugo-14727",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "hugolib/TestPublishMultilingualSectionCreation": false
+  },
+  "agent_seconds": 15.772228002548218,
+  "candidate_label": "agent.diff"
+}
+ patch hugolib/cascade_test.go cleanly.
+Applied patch hugolib/hugo_smoke_test.go cleanly.
+Applied patch hugolib/params_test.go cleanly.
+Applied patch hugolib/rebuild_test.go cleanly.
+
+
+Checking patch hugolib/content_map_page_assembler.go...
+Applied patch hugolib/content_map_page_assembler.go cleanly.
+
+
+[install rc=0]
+
+[hugolib/TestPublishMultilingualSectionCreation] rc=1
+FAIL	github.com/gohugoio/hugo/hugolib [build failed]
+FAIL
+# github.com/gohugoio/hugo/hugolib [github.com/gohugoio/hugo/hugolib.test]
+hugolib/content_map_page_assembler.go:61:2: seenRootSections redeclared
+	hugolib/content_map_page_assembler.go:44:2: other declaration of seenRootSections
+hugolib/content_map_page_assembler.go:1417:96: undefined: sitesmatrix.SitesMatrix
+hugolib/content_map_page_assembler.go:1419:36: a.pwRoot.WalkContext.GetOK undefined (type *doctree.WalkContext[contentNode] has no field or method GetOK)
+
+---

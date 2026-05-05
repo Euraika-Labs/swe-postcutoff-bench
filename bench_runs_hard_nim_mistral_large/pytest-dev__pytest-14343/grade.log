@@ -1,0 +1,101 @@
+{
+  "instance_id": "pytest-dev__pytest-14343",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "testing/test_tmpdir.py::test_tmp_path_factory_doesnt_follow_symlinks": false
+  },
+  "agent_seconds": 10.519139051437378,
+  "candidate_label": "agent.diff"
+}
+supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting iniconfig>=1.0.1 (from pytest==9.1.0.dev285+gada80d5e9.d20260505)
+  Using cached iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Requirement already satisfied: packaging>=22 in ./.pcb_venv/lib/python3.14/site-packages (from pytest==9.1.0.dev285+gada80d5e9.d20260505) (26.2)
+Collecting pluggy<2,>=1.5 (from pytest==9.1.0.dev285+gada80d5e9.d20260505)
+  Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest==9.1.0.dev285+gada80d5e9.d20260505)
+  Using cached pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Using cached pygments-2.20.0-py3-none-any.whl (1.2 MB)
+Building wheels for collected packages: pytest
+  Building editable for pytest (pyproject.toml): started
+  Building editable for pytest (pyproject.toml): finished with status 'done'
+  Created wheel for pytest: filename=pytest-9.1.0.dev285+gada80d5e9.d20260505-0.editable-py3-none-any.whl size=5373 sha256=5293384e65e3abbb1a6db85b1e0b0e4e0e0a47ae604e976448d186cbd016641d
+  Stored in directory: /tmp/pip-ephem-wheel-cache-xqr4kxad/wheels/72/d1/29/7aed28bc1ccf80f9e9d5edeecdf5ad15f5522d9f764ac59cc5
+Successfully built pytest
+Installing collected packages: pygments, pluggy, iniconfig, pytest
+
+Successfully installed iniconfig-2.3.0 pluggy-1.6.0 pygments-2.20.0 pytest-9.1.0.dev285+gada80d5e9.d20260505
+WARNING: pytest 9.1.0.dev285+gada80d5e9.d20260505 does not provide the extra 'test'
+
+[test rc=1]
+^^^^^^^^^^^^^^^
+.pcb_venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+src/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+src/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+src/_pytest/runner.py:531: in setup
+    col.setup()
+src/_pytest/python.py:1687: in setup
+    self._request._fillfixtures()
+src/_pytest/fixtures.py:722: in _fillfixtures
+    item.funcargs[argname] = self.getfixturevalue(argname)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/_pytest/fixtures.py:546: in getfixturevalue
+    fixturedef = self._get_active_fixturedef(argname)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/_pytest/fixtures.py:642: in _get_active_fixturedef
+    fixturedef.execute(request=subrequest)
+src/_pytest/fixtures.py:1129: in execute
+    result: FixtureValue = ihook.pytest_fixture_setup(
+.pcb_venv/lib/python3.14/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.pcb_venv/lib/python3.14/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/_pytest/setuponly.py:36: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+src/_pytest/fixtures.py:1214: in pytest_fixture_setup
+    result = call_fixture_func(fixturefunc, request, kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/_pytest/fixtures.py:914: in call_fixture_func
+    fixture_result = next(generator)
+                     ^^^^^^^^^^^^^^^
+src/_pytest/tmpdir.py:273: in tmp_path
+    path = _mk_tmp(request, tmp_path_factory)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/_pytest/tmpdir.py:260: in _mk_tmp
+    return factory.mktemp(name, numbered=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/_pytest/tmpdir.py:130: in mktemp
+    basename = self._ensure_relative_to_basetemp(basename)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/_pytest/tmpdir.py:111: in _ensure_relative_to_basetemp
+    if (self.getbasetemp() / basename).resolve().parent != self.getbasetemp():
+        ^^^^^^^^^^^^^^^^^^
+src/_pytest/tmpdir.py:199: in getbasetemp
+    assert basetemp is not None, basetemp
+           ^^^^^^^^
+E   UnboundLocalError: cannot access local variable 'basetemp' where it is not associated with a value
+=========================== short test summary info ============================
+ERROR testing/test_tmpdir.py::test_tmp_path_factory_doesnt_follow_symlinks - ...
+=============================== 1 error in 0.11s ===============================
+

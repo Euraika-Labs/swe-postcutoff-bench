@@ -1,0 +1,4 @@
+(node:2748641) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+API Error: 400 {"error":{"message":"Function name was The file src/_pytest/tmpdir.py has been updated successfully.[TOOL_CALLS]Edit but must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.","type":"BadRequestError","param":null,"code":400}}
+[done elapsed=1057s model=mistralai/mistral-large-3-675b-instruct-2512]

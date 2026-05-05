@@ -1,0 +1,41 @@
+diff --git a/hugolib/content_map_page_assembler.go b/hugolib/content_map_page_assembler.go
+index 5a61795c7..4df0a878e 100644
+--- a/hugolib/content_map_page_assembler.go
++++ b/hugolib/content_map_page_assembler.go
+@@ -41,6 +41,8 @@ import (
+ // Handles the flow of creating all the pages and resources for all sites.
+ // This includes applying any cascade configuration passed down the tree.
+ type allPagesAssembler struct {
++	seenRootSections *hmaps.Map[string, bool]
++	seenSectionsInAnyLanguage *hmaps.Map[string, bool]
+ 	// Dependencies.
+ 	ctx context.Context
+ 	h   *HugoSites
+@@ -511,7 +513,7 @@ func (a *allPagesAssembler) doCreatePages(prefix string, depth int) error {
+ 				var rootSectionPages contentNode
+ 				rootSectionPages, _, err = transformPages(rootSectionPath.Base(), &pageMetaSource{
+ 					pathInfo:        rootSectionPath,
+-					sitesMatrixBase: n2.(contentNodeForSites).siteVectors(),
++					sitesMatrixBase: a.getSitesMatrixForRootSection(rootSection, rootSectionPath.Base()),
+ 					pageConfigSource: &pagemeta.PageConfigEarly{
+ 						Kind: kinds.KindSection,
+ 					},
+@@ -1407,3 +1409,18 @@ func (a *allPagesAssembler) createMissingPages() error {
+ 	}
+ 	return nil
+ }
++
++// getSitesMatrixForRootSection returns an appropriate sites matrix for creating root sections.
++// For multilingual sites, it creates root sections for all languages when at least one
++// language has content in that section. This ensures consistent section hierarchy
++// across all languages in multilingual sites.
++func (a *allPagesAssembler) getSitesMatrixForRootSection(rootSection, base string) sitesmatrix.SitesMatrix {
++	// Check if this section exists in any language
++	if _, err := a.pwRoot.WalkContext.GetOK(rootSection); err == nil {
++		// Section exists in at least one language, create for all languages
++		return a.h.Conf.AllSitesMatrix()
++	}
++
++	// Use the current site vectors
++	return nil
++}

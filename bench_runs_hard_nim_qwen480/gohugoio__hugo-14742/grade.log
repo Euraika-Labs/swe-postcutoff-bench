@@ -1,0 +1,34 @@
+{
+  "instance_id": "gohugoio__hugo-14742",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 1,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "markup/goldmark/TestTableOfContentsWithPassthrough": false
+  },
+  "agent_seconds": 15.98775577545166,
+  "candidate_label": "agent.diff"
+}
+ied patch markup/goldmark/toc.go cleanly.
+
+
+[install rc=0]
+
+[markup/goldmark/TestTableOfContentsWithPassthrough] rc=1
+ts/home.html:1:3": execute of template failed: template: home.html:1:3: executing "home.html" at <.TableOfContents>: error calling TableOfContents: runtime error: index out of range [42] with length 42`
+        stack:
+          /tmp/pcb_grade_workdirs_nim_qwen480/gohugoio__hugo-14742/hugolib/integrationtest_builder.go:648
+            s.Assert(err, qt.IsNil)
+          /tmp/pcb_grade_workdirs_nim_qwen480/gohugoio__hugo-14742/hugolib/integrationtest_builder.go:148
+            return NewIntegrationTestBuilder(cfg).Build()
+          /tmp/pcb_grade_workdirs_nim_qwen480/gohugoio__hugo-14742/markup/goldmark/toc_integration_test.go:393
+            b := hugolib.Test(t, files)
+        
+--- FAIL: TestTableOfContentsWithPassthrough (0.01s)
+FAIL
+FAIL	github.com/gohugoio/hugo/markup/goldmark	0.080s
+FAIL
+
+---

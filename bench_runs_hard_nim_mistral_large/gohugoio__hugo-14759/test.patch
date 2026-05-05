@@ -1,0 +1,524 @@
+diff --git a/resources/page/page_matcher_test.go b/resources/page/page_matcher_test.go
+index e6e52251382..241202d454d 100644
+--- a/resources/page/page_matcher_test.go
++++ b/resources/page/page_matcher_test.go
+@@ -44,35 +44,33 @@ func TestPageMatcher(t *testing.T) {
+ 		&testPage{path: "p3", kind: "page", lang: "en", site: developmentTestSite}
+ 
+ 	c.Run("Matches", func(c *qt.C) {
+-		m := PageMatcher{Kind: "section"}
+-
+-		c.Assert(m.Matches(p1), qt.Equals, true)
+-		c.Assert(m.Matches(p2), qt.Equals, false)
+-
+-		m = PageMatcher{Kind: "page"}
+-		c.Assert(m.Matches(p1), qt.Equals, false)
+-		c.Assert(m.Matches(p2), qt.Equals, true)
+-		c.Assert(m.Matches(p3), qt.Equals, true)
+-
+-		m = PageMatcher{Kind: "page", Path: "/p2"}
+-		c.Assert(m.Matches(p1), qt.Equals, false)
+-		c.Assert(m.Matches(p2), qt.Equals, true)
+-		c.Assert(m.Matches(p3), qt.Equals, false)
+-
+-		m = PageMatcher{Path: "/p*"}
+-		c.Assert(m.Matches(p1), qt.Equals, true)
+-		c.Assert(m.Matches(p2), qt.Equals, true)
+-		c.Assert(m.Matches(p3), qt.Equals, true)
+-
+-		m = PageMatcher{Environment: "development"}
+-		c.Assert(m.Matches(p1), qt.Equals, true)
+-		c.Assert(m.Matches(p2), qt.Equals, false)
+-		c.Assert(m.Matches(p3), qt.Equals, true)
+-
+-		m = PageMatcher{Environment: "production"}
+-		c.Assert(m.Matches(p1), qt.Equals, false)
+-		c.Assert(m.Matches(p2), qt.Equals, true)
+-		c.Assert(m.Matches(p3), qt.Equals, false)
++		matches := func(m PageMatcher, p Page) bool {
++			c.Assert(m.compileGlobs(), qt.IsNil)
++			return m.Matches(p)
++		}
++
++		c.Assert(matches(PageMatcher{Kind: "section"}, p1), qt.Equals, true)
++		c.Assert(matches(PageMatcher{Kind: "section"}, p2), qt.Equals, false)
++
++		c.Assert(matches(PageMatcher{Kind: "page"}, p1), qt.Equals, false)
++		c.Assert(matches(PageMatcher{Kind: "page"}, p2), qt.Equals, true)
++		c.Assert(matches(PageMatcher{Kind: "page"}, p3), qt.Equals, true)
++
++		c.Assert(matches(PageMatcher{Kind: "page", Path: "/p2"}, p1), qt.Equals, false)
++		c.Assert(matches(PageMatcher{Kind: "page", Path: "/p2"}, p2), qt.Equals, true)
++		c.Assert(matches(PageMatcher{Kind: "page", Path: "/p2"}, p3), qt.Equals, false)
++
++		c.Assert(matches(PageMatcher{Path: "/p*"}, p1), qt.Equals, true)
++		c.Assert(matches(PageMatcher{Path: "/p*"}, p2), qt.Equals, true)
++		c.Assert(matches(PageMatcher{Path: "/p*"}, p3), qt.Equals, true)
++
++		c.Assert(matches(PageMatcher{Environment: "development"}, p1), qt.Equals, true)
++		c.Assert(matches(PageMatcher{Environment: "development"}, p2), qt.Equals, false)
++		c.Assert(matches(PageMatcher{Environment: "development"}, p3), qt.Equals, true)
++
++		c.Assert(matches(PageMatcher{Environment: "production"}, p1), qt.Equals, false)
++		c.Assert(matches(PageMatcher{Environment: "production"}, p2), qt.Equals, true)
++		c.Assert(matches(PageMatcher{Environment: "production"}, p3), qt.Equals, false)
+ 	})
+ 
+ 	c.Run("Decode", func(c *qt.C) {
+diff --git a/resources/page/permalinks_integration_test.go b/resources/page/permalinks_integration_test.go
+index 7aabb8ee6d5..cdca2bc9c7b 100644
+--- a/resources/page/permalinks_integration_test.go
++++ b/resources/page/permalinks_integration_test.go
+@@ -135,12 +135,8 @@ slug: "mytagslug"
+ 	b.AssertFileContent("public/tagsslug/tagsslug/index.html", "List|taxonomy|/tagsslug/tagsslug/|")
+ 
+ 	permalinksConf := b.H.Configs.Base.Permalinks
+-	b.Assert(permalinksConf, qt.DeepEquals, map[string]map[string]string{
+-		"page":     {"withallbutlastsection": "/:sections[:last]/:slug/", "withallbutlastsectionslug": "/:sectionslugs[:last]/:slug/", "withpageslug": "/pageslug/:slug/", "withsectionslug": "/sectionslug/:sectionslug/:slug/", "withsectionslugs": "/sectionslugs/:sectionslugs/:slug/"},
+-		"section":  {"nofilefilename": "/sectionnofilefilename/:contentbasename/", "nofileslug": "/sectionnofileslug/:slug/", "nofiletitle1": "/sectionnofiletitle1/:title/", "nofiletitle2": "/sectionnofiletitle2/:sections[:last]/", "withfilefilename": "/sectionwithfilefilename/:contentbasename/", "withfilefiletitle": "/sectionwithfilefiletitle/:title/", "withfileslug": "/sectionwithfileslug/:slug/"},
+-		"taxonomy": {"tags": "/tagsslug/:slug/"},
+-		"term":     {"tags": "/tagsslug/tag/:slug/"},
+-	})
++	// 5 page + 7 section + 1 taxonomy + 1 term = 14 rules.
++	b.Assert(len(permalinksConf), qt.Equals, 14)
+ }
+ 
+ func TestPermalinksOldSetup(t *testing.T) {
+@@ -172,12 +168,8 @@ slug: "p1slugvalue"
+ 	b.AssertFileContent("public/pageslug/p1slugvalue/index.html", "Single|page|/pageslug/p1slugvalue/|")
+ 
+ 	permalinksConf := b.H.Configs.Base.Permalinks
+-	b.Assert(permalinksConf, qt.DeepEquals, map[string]map[string]string{
+-		"page":     {"withpageslug": "/pageslug/:slug/"},
+-		"section":  {},
+-		"taxonomy": {},
+-		"term":     {"withpageslug": "/pageslug/:slug/"},
+-	})
++	// Old flat format: 1 entry creates 2 rules (page + term).
++	b.Assert(len(permalinksConf), qt.Equals, 2)
+ }
+ 
+ func TestPermalinksNestedSections(t *testing.T) {
+@@ -515,3 +507,266 @@ title: Tag A (set in front matter)
+ 		})
+ 	}
+ }
++
++func TestPermalinksNewSliceFormat(t *testing.T) {
++	t.Parallel()
++
++	files := `
++-- layouts/list.html --
++List|{{ .Kind }}|{{ .RelPermalink }}|
++-- layouts/single.html --
++Single|{{ .Kind }}|{{ .RelPermalink }}|
++-- hugo.yaml --
++permalinks:
++  - target:
++      kind: page
++      path: "/books/**"
++    pattern: /books/:year/:slug/
++  - target:
++      kind: section
++      path: "/{books,books/**}"
++    pattern: /libros/:sections[1:]
++  - target:
++      kind: page
++    pattern: /other/:slug/
++-- content/books/_index.md --
++---
++title: Books
++---
++-- content/books/fiction/_index.md --
++---
++title: Fiction
++---
++-- content/books/fiction/book1.md --
++---
++title: Book One
++date: 2023-06-15
++slug: book-one
++---
++-- content/other/p1.md --
++---
++title: Other Page
++slug: other-page
++---
++-- content/unmatched/p2.md --
++---
++title: Unmatched Page
++slug: unmatched-page
++---
++`
++
++	b := hugolib.Test(t, files)
++
++	// Page in /books section gets the books-specific pattern.
++	b.AssertFileContent("public/books/2023/book-one/index.html", "Single|page|/books/2023/book-one/|")
++	// Section page for books/fiction gets the section pattern.
++	b.AssertFileContent("public/libros/fiction/index.html", "List|section|/libros/fiction/|")
++	// Page outside /books matches the default page pattern.
++	b.AssertFileContent("public/other/other-page/index.html", "Single|page|/other/other-page/|")
++	// Page in unmatched section also matches the default page pattern.
++	b.AssertFileContent("public/other/unmatched-page/index.html", "Single|page|/other/unmatched-page/|")
++}
++
++func TestPermalinksNewSliceFormatEnvironment(t *testing.T) {
++	t.Parallel()
++
++	files := `
++-- layouts/list.html --
++List|{{ .Kind }}|{{ .RelPermalink }}|
++-- layouts/single.html --
++Single|{{ .Kind }}|{{ .RelPermalink }}|
++-- hugo.toml --
++disableKinds = ['home','rss','sitemap','taxonomy','term']
++[[permalinks]]
++pattern = "/testing/:slug/"
++[permalinks.target]
++path = "/books/**"
++environment = "test"
++[[permalinks]]
++pattern = "/prod/:slug/"
++[permalinks.target]
++path = "/books/**"
++environment = "production"
++-- content/books/fiction/book1.md --
++---
++title: Book One
++date: 2023-06-15
++slug: book-one
++---
++
++`
++
++	b := hugolib.Test(t, files)
++
++	b.AssertPublishDir("prod", "! testing")
++}
++
++func TestPermalinksNewSliceFormatSitesMatrix(t *testing.T) {
++	t.Parallel()
++
++	files := `
++-- layouts/single.html --
++Single|{{ .Kind }}|{{ .RelPermalink }}|{{ .Language.Lang }}|
++-- hugo.yaml --
++defaultContentLanguage: en
++defaultContentLanguageInSubdir: true
++disableKinds: ['home','rss','section','sitemap','taxonomy','term']
++languages:
++  en:
++    weight: 1
++  de:
++    weight: 2
++permalinks:
++  - target:
++      kind: page
++      sites:
++        matrix:
++          languages: ["en"]
++    pattern: /en-posts/:slug/
++  - target:
++      kind: page
++      sites:
++        matrix:
++          languages: ["de"]
++    pattern: /de-posts/:slug/
++  - target:
++      kind: page
++    pattern: /other/:slug/
++-- content/p1.en.md --
++---
++title: Hello
++slug: hello
++---
++-- content/p1.de.md --
++---
++title: Hallo
++slug: hallo
++---
++`
++
++	b := hugolib.Test(t, files)
++
++	// English page matches the en-specific rule.
++	b.AssertFileContent("public/en/en-posts/hello/index.html", "Single|page|/en/en-posts/hello/|en|")
++	// German page matches the de-specific rule.
++	b.AssertFileContent("public/de/de-posts/hallo/index.html", "Single|page|/de/de-posts/hallo/|de|")
++}
++
++// We only apply permalink patterns to kinds of type hone, page, section, taxonomy and term.
++func TestPermalinksNewSliceFormatAsteriskKind(t *testing.T) {
++	t.Parallel()
++
++	files := `
++-- hugo.toml --
++enableRobotsTXT = true
++[[permalinks]]
++pattern = "/mylink/:slug/"
++[permalinks.target]
++kind = "*"
++-- content/mysection/p1.md --
++---
++title: My Page
++slug: my-page
++---
++-- layouts/all.html --
++{{ .Title }}|{{ .RelPermalink }}|{{ .Kind }}|
++-- layouts/404.html --
++404.
++`
++
++	b := hugolib.Test(t, files)
++	b.AssertPublishDir(`
++404.html
++index.html
++index.xml
++mylink/categories/index.html 
++mylink/my-page/index.html
++mylink/mysections/index.html
++mylink/tags/index.html 
++sitemap.xml
++`)
++}
++
++func TestPermalinksHomeKind(t *testing.T) {
++	t.Parallel()
++
++	files := `
++-- layouts/home.html --
++Home|{{ .Kind }}|{{ .RelPermalink }}|
++-- layouts/list.html --
++List|{{ .Kind }}|{{ .RelPermalink }}|
++-- hugo.yaml --
++disableKinds: ['rss','sitemap','taxonomy','term']
++permalinks:
++  - target:
++      kind: home
++    pattern: /welcome/
++  - target:
++      kind: section
++    pattern: /s/:slug/
++-- content/mysection/_index.md --
++---
++title: My Section
++slug: my-section
++---
++`
++
++	b := hugolib.Test(t, files, hugolib.TestOptWarn())
++	t.Log(b.LogString())
++	b.Assert(b.H.Log.LoggCount(logg.LevelWarn), qt.Equals, 0)
++	b.AssertFileContent("public/welcome/index.html", "Home|home|/welcome/|")
++	b.AssertFileContent("public/s/my-section/index.html", "List|section|/s/my-section/|")
++}
++
++func TestPermalinksHomeKindLegacyMap(t *testing.T) {
++	t.Parallel()
++
++	files := `
++-- layouts/home.html --
++Home|{{ .Kind }}|{{ .RelPermalink }}|
++-- hugo.toml --
++disableKinds = ['rss','sitemap','taxonomy','term']
++[permalinks.home]
++"/" = '/welcome/'
++`
++
++	b := hugolib.Test(t, files, hugolib.TestOptWarn())
++	t.Log(b.LogString())
++	b.Assert(b.H.Log.LoggCount(logg.LevelWarn), qt.Equals, 0)
++	b.AssertFileContent("public/welcome/index.html", "Home|home|/welcome/|")
++}
++
++func TestPermalinksNewSliceFormatRootSection(t *testing.T) {
++	t.Parallel()
++
++	files := `
++-- layouts/single.html --
++Single|{{ .Kind }}|{{ .RelPermalink }}|
++-- hugo.yaml --
++permalinks:
++  - target:
++      kind: page
++      path: "/*"
++    pattern: /root/:slug/
++  - target:
++      kind: page
++    pattern: /deep/:slug/
++-- content/p1.md --
++---
++title: Root Page
++slug: root-page
++---
++-- content/sub/p2.md --
++---
++title: Sub Page
++slug: sub-page
++---
++`
++
++	b := hugolib.Test(t, files)
++
++	// Root section page matches /* (non-recursive).
++	b.AssertFileContent("public/root/root-page/index.html", "Single|page|/root/root-page/|")
++	// Nested page matches the default rule.
++	b.AssertFileContent("public/deep/sub-page/index.html", "Single|page|/deep/sub-page/|")
++}
+diff --git a/resources/page/permalinks_test.go b/resources/page/permalinks_test.go
+index 9b3c315ed11..a5ef79852b3 100644
+--- a/resources/page/permalinks_test.go
++++ b/resources/page/permalinks_test.go
+@@ -129,7 +129,7 @@ func TestPermalinkExpansion(t *testing.T) {
+ 		page.section = "blue"
+ 		page.slug = "The Slug"
+ 		page.kind = "page"
+-		// page.pathInfo
++		page.path = "/posts/test-page"
+ 		return page
+ 	}
+ 
+@@ -147,14 +147,12 @@ func TestPermalinkExpansion(t *testing.T) {
+ 		name := fmt.Sprintf("[%d] %s", i, specNameCleaner.ReplaceAllString(item.spec, "_"))
+ 
+ 		c.Run(name, func(c *qt.C) {
+-			patterns := map[string]map[string]string{
+-				"page": {
+-					"posts": item.spec,
+-				},
++			configs := PermalinksConfig{
++				{Target: PageMatcher{Kind: "page", Path: "/posts/**"}, Pattern: item.spec},
+ 			}
+-			expander, err := NewPermalinkExpander(urlize, patterns)
++			expander, err := NewPermalinkExpander(urlize, configs)
+ 			c.Assert(err, qt.IsNil)
+-			expanded, err := expander.Expand("posts", page)
++			expanded, err := expander.Expand(page)
+ 			c.Assert(err, qt.IsNil)
+ 			c.Assert(expanded, qt.Equals, item.expandsTo)
+ 
+@@ -178,39 +176,42 @@ func TestPermalinkExpansionMultiSection(t *testing.T) {
+ 	page.section = "blue"
+ 	page.slug = "The Slug"
+ 	page.kind = "page"
++	page.path = "/posts/my-page"
+ 
+-	page_slug_fallback := newTestPageWithFile("/page-filename/index.md")
+-	page_slug_fallback.title = "Page Title"
+-	page_slug_fallback.kind = "page"
+-
+-	permalinksConfig := map[string]map[string]string{
+-		"page": {
+-			"posts":   "/:slug",
+-			"blog":    "/:section/:year",
+-			"recipes": "/:slugorfilename",
+-			"special": "/special\\::slug",
+-		},
++	pageSlugFallback := newTestPageWithFile("/page-filename/index.md")
++	pageSlugFallback.title = "Page Title"
++	pageSlugFallback.kind = "page"
++
++	configs := PermalinksConfig{
++		{Target: PageMatcher{Kind: "page", Path: "/posts/**"}, Pattern: "/:slug"},
++		{Target: PageMatcher{Kind: "page", Path: "/blog/**"}, Pattern: "/:section/:year"},
++		{Target: PageMatcher{Kind: "page", Path: "/recipes/**"}, Pattern: "/:slugorfilename"},
++		{Target: PageMatcher{Kind: "page", Path: "/special/**"}, Pattern: "/special\\::slug"},
+ 	}
+-	expander, err := NewPermalinkExpander(urlize, permalinksConfig)
++	expander, err := NewPermalinkExpander(urlize, configs)
+ 	c.Assert(err, qt.IsNil)
+ 
+-	expanded, err := expander.Expand("posts", page)
++	expanded, err := expander.Expand(page)
+ 	c.Assert(err, qt.IsNil)
+ 	c.Assert(expanded, qt.Equals, "/the-slug")
+ 
+-	expanded, err = expander.Expand("blog", page)
++	page.path = "/blog/my-page"
++	expanded, err = expander.Expand(page)
+ 	c.Assert(err, qt.IsNil)
+ 	c.Assert(expanded, qt.Equals, "/blue/2012")
+ 
+-	expanded, err = expander.Expand("posts", page_slug_fallback)
++	pageSlugFallback.path = "/posts/my-page"
++	expanded, err = expander.Expand(pageSlugFallback)
+ 	c.Assert(err, qt.IsNil)
+ 	c.Assert(expanded, qt.Equals, "/page-title")
+ 
+-	expanded, err = expander.Expand("recipes", page_slug_fallback)
++	pageSlugFallback.path = "/recipes/my-page"
++	expanded, err = expander.Expand(pageSlugFallback)
+ 	c.Assert(err, qt.IsNil)
+ 	c.Assert(expanded, qt.Equals, "/page-filename")
+ 
+-	expanded, err = expander.Expand("special", page)
++	page.path = "/special/my-page"
++	expanded, err = expander.Expand(page)
+ 	c.Assert(err, qt.IsNil)
+ 	c.Assert(expanded, qt.Equals, "/special:the-slug")
+ }
+@@ -220,13 +221,11 @@ func TestPermalinkExpansionConcurrent(t *testing.T) {
+ 
+ 	c := qt.New(t)
+ 
+-	permalinksConfig := map[string]map[string]string{
+-		"page": {
+-			"posts": "/:slug/",
+-		},
++	configs := PermalinksConfig{
++		{Target: PageMatcher{Kind: "page", Path: "/posts/**"}, Pattern: "/:slug/"},
+ 	}
+ 
+-	expander, err := NewPermalinkExpander(urlize, permalinksConfig)
++	expander, err := NewPermalinkExpander(urlize, configs)
+ 	c.Assert(err, qt.IsNil)
+ 
+ 	var wg sync.WaitGroup
+@@ -237,9 +236,10 @@ func TestPermalinkExpansionConcurrent(t *testing.T) {
+ 			defer wg.Done()
+ 			page := newTestPage()
+ 			page.kind = "page"
++			page.path = "/posts/my-page"
+ 			for j := 1; j < 20; j++ {
+ 				page.slug = fmt.Sprintf("slug%d", i+j)
+-				expanded, err := expander.Expand("posts", page)
++				expanded, err := expander.Expand(page)
+ 				c.Assert(err, qt.IsNil)
+ 				c.Assert(expanded, qt.Equals, fmt.Sprintf("/%s/", page.slug))
+ 			}
+@@ -253,7 +253,7 @@ func TestPermalinkExpansionSliceSyntax(t *testing.T) {
+ 	t.Parallel()
+ 
+ 	c := qt.New(t)
+-	exp, err := NewPermalinkExpander(urlize, nil)
++	exp, err := NewPermalinkExpander(urlize, PermalinksConfig{})
+ 	c.Assert(err, qt.IsNil)
+ 	slice4 := []string{"a", "b", "c", "d"}
+ 	fn4 := func(s string) []string {
+@@ -302,19 +302,18 @@ func BenchmarkPermalinkExpand(b *testing.B) {
+ 	d, _ := time.Parse("2006-01-02", "2019-02-28")
+ 	page.date = d
+ 	page.kind = "page"
++	page.path = "/posts/my-page"
+ 
+-	permalinksConfig := map[string]map[string]string{
+-		"page": {
+-			"posts": "/:year-:month-:title",
+-		},
++	configs := PermalinksConfig{
++		{Target: PageMatcher{Kind: "page", Path: "/posts/**"}, Pattern: "/:year-:month-:title"},
+ 	}
+-	expander, err := NewPermalinkExpander(urlize, permalinksConfig)
++	expander, err := NewPermalinkExpander(urlize, configs)
+ 	if err != nil {
+ 		b.Fatal(err)
+ 	}
+ 
+ 	for b.Loop() {
+-		s, err := expander.Expand("posts", page)
++		s, err := expander.Expand(page)
+ 		if err != nil {
+ 			b.Fatal(err)
+ 		}
+

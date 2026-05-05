@@ -1,0 +1,16 @@
+diff --git a/src/_pytest/tmpdir.py b/src/_pytest/tmpdir.py
+index 855ad273e..908ff33ab 100644
+--- a/src/_pytest/tmpdir.py
++++ b/src/_pytest/tmpdir.py
+@@ -164,6 +164,11 @@ class TempPathFactory:
+                 # getuser() likely returned illegal characters for the platform, use unknown back off mechanism
+                 rootdir = temproot.joinpath("pytest-of-unknown")
+                 rootdir.mkdir(mode=0o700, exist_ok=True)
++            # Check if the rootdir is a symbolic link and reject it to prevent CVE-2025-71176
++            if rootdir.is_symlink():
++                raise OSError(
++                    f"temporary directory {rootdir} is a symbolic link"
++                )
+             # Because we use exist_ok=True with a predictable name, make sure
+             # we are the owners, to prevent any funny business (on unix, where
+             # temproot is usually shared).

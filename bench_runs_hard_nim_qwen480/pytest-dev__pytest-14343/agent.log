@@ -1,0 +1,17 @@
+(node:2234423) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Perfect! I've successfully implemented the fix for the insecure temporary directory vulnerability (CVE-2025-71176) in pytest. The solution is minimal but effective:
+
+### What I implemented:
+1. **The Fix**: Added a simple check in `src/_pytest/tmpdir.py` to detect if the temporary directory root is a symbolic link and reject it with an appropriate error message.
+
+2. **Location**: The fix is in the `getbasetemp()` method of `TempPathFactory`, right after the `rootdir` is created/made sure it exists.
+
+3. **Security**: This prevents attackers from creating symbolic links to control where temporary files are created, which was the vulnerability described in CVE-2025-71176.
+
+4. **Testing**: The fix correctly causes the failing test `test_tmp_path_factory_doesnt_follow_symlinks` to pass, and all other tmpdir tests continue to pass.
+
+5. **Verification**: The solution has been thoroughly tested and verified to work correctly.
+
+This is a simple but effective fix that directly addresses the security vulnerability by rejecting symbolic links rather than following them, which was the core issue in the original CVE.
+[done elapsed=924s model=qwen/qwen3-coder-480b-a35b-instruct]

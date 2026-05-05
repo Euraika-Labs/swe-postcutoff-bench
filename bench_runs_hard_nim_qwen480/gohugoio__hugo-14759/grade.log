@@ -1,0 +1,100 @@
+{
+  "instance_id": "gohugoio__hugo-14759",
+  "fail_to_pass_passed": 0,
+  "fail_to_pass_total": 7,
+  "pass_to_pass_passed": 0,
+  "pass_to_pass_total": 0,
+  "passed": false,
+  "results": {
+    "resources/page/TestPermalinksNewSliceFormat": false,
+    "resources/page/TestPermalinksNewSliceFormatEnvironment": false,
+    "resources/page/TestPermalinksNewSliceFormatSitesMatrix": false,
+    "resources/page/TestPermalinksNewSliceFormatAsteriskKind": false,
+    "resources/page/TestPermalinksHomeKind": false,
+    "resources/page/TestPermalinksHomeKindLegacyMap": false,
+    "resources/page/TestPermalinksNewSliceFormatRootSection": false
+  },
+  "agent_seconds": 10.769357442855835,
+  "candidate_label": "agent.diff"
+}
+resources/page/permalinks.go:82:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:89:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:114:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:144:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:169:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: too many errors
+
+---
+[resources/page/TestPermalinksNewSliceFormatEnvironment] rc=1
+eclaration statement outside function body
+resources/page/permalinks.go:79:1: syntax error: unexpected keyword func, expected field name or embedded type
+resources/page/permalinks.go:82:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:89:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:114:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:144:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:169:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: too many errors
+
+---
+[resources/page/TestPermalinksNewSliceFormatSitesMatrix] rc=1
+eclaration statement outside function body
+resources/page/permalinks.go:79:1: syntax error: unexpected keyword func, expected field name or embedded type
+resources/page/permalinks.go:82:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:89:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:114:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:144:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:169:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: too many errors
+
+---
+[resources/page/TestPermalinksNewSliceFormatAsteriskKind] rc=1
+eclaration statement outside function body
+resources/page/permalinks.go:79:1: syntax error: unexpected keyword func, expected field name or embedded type
+resources/page/permalinks.go:82:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:89:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:114:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:144:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:169:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: too many errors
+
+---
+[resources/page/TestPermalinksHomeKind] rc=1
+eclaration statement outside function body
+resources/page/permalinks.go:79:1: syntax error: unexpected keyword func, expected field name or embedded type
+resources/page/permalinks.go:82:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:89:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:114:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:144:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:169:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: too many errors
+
+---
+[resources/page/TestPermalinksHomeKindLegacyMap] rc=1
+eclaration statement outside function body
+resources/page/permalinks.go:79:1: syntax error: unexpected keyword func, expected field name or embedded type
+resources/page/permalinks.go:82:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:89:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:114:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:144:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:169:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: too many errors
+
+---
+[resources/page/TestPermalinksNewSliceFormatRootSection] rc=1
+eclaration statement outside function body
+resources/page/permalinks.go:79:1: syntax error: unexpected keyword func, expected field name or embedded type
+resources/page/permalinks.go:82:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:89:2: syntax error: non-declaration statement outside function body
+resources/page/permalinks.go:114:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:144:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:169:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: syntax error: unexpected name convertOldFormatToNew, expected (
+resources/page/permalinks.go:199:6: too many errors
+
+---

@@ -1,0 +1,8 @@
+gohugoio__hugo-14728  agent=410s  passed=False  F2P=0/1  model=qwen/qwen3-coder-480b-a35b-instruct
+gohugoio__hugo-14733  agent=428s  passed=True  F2P=1/1  model=qwen/qwen3-coder-480b-a35b-instruct
+gohugoio__hugo-14741  agent=866s  passed=False  F2P=0/1  model=qwen/qwen3-coder-480b-a35b-instruct
+gohugoio__hugo-14742  agent=1607s  passed=False  F2P=0/1  model=qwen/qwen3-coder-480b-a35b-instruct
+gohugoio__hugo-14754  agent=1608s  passed=False  F2P=0/2  model=qwen/qwen3-coder-480b-a35b-instruct
+gohugoio__hugo-14757  agent=1157s  passed=False  F2P=0/1  model=qwen/qwen3-coder-480b-a35b-instruct
+gohugoio__hugo-14759  agent=1610s  passed=False  F2P=0/7  model=qwen/qwen3-coder-480b-a35b-instruct
+pytest-dev__pytest-14363  agent=1609s  passed=True  F2P=1/1  model=qwen/qwen3-coder-480b-a35b-instruct
