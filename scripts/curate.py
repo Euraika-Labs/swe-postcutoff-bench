@@ -202,6 +202,14 @@ def main() -> int:
     ap.add_argument("--output", default="tasks/", help="Where to write task JSONs")
     ap.add_argument("--require-bug-label", action="store_true",
                     help="Only keep PRs with bug/regression-style label")
+    ap.add_argument("--min-lines", type=int, default=5,
+                    help="Minimum total patch lines (default 5)")
+    ap.add_argument("--max-lines", type=int, default=500,
+                    help="Maximum total patch lines (default 500)")
+    ap.add_argument("--min-files", type=int, default=1,
+                    help="Minimum touched files (default 1)")
+    ap.add_argument("--max-files", type=int, default=10,
+                    help="Maximum touched files (default 10)")
     args = ap.parse_args()
 
     out = pathlib.Path(args.output)
@@ -226,7 +234,7 @@ def main() -> int:
             print(f"  PR #{n}: gh fetch failed: {e}", file=sys.stderr)
             continue
 
-        if not (1 <= len(files) <= 10):
+        if not (args.min_files <= len(files) <= args.max_files):
             continue
         # Require at least one test file touched (REST returns "filename")
         test_paths = [f for f in files
@@ -236,7 +244,7 @@ def main() -> int:
             continue
         # Patch length filter
         n_lines = patch.count("\n")
-        if not (5 <= n_lines <= 500):
+        if not (args.min_lines <= n_lines <= args.max_lines):
             continue
 
         src_patch, test_patch = split_patch_test_vs_src(patch)
