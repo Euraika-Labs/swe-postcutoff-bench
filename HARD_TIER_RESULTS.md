@@ -7,7 +7,7 @@
 | Model | Class | Hard 10 | Notes |
 |---|---|---:|---|
 | **Opus 4.7** (`claude` CLI) | frontier proprietary | **9/10 (90%)** | Single miss: `pytest-14363` (empty agent.diff — described fix but didn't write) |
-| **qwen3-coder-next** (`qwen` CLI / Regolo) | ~480B coder open-weights | **5/10 (50%)** | 4 timeouts on big multi-file Hugo tasks; passed pytest-14363 where Opus failed |
+| **qwen3-coder-next** (`qwen` CLI / Regolo) | 80B coder open-weights | **5/10 (50%)** | 4 timeouts on big multi-file Hugo tasks; passed pytest-14363 where Opus failed |
 | **qwen3.6-27b** (`qwen` CLI / Regolo) | 27B general open-weights | **4/10 (40%)** | Persistent timeouts; outperformed bigger qwen3.5-122b |
 | **minimax-m2.5** (`openclaude` CLI / Regolo) | ~145B general | **4/10 (40%)** | Steady but slow; matched qwen3.6 |
 | **mistral-small-4-119b** (`vibe` CLI / Regolo) | 119B general | **3/10 (30%)** | Mistral-tuned harness; failed all big Hugo tasks |

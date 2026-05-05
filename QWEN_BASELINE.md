@@ -64,4 +64,4 @@ Several plausible factors, none individually conclusive:
 
 ## Headline
 
-For this specific benchmark surface and harness pairing, a hosted ~480B open-weights coder model **matched or exceeded** a frontier proprietary model. The result needs a harder benchmark and multi-rep evaluation to firm up — but the direction is consistent with the harness-aware-coding-parity paper's hypothesis that small-tuned-with-harness can approach frontier on contamination-controlled tasks.
+For this specific benchmark surface and harness pairing, a hosted 80B open-weights coder model **matched or exceeded** a frontier proprietary model. The result needs a harder benchmark and multi-rep evaluation to firm up — but the direction is consistent with the harness-aware-coding-parity paper's hypothesis that small-tuned-with-harness can approach frontier on contamination-controlled tasks.
